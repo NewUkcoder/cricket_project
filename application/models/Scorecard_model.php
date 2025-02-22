@@ -229,7 +229,7 @@ $result = $query->result();
     }
 
     public function get_scorecard($match_id)
-    {
+    { //echo $match_id;
 $this->db->select('
     add_schedule.*,  
     team1.team_name as team_one_name,
@@ -262,7 +262,7 @@ $this->db->where('add_schedule.match_id', $match_id);
 
 // Execute the query
 $query = $this->db->get();
-
+//var_dump($query->result());
 // Check if the query returned any results
 if ($query->num_rows() > 0) {
     // Return the results as an array

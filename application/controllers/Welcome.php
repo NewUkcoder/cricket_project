@@ -26,6 +26,7 @@ class Welcome extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
         $this->load->library('upload');
+        $this->load->library('session');
 
 
         
@@ -179,31 +180,19 @@ class Welcome extends CI_Controller {
 		
 	}
 
-	public function enter_schedule()
+	public function enter_schedule($team_one_id, $team_two_id)
 	{	
 		if($this->session->userdata('logged'))
 		{
-			$user_id=$this->session->userdata('user_id');
+			
                 
-                 $team_data['team']=$this->Team_model->get_team(array('user_id'=>$user_id),'add_team');
-                 if($team_data['team']==0)
-              {
-                $team_data['team']=0;
-              }
-               else
-              {
-                 $team_data['team']=$this->Team_model->get_team(array('user_id'=>$user_id),'add_team');
-            }
+                 $team_data=$this->Team_model->add_fixture($team_one_id,$team_two_id);
+                $this->load->view('header');
+							$this->load->view('enter_schedule',$team_data);
 
-		$this->load->view('header');
-		$this->load->view('enter_schedule',$team_data);
-		}
-		else
-		{
-			$this->index();
-		}
 		
 	}
+}
 
 	public function toss($team1,$team2,$match_id)
 	{

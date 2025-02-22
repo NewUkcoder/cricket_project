@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cricket Match Schedule Registration</title>
-  <!-- Bootstrap CSS -->
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     /* General Body Styling */
@@ -39,6 +33,48 @@
       color: #333;
       text-align: center;
       margin-bottom: 30px;
+    }
+
+    /* Flexbox Styling for Team Names and Images */
+    .team-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: nowrap;
+    }
+
+    .team-info .team {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .team-info img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .team-info span {
+      font-size: 1rem; /* Reduced text size */
+      font-weight: 600;
+      color: #333;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px; /* Limiting the text width */
+    }
+
+    .team-info .vs {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #007bff;
+      white-space: nowrap;
     }
 
     /* Input Fields Styling */
@@ -98,48 +134,39 @@
 <body>
 
   <div class="container py-5">
-    <h1>Cricket Match Schedule Registration</h1>
+    
 
     <!-- Form Card -->
     <div class="form-card">
       <h2>Enter Match Details</h2>
 
       <form action="<?php echo base_url();?>ScheduleController/add_schedule" method="POST">
-        <!-- Team 1 -->
+        <!-- Displaying Team 1 and Team 2 side by side -->
         <?php if ($this->session->flashdata('error')): ?>
-        <div style="color: red;">
+          <div style="color: red;">
             <?php echo $this->session->flashdata('error'); ?>
-        </div>
-    <?php endif; ?>
+          </div>
+        <?php endif; ?>
 
-    <?php if ($this->session->flashdata('success')): ?>
-        <div style="color: green;">
+        <?php if ($this->session->flashdata('success')): ?>
+          <div style="color: green;">
             <?php echo $this->session->flashdata('success'); ?>
+          </div>
+        <?php endif; ?>
+
+        <div class="team-info">
+          <div class="team">
+            <img src="<?php echo $team_one['image_path']; ?>" alt="Team 1">
+            <span><?php echo $team_one['team_name']; ?></span>
+          </div>
+          <span class="vs">VS</span>
+          <div class="team">
+            <img src="<?php echo $team_two['image_path']; ?>" alt="Team 2">
+            <span><?php echo $team_two['team_name']; ?></span>
+          </div>
         </div>
-    <?php endif; ?>
 
-    
-         <label for="playerRole" class="form-label">Select First Team</label>
-        <select class="form-select" id="playerRole" name="team1" required>
-                        <option value="">Select 1st Team</option>
-                         <?php foreach($team as $team_info)
-                {?>
-                        <option value="<?php echo $team_info->team_id;?>"><?php echo $team_info->team_name;?></option>
-                        
-                       <?php }?>
-        </select>
 
-        <!-- Team 2 -->
-         <label for="playerRole" class="form-label">Select Second Team</label>
-        <select class="form-select" id="playerRole" name="team2" required>
-                        <option value="">Select 2nd Team</option>
-                         <?php foreach($team as $team_info)
-                {?>
-                         <option value="<?php echo $team_info->team_id;?>"><?php echo $team_info->team_name;?></option>
-                        
-                     <?php }?>   
-          </select>
-                 
         <!-- Match Date -->
         <div class="mb-3">
           <label for="match-date" class="form-label">Match Date</label>
@@ -158,8 +185,8 @@
           <select class="form-control" id="match-type" name="match_type" required>
             <option value="Leather Ball">Leather Ball</option>
             <option value="Tape Ball">Tape Ball</option>
-             <option value="Tennis Ball">Tennis Ball</option>
-             <option value="Others">Others</option>
+            <option value="Tennis Ball">Tennis Ball</option>
+            <option value="Others">Others</option>
           </select>
         </div>
 
@@ -184,11 +211,11 @@
         <!-- Umpires -->
         <div class="mb-3">
           <label for="umpires" class="form-label">Umpires</label>
-          <input type="text" class="form-control" id="umpires" name="umpire1" placeholder="Enter First Umpires Names" >
+          <input type="text" class="form-control" id="umpires" name="umpire1" placeholder="Enter First Umpires Names">
         </div>
-         <div class="mb-3">
+        <div class="mb-3">
           <label for="umpires" class="form-label">Umpires</label>
-          <input type="text" class="form-control" id="umpires" name="umpire2" placeholder="Enter Second Umpires Names" >
+          <input type="text" class="form-control" id="umpires" name="umpire2" placeholder="Enter Second Umpires Names">
         </div>
 
         <!-- Submit Button -->

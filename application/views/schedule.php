@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,19 +52,24 @@
         }
 
         .match-details {
-            font-size: 13px;
+            font-size: 12px;
             color: #555;
             text-align: center;
+            padding: 5px 0;
+        }
+
+        .match-details p {
+            margin: 2px 0;
         }
 
         .badge-info {
-            font-size: 11px;
+            font-size: 10px;
             padding: 3px 6px;
             border-radius: 4px;
         }
 
         .scorecard-btn {
-            display: block;
+            display: inline-block;
             text-align: center;
             background-color: #007bff;
             color: white;
@@ -77,11 +79,21 @@
             border-radius: 5px;
             font-size: 14px;
             transition: 0.3s ease-in-out;
+            margin: 5px 0;
         }
 
         .scorecard-btn:hover {
             background-color: #0056b3;
             color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-group .scorecard-btn {
+            width: 48%; /* Ensures buttons take equal width */
         }
 
         @media (max-width: 576px) {
@@ -95,11 +107,28 @@
             }
 
             .match-details {
-                font-size: 12px;
+                font-size: 11px;
             }
 
             .scorecard-btn {
                 font-size: 12px;
+                padding: 4px 8px; /* Reduced padding for mobile */
+                width: 45%; /* Reduce width to make the buttons smaller */
+                margin-bottom: 8px; /* Add space between buttons */
+            }
+
+            .btn-group {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .btn-group .scorecard-btn {
+                width: 45%; /* Smaller button width on mobile */
+                margin-right: 5%; /* Added margin between buttons */
+            }
+
+            .btn-group .scorecard-btn:last-child {
+                margin-right: 0; /* No margin for the last button */
             }
         }
     </style>
@@ -134,12 +163,18 @@
                            <span class="badge bg-primary text-white badge-info"><?php echo $schedule_info->series;?></span></p>
                         <p><strong>Overs:</strong> <?php echo $schedule_info->overs;?> <strong>| Umpires:</strong> <?php echo $schedule_info->umpire1; ?>, <?php echo $schedule_info->umpire2; ?></p>
                     </div>
-                    <a href="<?php echo base_url();?>Welcome/toss/<?php echo $schedule_info->team_one_id;?>/<?php echo $schedule_info->team_two_id;?>/<?php echo $schedule_info->match_id;?>" class="scorecard-btn mt-2">View/Enter Scorecard</a>
+                    
+                    <!-- Buttons Group for Add and View -->
+                    <div class="btn-group mt-2">
+                        <a href="<?php echo base_url();?>Welcome/toss/<?php echo $schedule_info->team_one_id;?>/<?php echo $schedule_info->team_two_id;?>/<?php echo $schedule_info->match_id;?>" class="scorecard-btn">Add Scorecard</a>
+                       <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $schedule_info->match_id;?>/<?php echo $schedule_info->team_one_id;?>/<?php echo $schedule_info->team_two_id;?>" class="scorecard-btn">View Scorecard</a>
+
+
+                       
+                    </div>
                 </div>
             </div>
           <?php } ?>
-            <!-- Match Card 2 -->
-           
         </div>
     </div>
 

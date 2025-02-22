@@ -13,7 +13,8 @@ class TeamController extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
         $this->load->library('upload');
-        
+        $this->load->library('session');
+
         $this->load->database();
             if($this->session->userdata('logged')!=true)
     {
@@ -160,6 +161,85 @@ class TeamController extends CI_Controller {
 
     }
 
+    public function invite_team($team_id)
+    {
+        $data['team_id']=$team_id;
+        $this->load->view('header');
+        $this->load->view('invite_team',$data);
+    }
+
+    public function find_team()
+    {
+        $search_query = $this->input->post('email', TRUE);
+
+        $team_id = $this->input->post('team_id', TRUE);
+     //   echo $player_id;
+        // If a search query is provided, search teams, otherwise show all teams
+        $data['team_id']=$team_id;
+        $data['teams'] = $this->Team_model->invite_team($search_query);
+
+        // Load the view and pass the teams data
+        $this->load->view('invite_team', $data);
+    }
+
+  public function insert_match($team_two_id,$team_id) {
+    // Retrieve the values from the POST data
+  
+
    
+    $result = $this->Team_model->join_match( $team_two_id,$team_id);
+      $team_data['team_stats']=$this->Team_model->get_team_stats($team_id);
+              $team_data['data']=$this->Team_model->get_team(array('team_id'=>$team_id),'add_team');
+                $this->load->view('header');
+                $this->load->view('team_profile',$team_data);
+    
+        
+}
+
+public function match_request($team_id)
+    {
+        $team_data['team_id']=$team_id;
+        $team_data['team_names'] = $this->Team_model->get_match_teams($team_id);
+      $this->load->view('header');
+    $this->load->view('match_request',$team_data);
+
+}
+
+public function team_request($team_id)
+    {
+           $team_data['main_team']=$team_id;
+        $team_data['team_names'] = $this->Team_model->team_request($team_id);
+      $this->load->view('header');
+    $this->load->view('team_request',$team_data);
+
+}
+
+public function accept_match_request($team_one_id,$team_two_id)
+{
+ $team_data['team_id']=$team_one_id;
+ $this->Team_model->accept_match_request($team_one_id,$team_two_id);
+
+        $team_data['team_names'] = $this->Team_model->get_match_teams($team_one_id);
+      $this->load->view('header');
+    $this->load->view('team_request',$team_data);
+
+}
+public function reject_match_request($main_id,$team_one_id)
+{
+ $team_data['team_id']=$main_id;
+ $this->Team_model->reject_match_request(array('team_one_id'=>$main_id,'team_two_id'=>$team_one_id,'status'=> 0));
+
+        $team_data['team_names'] = $this->Team_model->get_match_teams($main_id);
+
+      $this->load->view('header');
+    $this->load->view('team_request',$team_data);
+
+}
+
+public function team_schedule($team_id)
+{
+     $this->load->view('header');
+    $this->load->view('team_schedule');
+}
 }
     

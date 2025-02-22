@@ -300,12 +300,34 @@
         .badge {
             font-size: 0.9rem;
         }
+        /* Flash message container */
+.flashdata-message {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/* Success message styles */
+.flashdata-message.success {
+    background-color: #28a745;  /* Green background */
+    color: white;               /* White text */
+}
+
+/* Error message styles */
+.flashdata-message.error {
+    background-color: #dc3545;  /* Red background */
+    color: white;               /* White text */
+}
+
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header Section -->
         <div class="header-container">
+
             <?php foreach ($data as $team_info) { ?>
             <div class="d-flex align-items-center">
                 <img src="<?php echo $team_info->image_path;?>" alt="Cricket Club Logo" class="club-logo">
@@ -328,13 +350,18 @@
                 </div>
             </div>
         </div>
-
+         <?php if ($this->session->flashdata('message')): ?>
+    <div class="flashdata-message <?php echo $this->session->flashdata('message_type'); ?>">
+        <?php echo $this->session->flashdata('message'); ?>
+    </div>
+        <?php endif; ?>
         <!-- Horizontal Link Bar -->
         <div class="link-bar">
             <a href="#" class="join-tournament">Join Tournament</a>
-            <a href="<?php echo base_url();?>Welcome/enter_schedule/<?php echo $team_id;?>" class="invite-team" title="Invite Team">Invite Team</a>
-            <a href="<?php echo base_url();?>Welcome/enter_schedule/<?php echo $team_id;?>" class="match-request" title="Match Request">Match Request</a>
-            <a href="<?php echo base_url();?>ScheduleController/schedule/<?php echo $team_id;?>">View Schedule</a>
+            <a href="<?php echo base_url();?>TeamController/invite_team/<?php echo $team_id;?>" class="invite-team" title="Invite Team">Invite Team</a>
+              <a href="<?php echo base_url();?>TeamController/match_request/<?php echo $team_id;?>" class="match-request" title="Team Request">Play Match</a>
+               <a href="<?php echo base_url();?>TeamController/team_request/<?php echo $team_id;?>" class="match-request" title="Match Request">Team Request</a>
+            <a href="<?php echo base_url();?>TeamController/team_schedule/<?php echo $team_id;?>">View Schedule</a>
             <a href="<?php echo base_url();?>TeamController/player_request/<?php echo $team_id;?>" class="player-request" title="Player Request">Player Request <span>(2)</span></a>
             <a href="<?php echo base_url();?>TeamController/team_squad/<?php echo $team_id;?>">Squad</a>
         </div>
