@@ -135,14 +135,14 @@ class Welcome extends CI_Controller {
 		{
 			$user_id=$this->session->userdata('user_id');
                 
-                 $team_data['team']=$this->Team_model->get_team(array('user_id'=>$user_id),'add_team');
+                 $team_data['team']=$this->Team_model->team_information(array('user_id'=>$user_id),'add_team');
                  if($team_data['team']==0)
               {
                 $team_data['team']=0;
               }
                else
               {
-                 $team_data['team']=$this->Team_model->get_team(array('user_id'=>$user_id),'add_team');
+                 $team_data['team']=$this->Team_model->team_information(array('user_id'=>$user_id),'add_team');
             }
 
               $team_data['user']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
@@ -155,7 +155,7 @@ class Welcome extends CI_Controller {
               {
                 $team_data['user']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
            	 }
-
+           	 
            	$this->load->view('header');
 			$this->load->view('landing_page',$team_data);
 		}
@@ -182,6 +182,7 @@ class Welcome extends CI_Controller {
 
 	public function enter_schedule($team_one_id, $team_two_id)
 	{	
+		// var_dump($team_one_id, $team_two_id);
 		if($this->session->userdata('logged'))
 		{
 			

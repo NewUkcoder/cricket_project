@@ -116,85 +116,36 @@
 <body>
 
    <h2> Team Name Schedule</h2>
+
     <div class="container">
-        <!-- Card 1 -->
+ <?php if($team_schedule==0) { echo "No Match is added yet "; } 
+     else 
+        { foreach ($team_schedule as $value) {
+                      // code...
+                  ?>
         <div class="card">
-            <div class="card-header">
-                Match - Team 1 vs Team 2
-            </div>
+           
             <div class="card-body">
                 <div class="match-info">
                     <div class="team-logo-container">
-                        <img src="team1-logo.png" alt="Team 1 Logo" class="team-logo">
-                        <p class="team-name">Team 1</p>
-                    </div>
-                    <span>2025-02-20</span>
-                    <div class="team-logo-container">
-                        <img src="team2-logo.png" alt="Team 2 Logo" class="team-logo">
-                        <p class="team-name">Team 2</p>
-                    </div>
-                </div>
-                <p><strong>Time:</strong> 18:00</p>
-                <p><strong>Venue:</strong> Stadium ABC</p>
-            </div>
-            <div class="card-footer actions">
-                <a href="add-scorecard.html">Add Scorecard</a>
-                <a href="view-scorecard.html">View Scorecard</a>
-            </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="card">
-            <div class="card-header">
-                Match - Team 3 vs Team 4
-            </div>
-            <div class="card-body">
-                <div class="match-info">
-                    <div class="team-logo-container">
-                        <img src="team3-logo.png" alt="Team 3 Logo" class="team-logo">
-                        <p class="team-name">Team 3</p>
-                    </div>
-                    <span>2025-02-21</span>
-                    <div class="team-logo-container">
-                        <img src="team4-logo.png" alt="Team 4 Logo" class="team-logo">
-                        <p class="team-name">Team 4</p>
-                    </div>
-                </div>
-                <p><strong>Time:</strong> 15:00</p>
-                <p><strong>Venue:</strong> Stadium XYZ</p>
-            </div>
-            <div class="card-footer actions">
-                <a href="add-scorecard.html">Add Scorecard</a>
-                <a href="view-scorecard.html">View Scorecard</a>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="card">
-            <div class="card-header">
-                Match - Team 5 vs Team 6
-            </div>
-            <div class="card-body">
-                <div class="match-info">
-                    <div class="team-logo-container">
-                        <img src="team5-logo.png" alt="Team 5 Logo" class="team-logo">
-                        <p class="team-name">Team 5</p>
+                        <img src="<?php echo $value->team_one_image;?>" alt="Team 5 Logo" class="team-logo">
+                        <p class="team-name"><?php echo $value->team_one_name;?></p>
                     </div>
                     <span>2025-02-22</span>
                     <div class="team-logo-container">
-                        <img src="team6-logo.png" alt="Team 6 Logo" class="team-logo">
-                        <p class="team-name">Team 6</p>
+                        <img src="<?php echo $value->team_two_image;?>" alt="Team 6 Logo" class="team-logo">
+                        <p class="team-name"> <?php echo $value->team_two_name;?></p>
                     </div>
                 </div>
-                <p><strong>Time:</strong> 20:00</p>
-                <p><strong>Venue:</strong> Stadium PQR</p>
+                <p><strong>Time:</strong>  <?php echo $value->match_time;?></p>
+                <p><strong>Venue:</strong>  <?php echo $value->location;?></p>
             </div>
             <div class="card-footer actions">
                 <a href="add-scorecard.html">Add Scorecard</a>
                 <a href="view-scorecard.html">View Scorecard</a>
             </div>
         </div>
-        <!-- Add more match cards here -->
+      <?php } } ?>
     </div>
 
 </body>

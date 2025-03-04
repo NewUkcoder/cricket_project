@@ -9,6 +9,7 @@ class ScheduleController extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Schedule_model');
+        $this->load->model('Team_model');
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
         $this->load->library('upload');
@@ -50,8 +51,10 @@ class ScheduleController extends CI_Controller {
         
         $this->Schedule_model->save_schedule($record);
         $this->session->set_flashdata('success', 'Match is added into Sechedule List.<p> Add another Match</p>');
+           $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team1);
         $this->load->view('header');
-        redirect('Welcome/enter_schedule');
+       
+          $this->load->view('team_schedule', $team_data);
                 }
 
     }    

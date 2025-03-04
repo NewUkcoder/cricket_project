@@ -165,8 +165,8 @@
             <span><?php echo $team_two['team_name']; ?></span>
           </div>
         </div>
-
-
+<input type="hidden" name="team1" value="<?php echo $team_one['team_id']; ?>">
+<input type="hidden" name="team2" value="<?php echo $team_two['team_id']; ?>">
         <!-- Match Date -->
         <div class="mb-3">
           <label for="match-date" class="form-label">Match Date</label>

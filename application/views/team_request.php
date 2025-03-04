@@ -140,7 +140,7 @@
       <div class="request-card">
         <img src="<?php echo $value->image_path; ?>" alt="Team Image" class="team-image">
         <div class="request-details">
-          <h5 class="card-title"><?php echo $value->team_name; ?></h5>
+          <h5 class="card-title"><a href="<?php echo base_url();?>TeamController/team_profile/<?php echo $value->team_id;?>"><?php echo $value->team_name; ?></a></h5>
           <p class="card-text"><?php echo $value->city; ?></p>
         </div>
         <div class="buttons">

@@ -10,11 +10,27 @@ class Team_model extends CI_Model {
 
     }
 
-     public function get_team($data) 
+     public function get_team($team_id) 
      {
         
+       
+         $this->db->select('users.user_id, users.email, add_team.*');
+        $this->db->from('users');
+        $this->db->join('add_team', 'add_team.team_id = users.user_id');
+        $this->db->where('add_team.team_id', $team_id);
+        $query = $this->db->get();
+
+        // Return the result as an associative array (single row)
+        return $query->row_array();
+             
+
+    }
+
+    public function team_information($data)
+    {
         $this->db->where($data);
         $query=$this->db->get('add_team');
+
                 if($query->num_rows()>0)
         {
             return $query->result();
@@ -318,7 +334,7 @@ public function team_request($team_id)
     $this->db->where('match_team.team_one_id', $team_id); // Match team_one_id
     $this->db->where('match_team.status', 0); // Status is 0
     $query_one = $this->db->get();
-
+   // var_dump($query_one->result());
     // Fetch data where team_two_id matches $team_id
     $this->db->select('add_team.team_name, add_team.image_path, add_team.team_id, add_team.city');
     $this->db->from('match_team');
@@ -348,10 +364,10 @@ public function team_request($team_id)
      $data = array(
         'status' => 1  // Set new status value, e.g. 1
     );
-
+   //  var_dump($team_one_id,$team_two_id);
     // Update the record in the database
-    $this->db->where('team_two_id', $team_two_id)
-             ->where('team_one_id', $team_one_id)
+    $this->db->where('team_two_id', $team_one_id)
+             ->where('team_one_id', $team_two_id)
              ->where('status', 0)  // Only update where status is 0
              ->update('match_team', $data);
 
@@ -366,7 +382,7 @@ public function team_request($team_id)
    }
    public function reject_match_request($data)
 {
-    var_dump($data);
+   // var_dump($data);
     // Check the data to make sure it's correct
     if (empty($data)) {
         return false; // No data provided
@@ -388,7 +404,87 @@ public function team_request($team_id)
     }
 }
 
+public function get_team_schedule($team_id)
+{
+    $this->db->select('s.*, t1.image_path as team_one_image, t1.team_name as team_one_name, t2.image_path as team_two_image, t2.team_name as team_two_name');
+$this->db->from('add_schedule s');
+$this->db->join('add_team t1', 't1.team_id = s.team_one_id', 'left'); // Join to get team one details
+$this->db->join('add_team t2', 't2.team_id = s.team_two_id', 'left'); // Join to get team two details
+$this->db->where('s.team_one_id', $team_id);
+$this->db->or_where('s.team_two_id', $team_id);
+$query = $this->db->get();
+
+if ($query->num_rows() > 0) {
+    // Records found, return the result
+    return $query->result(); 
+} else {
+    // No records found, show a message
+    return 0;
 }
+
+}
+public function team_captain($team_id)
+{
+        $this->db->select('tc.team_id, tc.ball_type, ap.playerName, ap.image_path');
+        $this->db->from('team_captain tc');
+        $this->db->join('add_player ap', 'tc.player_id = ap.player_id', 'left');
+        $this->db->where('tc.team_id', $team_id); // Filter by team_id
+        $query = $this->db->get();
+
+        // Initialize a user-defined array
+        $team_details = array(
+            'team_id' => $team_id,
+            'leather_ball' => array(
+                'playerName' => '',
+                'image_path' => '',
+                'status' => 0 // Default status is 0 (Not Found)
+            ),
+            'tape_ball' => array(
+                'playerName' => '',
+                'image_path' => '',
+                'status' => 0 // Default status is 0 (Not Found)
+            ),
+            'tennis_ball' => array(
+                'playerName' => '',
+                'image_path' => '',
+                'status' => 0 // Default status is 0 (Not Found)
+            )
+        );
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                // Populate the user-defined array based on ball_type
+                switch ($row['ball_type']) {
+                    case 'leather_ball':
+                        $team_details['leather_ball']['playerName'] = $row['playerName'];
+                        $team_details['leather_ball']['image_path'] = $row['image_path'];
+                        $team_details['leather_ball']['status'] = 1; // Status is 1 (Found)
+                        break;
+                    case 'tape_ball':
+                        $team_details['tape_ball']['playerName'] = $row['playerName'];
+                        $team_details['tape_ball']['image_path'] = $row['image_path'];
+                        $team_details['tape_ball']['status'] = 1; // Status is 1 (Found)
+                        break;
+                    case 'tennis_ball':
+                        $team_details['tennis_ball']['playerName'] = $row['playerName'];
+                        $team_details['tennis_ball']['image_path'] = $row['image_path'];
+                        $team_details['tennis_ball']['status'] = 1; // Status is 1 (Found)
+                        break;
+                }
+            }
+        }
+
+        // Return the user-defined array
+        return $team_details;
+    }
+
+    public function insert_captain($data)
+    {
+        $this->db->insert('team_captain', $data);
+    }
+    }
+
+
 
 
 

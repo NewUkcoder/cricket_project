@@ -53,15 +53,18 @@ class TeamController extends CI_Controller {
             $image_data = base_url('uploads/' . $file_data['file_name']);
 
             $user_id=$this->session->userdata('user_id');
-            var_dump($user_id);
+          $current_date = date('Y-m-d');
             $record=array('team_name'=>ucwords($this->input->post('team_name')),
                 'city'=>ucwords($this->input->post('city')),
                 'country'=>ucwords($this->input->post('country')),
+                'home_ground'=>ucwords($this->input->post('home_ground')),
+                'phone_number'=>ucwords($this->input->post('phone_number')),
                 'coach'=>ucwords($this->input->post('coach')),
                 'chairman'=>ucwords($this->input->post('chairman')),
                 'description'=>ucwords($this->input->post('description')),
                 'image_path'=>$image_data,
-                'user_id'=>$user_id
+                'user_id'=>$user_id,
+                'created_at' => date('Y-m-d', $current_date)
                 
                 
                 );
@@ -81,11 +84,64 @@ class TeamController extends CI_Controller {
     {       
   
                 $team_data['team_stats']=$this->Team_model->get_team_stats($team_id);
-              $team_data['data']=$this->Team_model->get_team(array('team_id'=>$team_id),'add_team');
+              $team_data['data']=$this->Team_model->get_team($team_id);
+              $team_data['captain']=$this->Team_model->team_captain($team_id);
+
+            //var_dump($team_data);
                 $this->load->view('header');
                 $this->load->view('team_profile',$team_data);
                 
     }
+
+    public function add_captain_leather($team_id)
+    {   $team_data['team_id']=$team_id;
+        $team_data['players']=$this->Team_model->get_squad($team_id);
+        //var_dump($team_data);
+         $this->load->view('header');
+                $this->load->view('add_captain_leather', $team_data);
+    }
+    public function add_captain_tape($team_id)
+    {   $team_data['team_id']=$team_id;
+        $team_data['players']=$this->Team_model->get_squad($team_id);
+        //var_dump($team_data);
+         $this->load->view('header');
+                $this->load->view('add_captain_tape', $team_data);
+    }
+
+    public function add_captain_tennis($team_id)
+    {   $team_data['team_id']=$team_id;
+        $team_data['players']=$this->Team_model->get_squad($team_id);
+        //var_dump($team_data);
+         $this->load->view('header');
+                $this->load->view('add_captain_tennis', $team_data);
+    }
+
+      public function insert_captain()
+    {   
+        $team_id=$this->input->post('team_id');
+        $player_id=$this->input->post('player_id');
+        $ball_type=$this->input->post('ball_type');
+        $user_id=$this->session->userdata('user_id');
+      
+          $record=array(
+                'ball_type'=>$ball_type,
+                'player_id'=>$player_id,
+                'team_id'=>$team_id,
+                'user_id'=>$user_id,
+                'created_on' => date('Y-m-d')
+                );
+        
+      $team_data['players']=$this->Team_model->insert_captain($record);
+        //var_dump($team_data);
+       $team_data['team_stats']=$this->Team_model->get_team_stats($team_id);
+              $team_data['data']=$this->Team_model->get_team($team_id);
+              $team_data['captain']=$this->Team_model->team_captain($team_id);
+
+            //var_dump($team_data);
+                $this->load->view('header');
+                $this->load->view('team_profile',$team_data);
+    }
+
 
     public function show_team()
     {
@@ -189,7 +245,8 @@ class TeamController extends CI_Controller {
    
     $result = $this->Team_model->join_match( $team_two_id,$team_id);
       $team_data['team_stats']=$this->Team_model->get_team_stats($team_id);
-              $team_data['data']=$this->Team_model->get_team(array('team_id'=>$team_id),'add_team');
+              $team_data['data']=$this->Team_model->get_team($team_id);
+             // var_dump($team_data);
                 $this->load->view('header');
                 $this->load->view('team_profile',$team_data);
     
@@ -201,6 +258,7 @@ public function match_request($team_id)
         $team_data['team_id']=$team_id;
         $team_data['team_names'] = $this->Team_model->get_match_teams($team_id);
       $this->load->view('header');
+     // var_dump($team_data);
     $this->load->view('match_request',$team_data);
 
 }
@@ -216,10 +274,10 @@ public function team_request($team_id)
 
 public function accept_match_request($team_one_id,$team_two_id)
 {
- $team_data['team_id']=$team_one_id;
+ $team_data['main_team']=$team_one_id;
  $this->Team_model->accept_match_request($team_one_id,$team_two_id);
 
-        $team_data['team_names'] = $this->Team_model->get_match_teams($team_one_id);
+        $team_data['team_names'] = $this->Team_model->team_request($team_one_id);
       $this->load->view('header');
     $this->load->view('team_request',$team_data);
 
@@ -238,8 +296,9 @@ public function reject_match_request($main_id,$team_one_id)
 
 public function team_schedule($team_id)
 {
+      $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team_id);
      $this->load->view('header');
-    $this->load->view('team_schedule');
+    $this->load->view('team_schedule' ,$team_data);
 }
 }
     

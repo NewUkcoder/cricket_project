@@ -113,8 +113,16 @@
 
             <!-- Team Management -->
             <div class="form-group mb-3">
-                <label for="country">country</label>
+                <label for="country">Country</label>
                 <input type="text" id="country" name="country" class="form-control" placeholder="Enter country" required>
+            </div>
+             <div class="form-group mb-3">
+                <label for="country">Home Ground</label>
+                <input type="text" id="home_ground" name="home_ground" class="form-control" placeholder="Enter home ground" required>
+            </div>
+             <div class="form-group mb-3">
+                <label for="country">Phone Number(Team admin phone number. It will be public.if you do not want to share opnely, leave it blank)</label>
+                <input type="text" id="phone_number" name="phone_number" class="form-control" placeholder="Enter team's admin phone number" >
             </div>
 
             <!-- Coach -->

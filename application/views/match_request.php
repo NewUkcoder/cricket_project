@@ -106,7 +106,7 @@
         <div class="team-card">
          
           <img src="<?php echo $team->team_one_image;?>" alt="Team 1" class="team-logo">
-          <div class="team-name"><?php echo $team->team_one_name;?></div>
+          <div class="team-name"><a href="<?php echo base_url();?>TeamController/team_profile/<?php echo $team->team_one_id;?>"><?php echo $team->team_one_name;?></a></div>
           <a href="<?php echo base_url();?>Welcome/enter_schedule/<?php echo $team->team_two_id;?>/<?php echo $team->team_one_id;?>" class="btn btn-play">Play Match</a>
        
         </div>

@@ -300,41 +300,113 @@
         .badge {
             font-size: 0.9rem;
         }
+
         /* Flash message container */
-.flashdata-message {
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 5px;
-}
+        .flashdata-message {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
 
-/* Success message styles */
-.flashdata-message.success {
-    background-color: #28a745;  /* Green background */
-    color: white;               /* White text */
-}
+        /* Success message styles */
+        .flashdata-message.success {
+            background-color: #28a745;  /* Green background */
+            color: white;               /* White text */
+        }
 
-/* Error message styles */
-.flashdata-message.error {
-    background-color: #dc3545;  /* Red background */
-    color: white;               /* White text */
-}
+        /* Error message styles */
+        .flashdata-message.error {
+            background-color: #dc3545;  /* Red background */
+            color: white;               /* White text */
+        }
 
+        /* Current Captain Section */
+        .current-captain-section {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .current-captain-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .captain-cards {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .captain-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            flex: 1;
+            min-width: 120px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .captain-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .captain-card h4 {
+            font-size: 1.1rem;
+            color: #007bff;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .captain-image {
+            max-width: 80px;
+            border-radius: 50%;
+            border: 3px solid #007bff;
+            transition: transform 0.3s ease;
+        }
+
+        .captain-image:hover {
+            transform: scale(1.1);
+        }
+
+        .edit-info-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-info-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header Section -->
         <div class="header-container">
-
-            <?php foreach ($data as $team_info) { ?>
             <div class="d-flex align-items-center">
-                <img src="<?php echo $team_info->image_path;?>" alt="Cricket Club Logo" class="club-logo">
-                <div class="club-title"><?php echo $team_info->team_name;?></div>
+                <img src="<?php echo $data['image_path'];?>" alt="Cricket Club Logo" class="club-logo">
+                <div class="club-title"><?php echo $data['team_name'];?></div>
             </div>
 
-            <?php $team_id=$team_info->team_id; } ?>
+            <?php $team_id=$data['team_id'];  ?>
             <div class="stats-container">
                 <div class="stats-item">
                     <div class="stats-title">Matches</div>
@@ -350,17 +422,19 @@
                 </div>
             </div>
         </div>
-         <?php if ($this->session->flashdata('message')): ?>
-    <div class="flashdata-message <?php echo $this->session->flashdata('message_type'); ?>">
-        <?php echo $this->session->flashdata('message'); ?>
-    </div>
+
+        <?php if ($this->session->flashdata('message')): ?>
+            <div class="flashdata-message <?php echo $this->session->flashdata('message_type'); ?>">
+                <?php echo $this->session->flashdata('message'); ?>
+            </div>
         <?php endif; ?>
+
         <!-- Horizontal Link Bar -->
         <div class="link-bar">
             <a href="#" class="join-tournament">Join Tournament</a>
             <a href="<?php echo base_url();?>TeamController/invite_team/<?php echo $team_id;?>" class="invite-team" title="Invite Team">Invite Team</a>
-              <a href="<?php echo base_url();?>TeamController/match_request/<?php echo $team_id;?>" class="match-request" title="Team Request">Play Match</a>
-               <a href="<?php echo base_url();?>TeamController/team_request/<?php echo $team_id;?>" class="match-request" title="Match Request">Team Request</a>
+            <a href="<?php echo base_url();?>TeamController/match_request/<?php echo $team_id;?>" class="match-request" title="Team Request">Play Match</a>
+            <a href="<?php echo base_url();?>TeamController/team_request/<?php echo $team_id;?>" class="match-request" title="Match Request">Team Request</a>
             <a href="<?php echo base_url();?>TeamController/team_schedule/<?php echo $team_id;?>">View Schedule</a>
             <a href="<?php echo base_url();?>TeamController/player_request/<?php echo $team_id;?>" class="player-request" title="Player Request">Player Request <span>(2)</span></a>
             <a href="<?php echo base_url();?>TeamController/team_squad/<?php echo $team_id;?>">Squad</a>
@@ -369,19 +443,74 @@
         <!-- Team Information Section -->
         <section class="team-info-section">
             <h2>Team Information</h2>
+            <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                <button class="edit-info-btn">Edit Information</button>
+            <?php endif; ?>
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>City:</strong> New York</p>
-                    <p><strong>Country:</strong> USA</p>
-                    <p><strong>Joinning Date:</strong> January 1, 2010</p>
-                    <p><strong>Home Ground:</strong> Central Cricket Stadium</p>
-                    <p><strong>Admin Email:</strong> <span class="team-admin-email">admin@example.com</span></p>
-                    <p><strong>Admin Phone:</strong> <span class="team-admin-phone">+1 234 567 890</span></p>
+                    <p><strong>City:</strong> <?php echo $data['city'];?></p>
+                    <p><strong>Country:</strong> <?php echo $data['country'];?></p>
+                    <p><strong>Joinning Date:</strong> <?php echo $data['created_at'];?></p>
+                    <p><strong>Home Ground:</strong> <?php echo $data['home_ground'];?></p>
+                    <p><strong>Admin Email:</strong> <span class="team-admin-email"><?php echo $data['email'];?></span></p>
+                    <p><strong>Admin Phone:</strong> <span class="team-admin-phone"><?php echo $data['phone_number'];?></span></p>
                 </div>
                 <div class="col-md-6">
                     <p><strong>Total Members:</strong> 25</p>
                     <p><strong>Current Captain:</strong> John Doe</p>
                     <p><strong>Vice-Captain:</strong> Jane Smith</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Captain Section -->
+        <section class="current-captain-section">
+            <h2>Current Captain</h2>
+            <div class="captain-cards">
+                <div class="captain-card">
+                    <h4>Leather Ball</h4>
+                    <?php if ($captain['leather_ball']['status'] === 0)
+                    { ?> <?php 
+                        if($this->session->userdata('user_id')==$data['user_id']){ ?>
+                        <a href="<?php echo base_url();?>TeamController/add_captain_leather/<?php echo $team_id;?>"><button class="add-info-btn">Add</button></a>
+                    <?php } else { echo "Not added yet";}   
+                     } else { ?>
+                    <img src="<?php echo $captain['leather_ball']['image_path'];?>" alt="Leather Ball Captain" class="captain-image">
+                    <p><?php echo $captain['leather_ball']['playerName'];?></p>
+                    
+                    <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                        <button class="edit-info-btn">Edit</button>
+                    <?php endif; }?>
+                </div>
+                <div class="captain-card">
+                    <h4>Tape Ball</h4>
+                    <?php if ($captain['tape_ball']['status'] === 0)
+                     { ?> <?php 
+                        if($this->session->userdata('user_id')==$data['user_id']){ ?>
+                        <a href="<?php echo base_url();?>TeamController/add_captain_tape/<?php echo $team_id;?>"><button class="add-info-btn">Add</button></a>
+                    <?php } else { echo "Not added yet";}   
+                     } else { ?>
+                    <img src="<?php echo $captain['tape_ball']['image_path'];?>" alt="Leather Ball Captain" class="captain-image">
+                    <p><?php echo $captain['tape_ball']['playerName'];?></p>
+                    
+                    <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                        <button class="edit-info-btn">Edit</button>
+                    <?php endif; }?>
+                </div>
+                <div class="captain-card">
+                    <h4>Tennis Ball</h4>
+                    <?php if ($captain['tennis_ball']['status'] === 0)
+                     { ?> <?php 
+                        if($this->session->userdata('user_id')==$data['user_id']){ ?>
+                        <a href="<?php echo base_url();?>TeamController/add_captain_tennis/<?php echo $team_id;?>"><button class="add-info-btn">Add</button></a>
+                    <?php } else { echo "Not added yet";}   
+                     } else { ?>
+                    <img src="<?php echo $captain['tennis_ball']['image_path'];?>" alt="Leather Ball Captain" class="captain-image">
+                    <p><?php echo $captain['tennis_ball']['playerName'];?></p>
+                    
+                    <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                        <button class="edit-info-btn">Edit</button>
+                    <?php endif; }?>
                 </div>
             </div>
         </section>
