@@ -78,8 +78,8 @@ class ScorecardController extends CI_Controller {
                 $win_team=$data['toss_winner'];
                 $batting_first=$data['bat_first'];
                 $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
             $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id));
               $data['player_info']=$this->Scorecard_model->player_info($match_id);
@@ -101,9 +101,9 @@ class ScorecardController extends CI_Controller {
                 $win_team=$data['toss_winner'];
                 $batting_first=$data['bat_first'];
                  $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
              $data['player_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
@@ -153,9 +153,9 @@ class ScorecardController extends CI_Controller {
                
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
@@ -178,9 +178,9 @@ class ScorecardController extends CI_Controller {
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -228,9 +228,9 @@ class ScorecardController extends CI_Controller {
                
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
@@ -253,9 +253,9 @@ class ScorecardController extends CI_Controller {
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -291,9 +291,9 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             //echo $bowl_first;
            // echo $match_id;
              $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -341,9 +341,9 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
 
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bowling_first']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowling_first,'match_id'=>$match_id),'bowling_first');
           //  var_dump($data['bowling_first']);
              $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -369,9 +369,9 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
 
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bowling_second']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowl_second,'match_id'=>$match_id),'bowling_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
             
@@ -405,9 +405,9 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             //echo $bowl_first;
            // echo $match_id;
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_second');
@@ -443,9 +443,9 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             //echo $bowl_first;
            // echo $match_id;
             $data['bowling_second']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowling_second,'match_id'=>$match_id),'bowling_first');
@@ -493,9 +493,9 @@ public function edit_score() {
                
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
@@ -518,9 +518,9 @@ public function edit_score() {
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -564,9 +564,9 @@ public function edit_score() {
                
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
@@ -590,9 +590,9 @@ public function edit_score() {
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -627,9 +627,9 @@ public function edit_score() {
                
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
@@ -653,9 +653,9 @@ public function edit_score() {
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -690,9 +690,9 @@ public function edit_score() {
 
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bowling_first']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowling_first,'match_id'=>$match_id),'bowling_first');
           //  var_dump($data['bowling_first']);
              $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -718,9 +718,9 @@ public function edit_score() {
 
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bowling_second']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowl_second,'match_id'=>$match_id),'bowling_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
             
@@ -768,9 +768,9 @@ public function edit_score() {
                
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
@@ -794,9 +794,9 @@ public function edit_score() {
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -833,9 +833,9 @@ public function edit_score() {
                
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
@@ -859,9 +859,9 @@ public function edit_score() {
               
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -906,9 +906,9 @@ $user_id=$this->session->userdata('user_id');
 
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bowling_first']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowling_first,'match_id'=>$match_id),'bowling_first');
           //  var_dump($data['bowling_first']);
              $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
@@ -934,9 +934,9 @@ $user_id=$this->session->userdata('user_id');
 
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-            $data['team_one']=$this->Team_model->get_team(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->get_team(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
+            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bowling_second']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowl_second,'match_id'=>$match_id),'bowling_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
             
