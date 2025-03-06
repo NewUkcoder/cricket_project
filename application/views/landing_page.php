@@ -249,20 +249,19 @@
       <!-- Player Section (Sidebar) -->
       <div class="player-section">
         <div class="profile-info">
-          <?php if ($user == 0) { ?>
+          <?php if ($data == 0) { ?>
             <p>You are not registered as a player yet.</p>
             <a href="<?php echo base_url(); ?>Welcome/enter_player">
               <button class="btn btn-primary">Register as a Player</button>
             </a>
-          <?php } else {
-            foreach ($user as $player) { ?>
-              <img src="<?php echo $player->image_path; ?>" alt="User Photo">
-              <h5><?php echo $player->playerName; ?></h5>
-              <p>Role: <?php echo $player->player_role; ?></p>
-              <p>City: <?php echo $player->city; ?></p>
+          <?php } else  { ?>
+              <img src="<?php echo $data['image_path']; ?>" alt="User Photo">
+              <h5><?php echo $data['playerName']; ?></h5>
+              <p>Role: <?php echo $data['player_role']; ?></p>
+              <p>City: <?php echo $data['city']; ?></p>
               <a href="<?php echo base_url(); ?>PlayerController/profile_player">View Profile</a>
             <?php }
-          } ?>
+        ?>
         </div>
       </div>
 

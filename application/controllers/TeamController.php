@@ -269,6 +269,7 @@ public function team_request($team_id)
         $team_data['team_names'] = $this->Team_model->team_request($team_id);
       $this->load->view('header');
     $this->load->view('team_request',$team_data);
+  //  var_dump($team_data);
 
 }
 
@@ -299,6 +300,7 @@ public function team_schedule($team_id)
       $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team_id);
      $this->load->view('header');
     $this->load->view('team_schedule' ,$team_data);
+   //var_dump($team_data);
 }
 }
     

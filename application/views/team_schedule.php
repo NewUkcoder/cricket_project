@@ -6,12 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Match Schedule</title>
     <style>
-     
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
 
         .container {
-            width: 90%;
-            margin: 20px auto;
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
@@ -51,7 +66,7 @@
 
         .match-info {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             gap: 15px;
             font-size: 16px;
@@ -107,6 +122,50 @@
 
             .card {
                 width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .match-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .team-logo {
+                width: 30px;
+                height: 30px;
+            }
+
+            .card-body p {
+                font-size: 14px;
+            }
+
+            .card-footer {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                max-width: 100%;
+                margin: 10px 0;
+            }
+
+            .card-header {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+
+            .match-info {
+                font-size: 14px;
+            }
+
+            .actions a {
+                padding: 5px 10px;
+                font-size: 12px;
             }
         }
 
@@ -115,37 +174,44 @@
 
 <body>
 
-   <h2> Team Name Schedule</h2>
+    <h2> Schedule</h2>
 
     <div class="container">
- <?php if($team_schedule==0) { echo "No Match is added yet "; } 
-     else 
-        { foreach ($team_schedule as $value) {
-                      // code...
-                  ?>
+        <?php if($team_schedule == 0) { 
+            echo "<p>No match is added yet</p>"; 
+        } else { 
+            foreach ($team_schedule as $value) { 
+        ?>
         <div class="card">
-           
+            <div class="card-header">
+                Match Details
+            </div>
             <div class="card-body">
                 <div class="match-info">
                     <div class="team-logo-container">
                         <img src="<?php echo $value->team_one_image;?>" alt="Team 5 Logo" class="team-logo">
-                        <p class="team-name"><?php echo $value->team_one_name;?></p>
+                        <p class="team-name"><?php echo strtoupper(substr($value->team_one_name, 0, 3));?></p> <!-- Team initials -->
                     </div>
-                    <span>2025-02-22</span>
+                    <span><?php echo $value->match_date;?></span>
                     <div class="team-logo-container">
                         <img src="<?php echo $value->team_two_image;?>" alt="Team 6 Logo" class="team-logo">
-                        <p class="team-name"> <?php echo $value->team_two_name;?></p>
+                        <p class="team-name"><?php echo strtoupper(substr($value->team_two_name, 0, 3));?></p> <!-- Team initials -->
                     </div>
                 </div>
-                <p><strong>Time:</strong>  <?php echo $value->match_time;?></p>
-                <p><strong>Venue:</strong>  <?php echo $value->location;?></p>
+                <div class="match-details">
+                    <p><strong>Time:</strong> <?php echo $value->match_time;?></p>
+                    <p><strong>Overs:</strong> <?php echo $value->overs;?></p>
+                    <p><strong>Venue:</strong> <?php echo $value->location;?></p>
+                </div>
             </div>
             <div class="card-footer actions">
-                <a href="add-scorecard.html">Add Scorecard</a>
-                <a href="view-scorecard.html">View Scorecard</a>
+                   <?php if($this->session->userdata('user_id')==$value->user_id): ?>
+                <a href="<?php echo base_url();?>Welcome/toss/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>/<?php echo $value->match_id;?>" class="scorecard-btn">Add Scorecard</a>
+                 <?php endif; ?>
+                <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $value->match_id;?>/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>" class="scorecard-btn">View Scorecard</a>
             </div>
         </div>
-      <?php } } ?>
+        <?php } } ?>
     </div>
 
 </body>

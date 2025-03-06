@@ -115,7 +115,7 @@
     </style>
 </head>
 <body>
-    <h1>Pakistan Squad 2025</h1>
+    <h1>Team Squad </h1>
 
     <?php 
     // Group players by their roles

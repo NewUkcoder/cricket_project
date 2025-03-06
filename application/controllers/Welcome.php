@@ -145,15 +145,15 @@ class Welcome extends CI_Controller {
                  $team_data['team']=$this->Team_model->team_information(array('user_id'=>$user_id),'add_team');
             }
 
-              $team_data['user']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
+              $team_data['data']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
              // var_dump($player_data);
-              if($team_data['user']==0)
+              if($team_data['data']==0)
               {
-                $team_data['user']=0;
+                $team_data['data']=0;
               }
               else
               {
-                $team_data['user']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
+                $team_data['data']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
            	 }
            	 
            	$this->load->view('header');

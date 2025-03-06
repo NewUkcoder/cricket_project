@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal Header with Logo and Email</title>
+    <title>imcric</title>
     <style>
         /* Basic Reset */
         * {

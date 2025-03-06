@@ -230,13 +230,15 @@
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
+              <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
                 <li class="nav-item">
-                    <a class="nav-link join-team" href="<?php echo base_url();?>PlayerController/join_team/<?php foreach($data as $player){ echo $player->player_id;}?>">Join Team</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo base_url();?>PlayerController/sent_team_request/<?php foreach($data as $player){ echo $player->player_id;}?>">Sent Request</a>
-                </li>
 
+<a class="nav-link join-team" href="<?php echo base_url();?>PlayerController/join_team/<?php  echo $data['player_id'];?>">Join Team</a>
+                </li>
+                <li class="nav-item">
+    <a class="nav-link" href="<?php echo base_url();?>PlayerController/sent_team_request/<?php echo $data['player_id'];?>">Sent Request</a>
+                </li>
+ <?php endif; ?>
                 <li class="nav-item">
                     <a class="nav-link" href="#contact">Contact</a>
                 </li>
@@ -249,24 +251,24 @@
     <div class="row">
         <div class="col-md-4">
             <div class="player-profile text-center">
-                <?php foreach($data as $player) { 
-                    $dob = new DateTime($player->date_of_birth);
+              <?php 
+                    $dob = new DateTime($data['date_of_birth']);
                     $today = new DateTime();
                     $age = $today->diff($dob)->y;
-                    $joining_date=$player->created_on;
+                    $joining_date=$data['created_on'];
                 ?>
-                <img src="<?php echo $player->image_path;?>" alt="Player Image" class="player-img">
-                <h1 class="player-name"><?php echo $player->playerName;?></h1>
-                <p class="player-details">Local Cricket Club | <?php echo $player->city;?></p>
+                <img src="<?php echo $data['image_path'];?>" alt="Player Image" class="player-img">
+                <h1 class="player-name"><?php echo $data['playerName'];?></h1>
+                <p class="player-details">Local Cricket Club | <?php echo $data['city'];?></p>
                 <p class="player-details">Born: <?php echo $dob->format('F j, Y');?></p>
                 <p class="player-details">Age: <?php echo $age;?></p>
-                <p class="player-details">Role: <?php echo $player->player_role;?></p>
-                <p class="player-details">Batting Style: <?php echo $player->batting_style;?></p>
-                <p class="player-details">Bowling Style: <?php echo $player->bowling_style;?></p>
+                <p class="player-details">Role: <?php echo $data['player_role'];?></p>
+                <p class="player-details">Batting Style: <?php echo $data['batting_style'];?></p>
+                <p class="player-details">Bowling Style: <?php echo $data['bowling_style'];?></p>
                 <div class="player-bio">
-                    <p><?php echo $player->additional_info; ?></p>
+                    <p><?php echo $data['additional_info']; ?></p>
                 </div>
-            <?php } ?>
+          
             </div>
         </div>
         <div class="col-md-8">

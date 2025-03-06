@@ -80,7 +80,7 @@ class ScorecardController extends CI_Controller {
                 $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
             $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
             $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->get_team(array('team_id'=>$win_team),'add_team');
+            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id));
               $data['player_info']=$this->Scorecard_model->player_info($match_id);
             $data['all_score']=$this->Scorecard_model->total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
@@ -105,6 +105,7 @@ class ScorecardController extends CI_Controller {
             $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
             $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
+             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
              $data['player_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
 

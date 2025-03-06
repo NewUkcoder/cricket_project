@@ -137,7 +137,7 @@ h1 {
 <body>
 
     <div class="container">
-         <h1><?php foreach($player_name as $name){echo $name->playerName; $player_id=$name->player_id;}?>(Sent Team Requests)</h1>
+             <h1><?php echo $player_name['playerName']; $player_id=$player_name['player_id'];?>(Sent Team Requests)</h1>
         <?php foreach($data as $request){ ?>
 
         <ul class="request-list">

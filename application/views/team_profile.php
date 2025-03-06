@@ -431,12 +431,28 @@
 
         <!-- Horizontal Link Bar -->
         <div class="link-bar">
+             <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
             <a href="#" class="join-tournament">Join Tournament</a>
+              <?php endif; ?>
+
+             <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
             <a href="<?php echo base_url();?>TeamController/invite_team/<?php echo $team_id;?>" class="invite-team" title="Invite Team">Invite Team</a>
+              <?php endif; ?>
+
+             <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
             <a href="<?php echo base_url();?>TeamController/match_request/<?php echo $team_id;?>" class="match-request" title="Team Request">Play Match</a>
-            <a href="<?php echo base_url();?>TeamController/team_request/<?php echo $team_id;?>" class="match-request" title="Match Request">Team Request</a>
-            <a href="<?php echo base_url();?>TeamController/team_schedule/<?php echo $team_id;?>">View Schedule</a>
+              <?php endif; ?>
+
+               <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
             <a href="<?php echo base_url();?>TeamController/player_request/<?php echo $team_id;?>" class="player-request" title="Player Request">Player Request <span>(2)</span></a>
+                  <?php endif; ?>
+
+             <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+            <a href="<?php echo base_url();?>TeamController/team_request/<?php echo $team_id;?>" class="match-request" title="Match Request">Team Request</a>
+              <?php endif; ?>
+            <a href="<?php echo base_url();?>TeamController/team_schedule/<?php echo $team_id;?>">View Schedule</a>
+
+          
             <a href="<?php echo base_url();?>TeamController/team_squad/<?php echo $team_id;?>">Squad</a>
         </div>
 
@@ -455,11 +471,11 @@
                     <p><strong>Admin Email:</strong> <span class="team-admin-email"><?php echo $data['email'];?></span></p>
                     <p><strong>Admin Phone:</strong> <span class="team-admin-phone"><?php echo $data['phone_number'];?></span></p>
                 </div>
-                <div class="col-md-6">
+               <!--  <div class="col-md-6">
                     <p><strong>Total Members:</strong> 25</p>
                     <p><strong>Current Captain:</strong> John Doe</p>
                     <p><strong>Vice-Captain:</strong> Jane Smith</p>
-                </div>
+                </div> -->
             </div>
         </section>
 

@@ -273,12 +273,7 @@
       </div>
     </div>
 
-    <div class="action-btn-container">
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scorecardModal">Insert Scorecard</button>
-      <a href="<?php echo base_url();?>ScorecardController/show_bowling_first/<?php echo $match_id;?>/<?php echo $bowl_first;?>/<?php echo $batting_first;?>/<?php echo $player_id=3;?>">
-        <button class="btn btn-success next-btn">Add Bowling</button>
-      </a>
-    </div>
+   
 
     <h4 class="text-left mt-1">First Inning (Batting)</h4>
     <!-- Scorecard Table -->
@@ -365,8 +360,15 @@
           </tr>
         </tbody>
       </table>
+       <div class="action-btn-container">
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scorecardModal">Insert Scorecard</button>
+      <a href="<?php echo base_url();?>ScorecardController/show_bowling_first/<?php echo $match_id;?>/<?php echo $bowl_first;?>/<?php echo $batting_first;?>/<?php echo $player_id=3;?>">
+        <button class="btn btn-success next-btn">Add Bowling</button>
+      </a>
+    </div>
     </div>
   </div>
+
 
   <!-- Modal for Scorecard Form -->
   <div class="modal fade" id="scorecardModal" tabindex="-1" aria-labelledby="scorecardModalLabel" aria-hidden="true">
@@ -708,5 +710,48 @@
 
 
   </script>
+  <script>
+  function validateScorecard() {
+    // Get input values
+    const runs = parseInt(document.getElementById('runs').value);
+    const balls = parseInt(document.getElementById('balls').value);
+    const fours = parseInt(document.getElementById('fours').value);
+    const sixes = parseInt(document.getElementById('sixes').value);
+
+    // Validate 4s and 6s
+    const maxFours = Math.floor(runs / 4); // Maximum possible 4s
+    const maxSixes = Math.floor(runs / 6); // Maximum possible 6s
+      const runsFromBoundaries = (fours * 4) + (sixes * 6); // Total runs from 4s and 6s
+    if (runsFromBoundaries > runs) {
+      alert(`The combination of 4s and 6s exceeds the total runs. 
+             Runs from boundaries: ${runsFromBoundaries}, Total runs: ${runs}.`);
+      return false;
+    }
+
+    if (fours > maxFours) {
+      alert(`Number of 4s cannot exceed ${maxFours} for ${runs} runs.`);
+      return false;
+    }
+
+    if (sixes > maxSixes) {
+      alert(`Number of 6s cannot exceed ${maxSixes} for ${runs} runs.`);
+      return false;
+    }
+
+    // Validate Strike Rate
+    if (balls > 0) {
+      const strikeRate = (runs / balls) * 100;
+      if (strikeRate > 600) {
+        alert(`Strike rate cannot exceed 600. Current strike rate is ${strikeRate.toFixed(2)}.`);
+        return false;
+      }
+    } else {
+      alert("Balls cannot be zero for strike rate calculation.");
+      return false;
+    }
+
+    return true; // Form will submit if validations pass
+  }
+</script>
 </body>
 </html>

@@ -87,23 +87,23 @@ class PlayerController extends CI_Controller {
                
                 
               $player_data['data']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
+             // var_dump($player_data);
               $player_info=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
            
-                foreach($player_info as $player)
-                {
-                    $player_id=$player->player_id;
-                }
+                
+                 if($player_data['data']==0)
+              {
+
+                 $this->load->view('header');
+                echo '<h2>please register as a player first, go back please</h2>';
+              } else {
+                 $player_id=$player_info['player_id'];
+                
                  $player_data['team_names'] = $this->Player_model->get_active_teams($player_id);
                  $player_data['player_stats'] = $this->Player_model->calculate_player_stats($player_id);
                   $player_data['bowling_stats'] = $this->Player_model->calculate_player_bowling_stats($player_id);
                //   var_dump($player_data['bowling_stats']);
-              if($player_data['data']==0)
-              {
-                 $this->load->view('header');
-                echo 'please register as a player first, go back please';
-              }
-              else
-              {
+             
                     $this->load->view('header');
                 $this->load->view('profile_player',$player_data);
             }
