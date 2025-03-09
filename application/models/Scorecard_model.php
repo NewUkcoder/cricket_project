@@ -266,7 +266,7 @@ $query = $this->db->get();
 // Check if the query returned any results
 if ($query->num_rows() > 0) {
     // Return the results as an array
-    return $query->result();
+    return $query->row_array();
 } else {
     // Return false if no results found
     return false;

@@ -321,36 +321,35 @@
     </style>
 </head>
 
-<?php 
-foreach ($match_information as $information) {
-    // code...
-?>
 <body>
     <header>
         <div class="match-teams">
             <div>
-                <img src="<?php echo $information->team_one_image;?>" alt="Team A Flag">
-                <span><strong><?php echo $information->team_one_name;?></strong></span>
+                <img src="<?php echo $information['team_one_image'];?>" alt="Team A Flag">
+                <span><strong><?php echo $information['team_one_name'];?></strong></span>
             </div>
             <div>
-                <img src="<?php echo $information->team_two_image;?>" alt="Team B Flag">
-                <span><strong><?php echo $information->team_two_name;?></strong></span>
+                <img src="<?php echo $information['team_two_image'];?>" alt="Team B Flag">
+                <span><strong><?php echo $information['team_two_name'];?></strong></span>
             </div>
         </div>
     </header>
-
+ <div class="match-result">
+        <?php echo $match_result; ?>
+    </div>
     <!-- Match Information Section -->
     <div class="match-info">
         <div>
-            <p><span>Match Date:</span><?php echo $information->match_date;?></p>
-            <p><span>Match Time:</span><?php echo $information->match_time;?></p>
-            <p><span>Venue:</span> <?php echo $information->location;?></p>
-            <p><span>Format:</span><?php echo $information->match_type;?></p>
-            <p><span>Series:</span> <?php echo $information->series;?></p>
-            <p><span>Toss Result:</span> <?php echo $information->toss_winner_name;?> won the toss and chose to <?php echo $information->decision;?>.</p>
-            <p><span>Umpires:</span> <?php echo $information->umpire1;?>, <?php echo $information->umpire2;?></p>
+            <p><span>Match Date:</span><?php echo $information['match_date'];?></p>
+            <p><span>Match Time:</span><?php echo $information['match_time'];?></p>
+            <p><span>Venue:</span> <?php echo $information['location'];?></p>
+            <p><span>Format:</span><?php echo $information['match_type'];?></p>
+            <p><span>Series:</span> <?php echo $information['series'];?></p>
+            <p><span>Overs:</span> <?php echo $information['overs'];?></p>
+            <p><span>Toss Result:</span> <?php echo $information['toss_winner_name'];?> won the toss and chose to <?php echo $information['decision'];?>.</p>
+            <p><span>Umpires:</span> <?php echo $information['umpire1'];?>, <?php echo $information['umpire2'];?></p>
         </div>
-    <?php } ?>
+   
         <!-- Player of the Match -->
         <div class="player-of-the-match">
             <img src="https://via.placeholder.com/100" alt="Player of the Match">
@@ -359,9 +358,7 @@ foreach ($match_information as $information) {
     </div>
 
     <!-- Match Result Section -->
-    <div class="match-result">
-        <?php echo $match_result; ?>
-    </div>
+   
 
     <!-- Scorecards for First and Second Innings -->
     <!-- First Innings - Batting -->

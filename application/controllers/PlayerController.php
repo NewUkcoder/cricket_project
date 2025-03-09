@@ -151,7 +151,7 @@ class PlayerController extends CI_Controller {
 
     public function search_team()
     {
-        $search_query = $this->input->post('query', TRUE);
+        $search_query = $this->input->post('email', TRUE);
         $player_id = $this->input->post('player_id', TRUE);
      //   echo $player_id;
         // If a search query is provided, search teams, otherwise show all teams
@@ -164,14 +164,14 @@ class PlayerController extends CI_Controller {
 
   public function insert_team() {
         // Check if POST data exists
-        $team_name = $this->input->post('team_name');
+        $team_id = $this->input->post('team_id');
         $player_id = $this->input->post('player_id');
         
         // Log the data received for debugging
-        log_message('debug', 'Received data: team_name = ' . $team_name . ', player_id = ' . $player_id);
+        log_message('debug', 'Received data: team_id = ' . $team_id . ', player_id = ' . $player_id);
 
         // Check if the data is valid
-        if (!$team_name || !$player_id) {
+        if (!$team_id || !$player_id) {
             log_message('debug', 'Invalid input: team_name or player_id missing');
             echo json_encode(['status' => 'error', 'message' => 'Invalid input.']);
             return;
@@ -186,7 +186,7 @@ class PlayerController extends CI_Controller {
         }
 
         // Call the model to join the team
-        $result = $this->Player_model->join_team($player_id, $team_name, $user_id);
+        $result = $this->Player_model->join_team($player_id, $team_id, $user_id);
 
         if ($result) {
             echo json_encode(['status' => 'success', 'message' => 'Successfully joined the team.']);

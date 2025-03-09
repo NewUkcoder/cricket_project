@@ -68,7 +68,7 @@
         <div class="mb-4 search-form">
             <form action="<?php echo site_url('PlayerController/search_team'); ?>" method="POST" class="d-flex">
                 <input type="hidden" value="<?php echo $player_id; ?>" name="player_id">
-                <input type="text" name="query" class="form-control me-2" placeholder="Search for a team..." value="<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>" required>
+                <input type="text" name="email" class="form-control me-2" placeholder="Search for a team..." value="<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>" required>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         </div>
@@ -77,10 +77,11 @@
         <div id="team-list">
             <?php if (!empty($teams)): ?>
                 <?php foreach ($teams as $team): ?>
-                    <div class="team-item">
-                        <span><?php echo $team->team_name; ?></span>
-                        <button class="join-btn" data-team="<?php echo $team->team_name; ?>" data-player-id="<?php echo $player_id; ?>">Join</button>
-                    </div>
+                   <div class="team-item">
+    <span><?php echo $team->team_name; ?></span>
+    <button class="join-btn" data-team-id="<?php echo $team->team_id; ?>" data-player-id="<?php echo $player_id; ?>">Join</button>
+</div>
+
                 <?php endforeach; ?>
             <?php else: ?>
                 <p class="no-teams">No teams found. Try searching for another team!</p>
@@ -97,20 +98,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-       $(document).ready(function() {
+      $(document).ready(function() {
     // Handle the Join button click event
     $('.join-btn').click(function() {
-        const teamName = $(this).data('team'); // Retrieve team name
+        const teamId = $(this).data('team-id'); // Retrieve team ID
         const playerId = $(this).data('player-id'); // Retrieve player ID
 
-        console.log("Team Name:", teamName); // Log for debugging
+        console.log("Team ID:", teamId); // Log for debugging
         console.log("Player ID:", playerId); // Log for debugging
 
         // Send AJAX request to join the team
         $.ajax({
             url: '<?php echo base_url(); ?>PlayerController/insert_team', // Endpoint to handle the join request
             type: 'POST',
-            data: { team_name: teamName, player_id: playerId },
+            data: { team_id: teamId, player_id: playerId }, // Send team_id instead of team_name
             success: function(response) {
                 console.log('Response from server:', response);  // Log the response from the server
                 const data = JSON.parse(response); // Parse the JSON response
@@ -132,6 +133,7 @@
         });
     });
 });
+
     </script>
 </body>
 </html>

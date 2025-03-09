@@ -98,16 +98,18 @@ class Welcome extends CI_Controller {
 
 
 				$data['match_result']=$this->Scorecard_model->calculate_match_result($match_id);
-			  $data['match_information']=$this->Scorecard_model->get_scorecard($match_id);
-			  $data['first_inning']=$this->Scorecard_model->get_batting_first_details($match_id);
+			  $data['information']=$this->Scorecard_model->get_scorecard($match_id);
+			 
 			  $data['batting_first_score']=$this->Scorecard_model->show_total_score(1,$match_id);
 			   $data['batting_second_score']=$this->Scorecard_model->show_total_score(2,$match_id);
+			    $data['first_inning']=$this->Scorecard_model->get_batting_first_details($match_id);
 			  $data['first_bowling_inning']=$this->Scorecard_model->get_bowling_first_details($match_id);
 			  $data['second_inning']=$this->Scorecard_model->get_batting_second_details($match_id);
 			   $data['second_bowling_inning']=$this->Scorecard_model->get_bowling_second_details($match_id);
 			   //var_dump($data['second_bowling_inning']);
 			$this->load->view('header');
 		$this->load->view('scorecard', $data);
+	//	var_dump($data);
 		}
 		else
 		{

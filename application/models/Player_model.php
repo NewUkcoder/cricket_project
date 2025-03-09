@@ -45,20 +45,20 @@ class Player_model extends CI_Model {
        
     }
 
-    public function searchTeams($searchTerm) {
-           if (!empty($search_query)) {
-            // Perform the search query on the team_name column
-            $this->db->like('team_name', $search_query);
-        }
+    public function searchTeams($email) {
+              $this->db->select('add_team.team_name, add_team.team_id');
+        $this->db->from('users');  // Assuming your users table is named 'users'
+        $this->db->join('add_team', 'add_team.user_id = users.user_id');  // Join using user_id
+        $this->db->where('users.email', $email);  
 
         // Query the add_team table and return the results
-        $query = $this->db->get('add_team');
+        $query = $this->db->get();
         return $query->result();  // Return teams as an array
     }
 
-  public function join_team($player_id, $team_name, $user_id) {
+  public function join_team($player_id, $team_id, $user_id) {
     // Look for the team by name
-    $this->db->where('team_name', $team_name);
+    $this->db->where('team_id', $team_id);
     $query = $this->db->get('add_team'); // Assuming your table is named 'add_team'
 
     // Log the team query result
@@ -72,7 +72,7 @@ class Player_model extends CI_Model {
 
         // Check if the player is already in this team
         $this->db->where('player_id', $player_id);
-        $this->db->where('team_id', $team->team_id);
+        $this->db->where('team_id', $team_id);
         $existing_player = $this->db->get('player_team');
 
         // Log the existing player query result
@@ -285,7 +285,8 @@ public function calculate_player_bowling_stats($player_id) {
             'total_matches' => $result->total_matches,
             'total_wickets' => $result->total_wickets,
             'total_runs' => $result->total_runs,
-            'economy_rate' => round($result->economy_rate, 2), // Round economy rate to 2 decimal places
+            'economy_rate' => round($result->economy_rate ?? 0, 2), // Round economy rate to 2 decimal places, defaulting to 0 if null
+
             'best_bowling' => $best_bowling,
         ];
     }
