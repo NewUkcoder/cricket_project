@@ -314,7 +314,7 @@
             <div class="card">
               <div class="card-body">
                 <img src="https://via.placeholder.com/400x225" alt="Tournament Logo">
-                <h5 class="card-title">Tournament 1</h5>
+                <h5 class="card-title" onclick="location.href='<?php echo base_url(); ?>Welcome/tournament_landing'">Tournament 1</h5>
               </div>
               <div class="action-buttons">
                 <button class="btn btn-warning btn-sm">Edit</button>

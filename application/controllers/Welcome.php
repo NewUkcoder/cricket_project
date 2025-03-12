@@ -241,6 +241,7 @@ class Welcome extends CI_Controller {
             
              $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
               $data['player_info']=$this->Scorecard_model->player_info($match_id);
+              $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
               $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             //  var_dump($data['all_score']);
              $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
@@ -292,6 +293,11 @@ class Welcome extends CI_Controller {
 			$this->index();
 		}
 		
+	}
+
+	public function tournament_landing()
+	{
+		$this->load->view('tournament_landing');
 	}
 
 	

@@ -72,13 +72,20 @@ class Scorecard_model extends CI_Model {
 
      public function get_score($data)
     {
-         $batting_team = $data['batting_team'];
-    $match_id = $data['match_id'];
+        $batting_team = $data['batting_team'];
+$match_id = $data['match_id'];
 
-        $this->db->select('batting_first.*, add_player.playerName');  // Select all columns from 'batting_first' and 'player_name' from 'add_player'
+$this->db->select('
+    batting_first.*, 
+    batsman.playerName as playerName, 
+    batsman.player_id as player_id, 
+    bowler.playerName as bowler_name, 
+    bowler.player_id as bowler_id
+');  // Select all columns from batting_first, and batsman/bowler details from add_player
 $this->db->from('batting_first');  // Start from the 'batting_first' table
-$this->db->join('add_player', 'add_player.player_id = batting_first.player_id', 'inner');  // Join the 'add_player' table using player_id
-$this->db->where('batting_first.batting_team', $batting_team);  // Filter by team_id
+$this->db->join('add_player as batsman', 'batsman.player_id = batting_first.player_id', 'inner');  // Join for batsman
+$this->db->join('add_player as bowler', 'bowler.player_id = batting_first.bowler_player_id', 'left');  // Use LEFT JOIN for bowler
+$this->db->where('batting_first.batting_team', $batting_team);  // Filter by batting_team
 $this->db->where('batting_first.match_id', $match_id);  // Filter by match_id
 $query = $this->db->get();  // Execute the query
 

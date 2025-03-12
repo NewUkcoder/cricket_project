@@ -198,6 +198,12 @@
             color: #444;
         }
 
+        .dismissal-info {
+            font-size: 0.8rem;
+            color: #777;
+            margin-top: 4px;
+        }
+
         .responsive-table {
             display: block;
             overflow-x: auto;
@@ -334,7 +340,7 @@
             </div>
         </div>
     </header>
- <div class="match-result">
+    <div class="match-result">
         <?php echo $match_result; ?>
     </div>
     <!-- Match Information Section -->
@@ -357,9 +363,6 @@
         </div>
     </div>
 
-    <!-- Match Result Section -->
-   
-
     <!-- Scorecards for First and Second Innings -->
     <!-- First Innings - Batting -->
     <div class="scorecard-container">
@@ -380,22 +383,27 @@
                 </thead>
                 <tbody>
                     <?php if($first_inning !=0){ foreach($first_inning as $score) {
-                    $strike_rate = ($score->runs / $score->balls) * 100; ?>
+                    $strike_rate = ($score->runs / $score->balls) * 100; 
+                    $dismissal_info = "Caught" ? "c Player B1 b Bowler B1" : "Not Out"; // Dummy dismissal info
+                    ?>
                     <tr>
                         <td>
                             <div class="player-info">
                                 <img class="player-image" src="<?php echo $score->image_path;?>" alt="Player A1">
-                                <span class="player-name"><?php echo $score->playerName;?></span>
+                                <div>
+                                    <span class="player-name"><?php echo $score->playerName;?></span>
+                                    <div class="dismissal-info"><?php echo $dismissal_info; ?></div>
+                                </div>
                             </div>
                         </td>
                         <td><?php echo $score->runs;?></td>
                         <td><?php echo $score->balls;?></td>
                         <td><?php echo $score->fours;?></td>
-                          <td><?php echo $score->sixes;?></td>
+                        <td><?php echo $score->sixes;?></td>
                         <td><?php echo number_format($strike_rate, 2);?></td>
                     </tr>
                     <?php } } else { ?> 
-                        <tr> <td colspan="5" align="text-center"> No record available for this innings yet. </td> </tr>
+                        <tr> <td colspan="6" align="text-center"> No record available for this innings yet. </td> </tr>
                      
                   <?php  }?>
                    <tr>
@@ -471,22 +479,27 @@
                 </thead>
                 <tbody>
                      <?php if($second_inning !=0){ foreach($second_inning as $score) {
-                    $strike_rate = ($score->runs / $score->balls) * 100; ?>
+                    $strike_rate = ($score->runs / $score->balls) * 100; 
+                    $dismissal_info = "caught" ? "c Player A1 b Bowler A1" : "Not Out"; // Dummy dismissal info
+                    ?>
                     <tr>
                         <td>
                             <div class="player-info">
                                 <img class="player-image" src="<?php echo $score->image_path;?>" alt="Player A1">
-                                <span class="player-name"><?php echo $score->playerName;?></span>
+                                <div>
+                                    <span class="player-name"><?php echo $score->playerName;?></span>
+                                    <div class="dismissal-info"><?php echo $dismissal_info; ?></div>
+                                </div>
                             </div>
                         </td>
                         <td><?php echo $score->runs;?></td>
                         <td><?php echo $score->balls;?></td>
                         <td><?php echo $score->fours;?></td>
-                          <td><?php echo $score->sixes;?></td>
+                        <td><?php echo $score->sixes;?></td>
                         <td><?php echo number_format($strike_rate, 2);?></td>
                     </tr>
                     <?php } } else { ?> 
-                        <tr> <td colspan="5" align="text-center"> No record available for this innings yet. </td> </tr>
+                        <tr> <td colspan="6" align="text-center"> No record available for this innings yet. </td> </tr>
                      
                   <?php  }?>
                      <tr>

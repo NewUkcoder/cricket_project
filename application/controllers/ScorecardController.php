@@ -83,6 +83,7 @@ class ScorecardController extends CI_Controller {
             $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id));
               $data['player_info']=$this->Scorecard_model->player_info($match_id);
+               $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
             $data['all_score']=$this->Scorecard_model->total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
              $data['decision']=$data['decision'];
@@ -107,6 +108,7 @@ class ScorecardController extends CI_Controller {
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
              $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
              $data['player_info']=$this->Scorecard_model->player_info($match_id);
+              $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
 
              $data['decision']=$data['decision'];
@@ -127,6 +129,11 @@ class ScorecardController extends CI_Controller {
             $bowl_first=$this->input->post('bowling_team');
             $player_id=$this->input->post('player_id');
             $batting_order=$this->input->post('batting_order');
+             $dismissal=$this->input->post('dismissal');
+              $bowler_id=$this->input->post('bowler_id');
+ if ($dismissal === 'Not Out' || $dismissal === 'Run Out') {
+    $bowler_id = "";
+  }
 
         $record=array('batting_team'=>$batting_team,
                 'bowling_team'=>$bowl_first,
@@ -137,6 +144,8 @@ class ScorecardController extends CI_Controller {
                 'fours'=>$this->input->post('fours'),
                 'sixes'=>$this->input->post('sixes'),
                 'batting_order'=>$batting_order,
+                'dismissal'=>$dismissal,
+                'bowler_player_id'=>$bowler_id,
                 'user_id'=>$this->session->userdata('user_id')
                 );
        
@@ -160,6 +169,7 @@ class ScorecardController extends CI_Controller {
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
              $data['decision']=$data['decision'];
          // var_dump($data);
@@ -185,6 +195,7 @@ class ScorecardController extends CI_Controller {
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
 
              $data['decision']=$data['decision'];
@@ -235,6 +246,7 @@ class ScorecardController extends CI_Controller {
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
              $data['decision']=$data['decision'];
          // var_dump($data);
@@ -260,6 +272,7 @@ class ScorecardController extends CI_Controller {
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
 
              $data['decision']=$data['decision'];
@@ -298,6 +311,8 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
             //echo $bowl_first;
            // echo $match_id;
              $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
+
+
             $data['bowling_first']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowl_first,'match_id'=>$match_id),'bowling_first');
             
              $data['decision']=$data['decision'];
@@ -414,6 +429,7 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_second');
              $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
              $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
+              $data['bowler_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
             
              $data['decision']=$data['decision'];
@@ -471,14 +487,21 @@ public function edit_score() {
             $balls = $this->input->post('balls');
             $fours = $this->input->post('fours');
             $sixes = $this->input->post('sixes');
+            $dismissal=$this->input->post('dismissal');
+              $bowler_id=$this->input->post('bowler_id');
+ if ($dismissal =='Not Out' || $dismissal == 'Run Out') {
+    $bowler_id = "";
+  }
 
             $data = array(
                 'runs' => $runs,
                 'balls' => $balls,
                 'fours' => $fours,
-                'sixes' => $sixes
+                'sixes' => $sixes,
+                'dismissal'=>$dismissal,
+                'bowler_player_id'=>$bowler_id
             );
-
+//var_dump($data);
             $this->load->model('Scorecard_model');
             $result = $this->Scorecard_model->update_score($match_id, $player_id, $data);
             if($batting_order==1)
@@ -500,6 +523,8 @@ public function edit_score() {
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
+
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
              $data['decision']=$data['decision'];
          // var_dump($data);
@@ -525,6 +550,7 @@ public function edit_score() {
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
 
              $data['decision']=$data['decision'];
@@ -571,6 +597,7 @@ public function edit_score() {
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
              $data['decision']=$data['decision'];
          // var_dump($data);
@@ -597,6 +624,7 @@ public function edit_score() {
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
  //var_dump($data['get_extra1']);
              $data['decision']=$data['decision'];
@@ -634,6 +662,7 @@ public function edit_score() {
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
              $data['decision']=$data['decision'];
          // var_dump($data);
@@ -660,6 +689,7 @@ public function edit_score() {
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
  //var_dump($data['get_extra1']);
              $data['decision']=$data['decision'];
@@ -724,6 +754,7 @@ public function edit_score() {
             $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bowling_second']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowl_second,'match_id'=>$match_id),'bowling_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
+
             
              $data['decision']=$data['decision'];
         //var_dump($data);
@@ -775,6 +806,7 @@ public function edit_score() {
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
              $data['decision']=$data['decision'];
          // var_dump($data);
@@ -801,6 +833,7 @@ public function edit_score() {
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
  //var_dump($data['get_extra1']);
              $data['decision']=$data['decision'];
@@ -840,6 +873,7 @@ public function edit_score() {
             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
            $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
              $data['decision']=$data['decision'];
          // var_dump($data);
@@ -866,6 +900,7 @@ public function edit_score() {
             $data['bat_second']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_second,'match_id'=>$match_id),'batting_first');
             $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
+             $data['bowler_info']=$this->Scorecard_model->player_info($match_id);
             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
  //var_dump($data['get_extra1']);
              $data['decision']=$data['decision'];

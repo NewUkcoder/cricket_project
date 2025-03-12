@@ -98,6 +98,7 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -108,17 +109,16 @@
     </div>
 
     <!-- Form to select toss winner, decision, and user's name -->
-    <form action="<?php echo base_url();?>/ScorecardController/add_first_batting" method="POST" class="form-container">
-        
-
+    <form action="<?php echo base_url();?>/ScorecardController/add_first_batting" method="POST" class="form-container" id="tossForm">
         <select id="tossWinner" name="toss_winner" required>
             <option value="">Who won the toss. Select Here</option>
             <option value="<?php echo $team_one->team_id; ?>"><?php echo $team_one->team_name; ?> won the toss</option>
             <option value="<?php echo $team_two->team_id; ?>"><?php echo $team_two->team_name; ?> won the toss</option>
         </select>
-            <input type="hidden" value="<?php echo $team_one->team_id;?>" name="team_one">
-            <input type="hidden" value="<?php echo $team_two->team_id;?>" name="team_two">
-            <input type="hidden" value="<?php echo $match_id;?>" name="match_id">
+        <input type="hidden" value="<?php echo $team_one->team_id;?>" name="team_one">
+        <input type="hidden" value="<?php echo $team_two->team_id;?>" name="team_two">
+        <input type="hidden" value="<?php echo $match_id;?>" name="match_id">
+        
         <select id="decision" name="decision" required>
             <option value="">What is decision</option>
             <option value="bat">Bat first</option>
@@ -127,6 +127,25 @@
 
         <button type="submit" class="submit-btn">Submit</button>
     </form>
+
+    <script>
+        document.getElementById('tossForm').addEventListener('submit', function(event) {
+            const tossWinner = document.getElementById('tossWinner').value;
+            const decision = document.getElementById('decision').value;
+
+            if (!tossWinner || !decision) {
+                alert("Please select both toss winner and decision.");
+                event.preventDefault(); // Prevent form submission if any field is missing
+            } else {
+                const confirmationMessage = `You have selected:\n\nToss Winner: ${tossWinner}\nDecision: ${decision}\n\nAre you sure you want to submit this?`Once submitted, it can not be changed;
+                const isConfirmed = confirm(confirmationMessage);
+
+                if (!isConfirmed) {
+                    event.preventDefault(); // Prevent form submission if user cancels
+                }
+            }
+        });
+    </script>
 <?php } ?>
 </div>
 
