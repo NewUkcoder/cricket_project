@@ -167,7 +167,7 @@
                     <!-- Buttons Group for Add and View -->
                     <div class="btn-group mt-2">
                         <a href="<?php echo base_url();?>Welcome/toss/<?php echo $schedule_info->team_one_id;?>/<?php echo $schedule_info->team_two_id;?>/<?php echo $schedule_info->match_id;?>" class="scorecard-btn">Add Scorecard</a>
-                       <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $schedule_info->match_id;?>/<?php echo $schedule_info->team_one_id;?>/<?php echo $schedule_info->team_two_id;?>" class="scorecard-btn">View Scorecard</a>
+                       <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $schedule_info->team_one_id;?>/<?php echo $schedule_info->team_two_id;?>/<?php echo $schedule_info->match_id;?>" class="scorecard-btn">View Scorecard</a>
 
 
                        

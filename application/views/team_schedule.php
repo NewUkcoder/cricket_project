@@ -208,7 +208,7 @@
                    <?php if($this->session->userdata('user_id')==$value->user_id): ?>
                 <a href="<?php echo base_url();?>Welcome/toss/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>/<?php echo $value->match_id;?>" class="scorecard-btn">Add Scorecard</a>
                  <?php endif; ?>
-                <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $value->match_id;?>/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>" class="scorecard-btn">View Scorecard</a>
+                <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>/<?php echo $value->match_id;?>" class="scorecard-btn">View Scorecard</a>
             </div>
         </div>
         <?php } } ?>

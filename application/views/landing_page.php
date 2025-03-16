@@ -14,19 +14,20 @@
     }
 
     .container {
-      padding: 20px;
+      padding: 30px;
       display: flex;
       flex-direction: column;
     }
 
     .main-content {
       display: flex;
-      gap: 20px;
+      gap: 10px; /* Reduced gap */
+      flex-wrap: wrap;
     }
 
     /* Player Section (Sidebar) */
     .player-section {
-      width: 250px; /* Fixed width for player section */
+      width: 250px;
       background-color: #fff;
       border-radius: 15px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -35,22 +36,22 @@
     }
 
     .player-section img {
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       object-fit: cover;
       border-radius: 50%;
     }
 
     .player-section h5 {
-      font-size: 1.2rem;
+      font-size: 1.2rem; /* Reduced font size */
       font-weight: bold;
       margin: 10px 0 5px;
     }
 
     .player-section p {
-      font-size: 0.9rem;
+      font-size: 0.9rem; /* Reduced font size */
       color: #666;
-      margin: 3px 0;
+      margin: 5px 0;
     }
 
     .player-section a {
@@ -58,6 +59,7 @@
       margin-top: 10px;
       color: #3498db;
       text-decoration: none;
+      font-size: 0.9rem; /* Reduced font size */
     }
 
     .player-section a:hover {
@@ -67,17 +69,17 @@
     /* Link Bar for Teams and Tournaments */
     .link-bar {
       display: flex;
-      justify-content: flex-start;
-      gap: 10px;
-      margin-bottom: 20px;
+      justify-content: center;
+      gap: 10px; /* Reduced gap */
+      margin-bottom: 20px; /* Reduced margin */
     }
 
     .link-bar button {
       background-color: #3498db;
       border: none;
       border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 0.9rem;
+      padding: 8px 18px;
+      font-size: 0.9rem; /* Reduced font size */
       color: white;
       cursor: pointer;
       transition: background-color 0.3s;
@@ -98,10 +100,11 @@
       border-radius: 15px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 20px;
+      width: 100%;
     }
 
     .section-header {
-      font-size: 1.5rem;
+      font-size: 1.3rem; /* Reduced font size */
       font-weight: bold;
       margin-bottom: 20px;
       color: #2c3e50;
@@ -109,8 +112,8 @@
 
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Reduced minimum size */
+      gap: 15px; /* Reduced gap */
     }
 
     .card {
@@ -120,6 +123,7 @@
       background-color: #fff;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s, box-shadow 0.3s;
+      padding: 10px; /* Reduced padding */
     }
 
     .card:hover {
@@ -132,17 +136,17 @@
       height: 60px;
       object-fit: cover;
       border-radius: 50%;
-      margin-right: 15px;
+      margin-right: 10px; /* Reduced margin */
     }
 
     .card-body {
       display: flex;
       align-items: center;
-      padding: 15px;
+      padding: 10px; /* Reduced padding */
     }
 
     .card-title {
-      font-size: 1.1rem;
+      font-size: 1rem; /* Reduced font size */
       font-weight: bold;
       margin: 0;
     }
@@ -150,16 +154,16 @@
     .action-buttons {
       display: flex;
       justify-content: flex-start;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 10px; /* Reduced gap */
+      margin-top: 10px; /* Reduced margin */
     }
 
     .btn-primary {
       background-color: #3498db;
       border: none;
       border-radius: 8px;
-      padding: 8px 16px;
-      font-size: 0.9rem;
+      padding: 8px 16px; /* Reduced padding */
+      font-size: 0.9rem; /* Reduced font size */
       transition: background-color 0.3s;
     }
 
@@ -171,6 +175,8 @@
       background-color: #f39c12;
       border: none;
       border-radius: 8px;
+      padding: 6px 12px; /* Reduced padding */
+      font-size: 0.9rem; /* Reduced font size */
     }
 
     .btn-warning:hover {
@@ -181,6 +187,8 @@
       background-color: #e74c3c;
       border: none;
       border-radius: 8px;
+      padding: 6px 12px; /* Reduced padding */
+      font-size: 0.9rem; /* Reduced font size */
     }
 
     .btn-danger:hover {
@@ -205,12 +213,12 @@
       .player-section {
         width: 100%;
         padding: 15px;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
       }
 
       .player-section img {
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
       }
 
       .link-bar {
@@ -222,12 +230,12 @@
       }
 
       .card img {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
       }
 
       .section-header {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
 
       .card-title {
@@ -277,7 +285,7 @@
         <div id="teams-section" class="section active">
           <div class="section-header">
             <h4>My Teams</h4>
-             <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">Add Team</button>
+            <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">Add Team</button>
           </div>
           <?php if ($team == 0) { ?>
             <div class="create-btn">
@@ -308,13 +316,13 @@
         <div id="tournaments-section" class="section">
           <div class="section-header">
             <h4>Tournaments</h4>
-             <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">Add Team</button>
+            <button class="btn btn-primary" onclick="location.href='<?php echo base_url();?>Welcome/enter_team'">Add Tournament</button>
           </div>
           <div class="grid-container">
             <div class="card">
               <div class="card-body">
                 <img src="https://via.placeholder.com/400x225" alt="Tournament Logo">
-                <h5 class="card-title" onclick="location.href='<?php echo base_url(); ?>Welcome/tournament_landing'">Tournament 1</h5>
+                <h5 class="card-title"> <a  href="<?php echo base_url();?>Welcome/tournament_landing">Tournament 1</a></h5>
               </div>
               <div class="action-buttons">
                 <button class="btn btn-warning btn-sm">Edit</button>

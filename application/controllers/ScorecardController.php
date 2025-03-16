@@ -22,33 +22,33 @@ class ScorecardController extends CI_Controller {
         
     }
 
-    public function add_first_batting()
-    {
-            $team_one=$this->input->post('team_one');
-            $team_two=$this->input->post('team_two');
+     public function add_toss()
+  {
+    $team1=$this->input->post('team_one');
+            $team2=$this->input->post('team_two');
             $user_id=$this->session->userdata('user_id');
             $match_id=$this->input->post('match_id');
             $toss_winner=$this->input->post('toss_winner');
             $decision=$this->input->post('decision');
-            if($decision=="bat" && $toss_winner==$team_one)
+            if($decision=="bat" && $toss_winner==$team1)
             {
-                $bat_first=$team_one;
-                $bowl_first=$team_two;
+                $bat_first=$team1;
+                $bowl_first=$team2;
             }
-            elseif($decision=="bowl" && $toss_winner==$team_one)
+            elseif($decision=="bowl" && $toss_winner==$team1)
             {
-                $bat_first=$team_two;
-                $bowl_first=$team_one;
+                $bat_first=$team2;
+                $bowl_first=$team1;
             }
-            elseif($decision=="bat" && $toss_winner==$team_two)
+            elseif($decision=="bat" && $toss_winner==$team2)
             {
-                $bat_first=$team_two;
-                $bowl_first=$team_one;
+                $bat_first=$team2;
+                $bowl_first=$team1;
             }
-            elseif($decision=="bowl" && $toss_winner==$team_two)
+            elseif($decision=="bowl" && $toss_winner==$team2)
             {
-                $bat_first=$team_one;
-                $bowl_first=$team_two;
+                $bat_first=$team1;
+                $bowl_first=$team2;
             }
 
             
@@ -56,8 +56,8 @@ class ScorecardController extends CI_Controller {
          $data['toss1']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
          if($data['toss1']==0)
          {
-            $record=array('team_one_id'=>$team_one,
-                'team_two_id'=>$team_two,
+            $record=array('team_one_id'=>$team1,
+                'team_two_id'=>$team2,
                  'match_id'=>$match_id,
                 'toss_winner'=>$toss_winner,
                 'decision'=>$decision,
@@ -69,34 +69,44 @@ class ScorecardController extends CI_Controller {
 
         $this->Scorecard_model->insert_toss($record);
 
-          $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-                
+         $user_id=$this->session->userdata('user_id');
+    //var_dump($match_id);
 
-                
-                $team1=$data['team_one_id'];
-                $team2=$data['team_two_id'];
-                $win_team=$data['toss_winner'];
-                $batting_first=$data['bat_first'];
-                $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
-            $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id));
-              $data['player_info']=$this->Scorecard_model->player_info($match_id);
-               $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
-            $data['all_score']=$this->Scorecard_model->total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
-            $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
-             $data['decision']=$data['decision'];
-          
-                $this->load->view('header');
-            $this->load->view('add_first_batting', $data);
+        $data['toss1']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
+            
+            if($data['toss1']==0)
+         {
+         $data['toss_information']="";
          }
-            else
-            {
+         else {
+            $data['toss_information']=$this->Scorecard_model->toss_info_row($match_id);
+             
+            
+        }
+             $data['two_team']=$this->Team_model->two_team($team1,$team2);
+             $data['two_team_player']=$this->Team_model->two_team_player($team1,$team2);
+              $data['player_of_match']=$this->Player_model->player_of_match($match_id);
+                 $data['match_id']=$match_id;
+           //  var_dump($data);
+ $this->load->view('header');
+    $this->load->view('scorecard_links',$data);
+  }
+
+}
+
+
+
+    public function add_first_batting($team1,$team2,$match_id)
+    {
+           
+
+            
+
+                $user_id=$this->session->userdata('user_id');
+
                 $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
 
-                
                 $team1=$data['team_one_id'];
                 $team2=$data['team_two_id'];
                 $win_team=$data['toss_winner'];
@@ -116,8 +126,7 @@ class ScorecardController extends CI_Controller {
                 $this->load->view('header');
             $this->load->view('add_first_batting', $data);
              
-            }
-
+            
         
     }
 
@@ -285,14 +294,10 @@ class ScorecardController extends CI_Controller {
     }
 
     
-    public function show_bowling_first($match_id,$bowl_first,$batting_first,$player_id)
+    public function show_bowling_first($bowl_first,$batting_first,$match_id)
     {
 
-         $record=array('batting_team'=>$batting_first,
-                'bowling_team'=>$bowl_first,
-                 'match_id'=>$match_id,
-                'player_id'=>$player_id
-            );
+       
          $user_id=$this->session->userdata('user_id');
 $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
@@ -400,7 +405,7 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
  }
     }
 
-      public function add_second_batting($match_id,$batting_second,$bowling_second)
+      public function add_second_batting($batting_second,$bowling_second,$match_id)
     
          
     {
@@ -440,14 +445,10 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
          
     }
 
-     public function show_bowling_second($match_id,$batting_second,$bowling_second,$player_id)
+     public function show_bowling_second($batting_second,$bowling_second, $match_id)
     {
 
-         $record=array('batting_team'=>$batting_second,
-                'bowling_team'=>$bowling_second,
-                 'match_id'=>$match_id,
-                'player_id'=>$player_id
-            );
+      
          $user_id=$this->session->userdata('user_id');
 $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 

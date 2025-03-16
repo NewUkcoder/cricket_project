@@ -55,6 +55,38 @@ class Scorecard_model extends CI_Model {
         }
 
     }
+      public function toss_info_row($match_id)
+    {
+       $this->db->select('
+            toss.match_id,
+            toss.toss_winner,
+            toss.bat_first,
+            toss.bowl_first,
+            team_toss.team_name AS toss_winner_name,
+            team_bat.team_name AS bat_first_name,
+            team_bowl.team_name AS bowl_first_name
+        ');
+        $this->db->from('toss');
+        // Join the add_team table three times with aliases
+        $this->db->join('add_team AS team_toss', 'team_toss.team_id = toss.toss_winner', 'left');
+        $this->db->join('add_team AS team_bat', 'team_bat.team_id = toss.bat_first', 'left');
+        $this->db->join('add_team AS team_bowl', 'team_bowl.team_id = toss.bowl_first', 'left');
+        // Filter by match_id
+        $this->db->where('toss.match_id', $match_id);
+        // Execute the query
+        $query = $this->db->get();
+
+        // Check if any rows were returned
+        if ($query->num_rows() == 1) {
+            // Return the result as an associative array
+            return $query->row_array();
+        } else {
+            // Return a message if no record is found
+            return "Record with match_id $match_id does not exist in the toss table.";
+        }
+    }
+
+    
 
      public function insert_batting_first($data)
     {   

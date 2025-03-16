@@ -279,9 +279,9 @@
     <!-- Action Buttons in Row -->
     <div class="action-btn-container">
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scorecardModal">Insert Scorecard</button>
-      <a href="<?php echo base_url();?>ScorecardController/show_bowling_second/<?php echo $match_id;?>/<?php echo $batting_second;?>/<?php echo $bowling_second;?>/<?php echo $player_id=3;?>">
-        <button class="btn btn-success next-btn">Add 2nd Bowling</button>
-      </a>
+      <a href="<?php echo base_url();?>Welcome/scorecard_links//<?php echo $bowling_second;?>/<?php echo $batting_second;?>/<?php echo $match_id;?>">
+          <button class="btn btn-success next-btn">NEXT</button>
+        </a>
     </div>
   </div>
 

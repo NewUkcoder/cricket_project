@@ -91,25 +91,38 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->view('team_profile');
 	}*/
-	public function scorecard($match_id,$team_one, $team_two)
+	public function scorecard($team_one, $team_two,$match_id)
 	{
 		if($this->session->userdata('logged'))
 		{
+			$user_id = $this->session->userdata('user_id');
+$toss = $this->Scorecard_model->get_toss(array('user_id' => $user_id, 'match_id' => $match_id));
 
+// Check if toss is not equal to 0
+if ($toss != 0) {
+    // Execute the code if toss is not equal to 0
+  
+    $data['match_result'] = $this->Scorecard_model->calculate_match_result($match_id);
+    $data['information'] = $this->Scorecard_model->get_scorecard($match_id);
+    $data['batting_first_score'] = $this->Scorecard_model->show_total_score(1, $match_id);
+    $data['batting_second_score'] = $this->Scorecard_model->show_total_score(2, $match_id);
+    $data['first_inning'] = $this->Scorecard_model->get_batting_first_details($match_id);
+    $data['first_bowling_inning'] = $this->Scorecard_model->get_bowling_first_details($match_id);
+    $data['second_inning'] = $this->Scorecard_model->get_batting_second_details($match_id);
+    $data['second_bowling_inning'] = $this->Scorecard_model->get_bowling_second_details($match_id);
 
-				$data['match_result']=$this->Scorecard_model->calculate_match_result($match_id);
-			  $data['information']=$this->Scorecard_model->get_scorecard($match_id);
-			 
-			  $data['batting_first_score']=$this->Scorecard_model->show_total_score(1,$match_id);
-			   $data['batting_second_score']=$this->Scorecard_model->show_total_score(2,$match_id);
-			    $data['first_inning']=$this->Scorecard_model->get_batting_first_details($match_id);
-			  $data['first_bowling_inning']=$this->Scorecard_model->get_bowling_first_details($match_id);
-			  $data['second_inning']=$this->Scorecard_model->get_batting_second_details($match_id);
-			   $data['second_bowling_inning']=$this->Scorecard_model->get_bowling_second_details($match_id);
-			   //var_dump($data['second_bowling_inning']);
-			$this->load->view('header');
-		$this->load->view('scorecard', $data);
-	//	var_dump($data);
+    // Load views
+    $this->load->view('header');
+    $this->load->view('scorecard', $data);
+} else {
+    // Show message if toss is equal to 0
+     echo "<script type='text/javascript'>
+            alert('Wait for scorecard entry, cannot proceed with the match details.');
+            window.history.back();
+          </script>";
+}
+
+	//var_dump($data);
 		}
 		else
 		{
@@ -197,6 +210,32 @@ class Welcome extends CI_Controller {
 	}
 }
 
+public function scorecard_links($team1,$team2,$match_id)
+{
+	$user_id=$this->session->userdata('user_id');
+	//var_dump($match_id);
+
+	 	$data['toss1']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
+	 		
+	 		if($data['toss1']==0)
+         {
+         $data['toss_information']="";
+         }
+         else {
+         	$data['toss_information']=$this->Scorecard_model->toss_info_row($match_id);
+         	 
+	 		
+	 	}
+	 		 $data['two_team']=$this->Team_model->two_team($team1,$team2);
+	 		  $data['two_team_player']=$this->Team_model->two_team_player($team1,$team2);
+	 		  $data['player_of_match']=$this->Player_model->player_of_match($match_id);
+	 			 $data['match_id']=$match_id;
+	 //		 var_dump($data);
+ $this->load->view('header');
+	$this->load->view('scorecard_links',$data);
+
+
+}
 	public function toss($team1,$team2,$match_id)
 	{
 		$team_one= $team1;
@@ -225,33 +264,29 @@ class Welcome extends CI_Controller {
       }
       else {
       	
-      	  $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-                
-      	 
-                
-                $team1=$data['team_one_id'];
-                $team2=$data['team_two_id'];
-                $win_team=$data['toss_winner'];
-               $batting_first=$data['bat_first'];
-            $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-  					
-            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
-            
-             $data['bat_first']=$this->Scorecard_model->get_score(array('batting_team'=>$batting_first,'match_id'=>$match_id),'batting_first');
-              $data['player_info']=$this->Scorecard_model->player_info($match_id);
-              $data['bowler_info']=$this->Scorecard_model->player_info_second($match_id);
-              $data['all_score']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id),'batting_first');
-            //  var_dump($data['all_score']);
-             $data['get_extra1']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
-             //var_dump($data['get_extra']);
-            
-            
-             $data['decision']=$data['decision'];
-      	//var_dump($data['bat_first']);
-                $this->load->view('header');
-            $this->load->view('add_first_batting', $data);
+      	   $user_id=$this->session->userdata('user_id');
+	//var_dump($match_id);
+
+	 	$data['toss1']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
+	 		
+	 		if($data['toss1']==0)
+         {
+         $data['toss_information']="";
+         }
+         else {
+         	$data['toss_information']=$this->Scorecard_model->toss_info_row($match_id);
+         	 
+	 		
+	 	}
+	 		 $data['two_team']=$this->Team_model->two_team($team1,$team2);
+	 		  $data['two_team_player']=$this->Team_model->two_team_player($team1,$team2);
+	 		    $data['player_of_match']=$this->Player_model->player_of_match($match_id);
+	 			 $data['match_id']=$match_id;
+	 		// var_dump($data);
+ $this->load->view('header');
+	$this->load->view('scorecard_links',$data);
+           
+
 
       }
 		

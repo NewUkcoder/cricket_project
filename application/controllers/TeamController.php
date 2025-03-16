@@ -75,19 +75,19 @@ class TeamController extends CI_Controller {
             // Set a success message and redirect
             $this->session->set_flashdata('success', 'Image uploaded successfully!');
                 $this->load->view('header');
-            redirect('Welcome/welcome_message');
+            redirect('Welcome/landing_page');
 
         }
     }
 
     public function team_profile($team_id)
     {       
-  
+           // echo $team_id;
                 $team_data['team_stats']=$this->Team_model->get_team_stats($team_id);
               $team_data['data']=$this->Team_model->get_team($team_id);
               $team_data['captain']=$this->Team_model->team_captain($team_id);
 
-            //var_dump($team_data);
+           // var_dump($team_data);
                 $this->load->view('header');
                 $this->load->view('team_profile',$team_data);
                 

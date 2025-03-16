@@ -109,7 +109,7 @@
     </div>
 
     <!-- Form to select toss winner, decision, and user's name -->
-    <form action="<?php echo base_url();?>/ScorecardController/add_first_batting" method="POST" class="form-container" id="tossForm">
+    <form action="<?php echo base_url();?>/ScorecardController/add_toss" method="POST" class="form-container" id="tossForm">
         <select id="tossWinner" name="toss_winner" required>
             <option value="">Who won the toss. Select Here</option>
             <option value="<?php echo $team_one->team_id; ?>"><?php echo $team_one->team_name; ?> won the toss</option>

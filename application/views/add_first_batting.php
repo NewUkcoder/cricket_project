@@ -363,8 +363,8 @@
       </table>
       <div class="action-btn-container">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scorecardModal">Insert Scorecard</button>
-        <a href="<?php echo base_url();?>ScorecardController/show_bowling_first/<?php echo $match_id;?>/<?php echo $bowl_first;?>/<?php echo $batting_first;?>/<?php echo $player_id=3;?>">
-          <button class="btn btn-success next-btn">Add Bowling</button>
+        <a href="<?php echo base_url();?>Welcome/scorecard_links//<?php echo $bowl_first;?>/<?php echo $batting_first;?>/<?php echo $match_id;?>">
+          <button class="btn btn-success next-btn">NEXT</button>
         </a>
       </div>
     </div>

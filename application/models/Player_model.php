@@ -38,11 +38,36 @@ class Player_model extends CI_Model {
 
     }
 
+    public function player_of_match($match_id) 
+     {
+       
+       $this->db->select('ap.playerName, ap.player_id, ap.image_path');
+$this->db->from('add_player ap');
+$this->db->join('match_player pm', 'ap.player_id = pm.player_id');
+$this->db->where('pm.match_id', $match_id);
+$query = $this->db->get();
+$result = $query->row_array();
+return $result;
+
+    }
+
      public function update_player($user_id,$data) {
        
         $this->db->where('user_id', $user_id);
         return $this->db->update('add_player', $data);
        
+    }
+
+    public function add_match_player($data)
+    {
+
+        $this->db->where($data);
+        $query=$this->db->get('match_player');
+        
+                if($query->num_rows()==0)
+                {
+         $this->db->insert('match_player', $data);
+     }
     }
 
     public function searchTeams($email) {

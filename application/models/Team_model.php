@@ -13,10 +13,10 @@ class Team_model extends CI_Model {
      public function get_team($team_id) 
      {
         
-       
+    
          $this->db->select('users.user_id, users.email, add_team.*');
         $this->db->from('users');
-        $this->db->join('add_team', 'add_team.team_id = users.user_id');
+        $this->db->join('add_team', 'add_team.user_id = users.user_id');
         $this->db->where('add_team.team_id', $team_id);
         $query = $this->db->get();
 
@@ -37,6 +37,8 @@ class Team_model extends CI_Model {
         }
 
     }
+
+   
         public function add_fixture($team_one_id, $team_two_id) {
         // Create the JOIN query
         $this->db->select('
@@ -210,6 +212,36 @@ public function delete_player_request($data) {
         }
         
         return null;  // If no result is found
+    }
+
+    public function two_team($team1, $team2)
+    {
+        $this->db->select('team_name, team_id, image_path');
+        $this->db->from('add_team');
+        $this->db->where_in('team_id', [$team1, $team2]); // Using where_in to match both team names
+        $query = $this->db->get();
+
+        // Return the result as an array
+        return $query->result_array();
+    }
+
+    public function two_team_player($team1, $team2)
+    {
+        $this->db->select('add_player.player_id, add_player.playerName');
+$this->db->from('add_player');
+$this->db->join('player_team', 'add_player.player_id = player_team.player_id');
+$this->db->where('player_team.status', 1);
+$this->db->group_start(); // Start grouping for OR conditions
+$this->db->where('player_team.team_id', $team1);
+$this->db->or_where('player_team.team_id', $team2);
+$this->db->group_end(); // End grouping for OR conditions
+$query = $this->db->get();
+
+if ($query->num_rows() > 0) {
+    return $query->result_array(); // Returns an array of players
+} else {
+    return array(); // No players found
+}
     }
 
 

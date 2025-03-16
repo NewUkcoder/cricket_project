@@ -78,6 +78,23 @@ class PlayerController extends CI_Controller {
         }
     }
 
+    public function add_match_player()
+    {
+        $player_id= $this->input->post('match_player');
+        $match_id= $this->input->post('match_id');
+
+        $record=array('player_id'=> $player_id,'match_id'=>$match_id);
+         $this->Player_model->add_match_player($record);
+          echo "<script type='text/javascript'>
+            alert('Player of the Match is selected.');
+            window.history.back();
+          </script>";
+
+
+
+
+    }
+
     public function profile_player()
     {       
     //code for read bills table
