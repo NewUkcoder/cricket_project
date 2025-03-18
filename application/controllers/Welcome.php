@@ -329,10 +329,22 @@ public function scorecard_links($team1,$team2,$match_id)
 		}
 		
 	}
+		public function add_tournament()
+	{
+			$this->load->view('header');
+		$this->load->view('add_tournament');
+	}
 
 	public function tournament_landing()
 	{
+			$this->load->view('header');
 		$this->load->view('tournament_landing');
+	}
+
+	public function tournament_main()
+	{
+			$this->load->view('header');
+		$this->load->view('tournament_main');
 	}
 
 	

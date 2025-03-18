@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cricket League Overview</title>
+    <title>Cricket League</title>
     <style>
         /* Reset and Universal Styles */
         * {
@@ -13,27 +13,27 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: white; /* White background */
+      
+            background-color: white;
             color: #333;
-            font-size: 14px; /* Reduced base font size */
+            font-size: 14px;
         }
 
-        header {
-            background: white; /* White background */
-            color: #005f8d; /* Dark blue text */
+        header1 {
+            background: white;
+            color: #005f8d;
             text-align: center;
-            padding: 15px 0; /* Reduced height */
+            padding: 15px 0;
             border-bottom: 2px solid #005f8d;
         }
 
-        header h1 {
-            font-size: 2em; /* Slightly smaller text */
+        header1 h1 {
+            font-size: 2em;
             letter-spacing: 1px;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        header .league-info {
+        header1 .league-info {
             font-size: 1.1em;
             color: #666;
             margin-top: 10px;
@@ -41,31 +41,31 @@
 
         /* Navigation Styles */
         nav {
-            background-color: #005f8d; /* Darker blue */
+            background-color: #005f8d;
             position: sticky;
             top: 0;
             z-index: 100;
-            overflow-x: auto; /* Enable horizontal scrolling */
-            white-space: nowrap; /* Keep links in a single line */
+            overflow-x: auto;
+            white-space: nowrap;
             padding: 8px 0;
         }
 
         nav ul {
             display: flex;
-            justify-content: center; /* Center links on big screens */
+            justify-content: center;
             list-style-type: none;
             margin: 0;
             padding: 0;
         }
 
         nav ul li {
-            margin: 0 15px; /* Spacing between links */
+            margin: 0 15px;
         }
 
         nav ul li a {
             color: white;
             text-decoration: none;
-            font-size: 1em; /* Slightly smaller font size for nav */
+            font-size: 1em;
             padding: 6px 12px;
             display: block;
             border-radius: 5px;
@@ -90,8 +90,8 @@
         /* Section Titles */
         .section-title {
             margin-bottom: 25px;
-            font-size: 1.6em; /* Reduced font size for section titles */
-            color: #005f8d; /* Dark blue */
+            font-size: 1.6em;
+            color: #005f8d;
             text-align: center;
             border-bottom: 3px solid #007bb5;
             padding-bottom: 10px;
@@ -143,66 +143,6 @@
             color: #007bb5;
             font-weight: bold;
             margin-top: 10px;
-        }
-
-        /* Team Request Section */
-        .team-request-section {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #f4f4f4;
-            border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .team-request-section h3 {
-            font-size: 1.6em;
-            color: #005f8d;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .team-request-card {
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .team-request-card p {
-            font-size: 1.1em;
-            color: #333;
-        }
-
-        .team-request-card .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .team-request-card .actions button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-        }
-
-        .team-request-card .actions button.accept {
-            background-color: #007bb5;
-            color: white;
-        }
-
-        .team-request-card .actions button.reject {
-            background-color: #f44336;
-            color: white;
-        }
-
-        .team-request-card .actions button:hover {
-            opacity: 0.9;
         }
 
         /* Schedule Section */
@@ -329,7 +269,7 @@
             color: #005f8d;
             margin-bottom: 20px;
             text-align: center;
-            word-wrap: break-word; /* Ensure long team names wrap properly */
+            word-wrap: break-word;
         }
 
         .team-card .player-stats {
@@ -434,6 +374,42 @@
             font-weight: bold;
         }
 
+        /* League Rules Section */
+        .rules-section {
+            margin-top: 40px;
+        }
+
+        .rules-card {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .rules-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .rules-card h4 {
+            font-size: 1.4em;
+            color: #005f8d;
+            margin-bottom: 10px;
+        }
+
+        .rules-card ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .rules-card ul li {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
         footer {
             background-color: #005f8d;
             color: white;
@@ -444,12 +420,12 @@
     </style>
 </head>
 <body>
-    <header>
+    <header1>
         <h1>External Header Name</h1>
         <div class="league-info">
             <p>Year: 2025 | City: New York | Country: USA</p>
         </div>
-    </header>
+    </header1>
 
     <!-- Navigation Bar -->
     <nav>
@@ -459,7 +435,7 @@
             <li><a href="#schedule">Schedule</a></li>
             <li><a href="#points-table">Points Table</a></li>
             <li><a href="#result">Results</a></li>
-            <li><a href="#team-request">Team Request</a></li>
+            <li><a href="#rules">League Rules</a></li>
         </ul>
     </nav>
 
@@ -567,25 +543,6 @@
                     <p>Result: Team 3 won by 60 runs</p>
                 </div>
                 <button class="view-scorecard-button">View Scorecard</button>
-            </div>
-        </div>
-
-        <!-- Team Request Section -->
-        <div id="team-request" class="team-request-section">
-            <h3>Team Requests</h3>
-            <div class="team-request-card">
-                <p>Team 5 has requested to join the league.</p>
-                <div class="actions">
-                    <button class="accept">Accept</button>
-                    <button class="reject">Reject</button>
-                </div>
-            </div>
-            <div class="team-request-card">
-                <p>Team 6 has requested to join the league.</p>
-                <div class="actions">
-                    <button class="accept">Accept</button>
-                    <button class="reject">Reject</button>
-                </div>
             </div>
         </div>
 
@@ -759,6 +716,39 @@
                         <a href="#" class="scorecard-link">View Scorecard</a>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- League Rules Section -->
+        <div id="rules" class="section-title">League Rules</div>
+        <div class="rules-section">
+            <div class="rules-card">
+                <h4>General Rules</h4>
+                <ul>
+                    <li>Each team consists of 11 players.</li>
+                    <li>Matches will be played in a T20 format.</li>
+                    <li>Each match will have a maximum of 20 overs per side.</li>
+                    <li>In case of a tie, a super over will be played.</li>
+                    <li>Teams must adhere to the ICC Code of Conduct.</li>
+                </ul>
+            </div>
+
+            <div class="rules-card">
+                <h4>Player Eligibility</h4>
+                <ul>
+                    <li>Players must be registered with the league before the start of the tournament.</li>
+                    <li>Each team can have a maximum of 4 overseas players.</li>
+                    <li>Players must be above 18 years of age.</li>
+                </ul>
+            </div>
+
+            <div class="rules-card">
+                <h4>Match Rules</h4>
+                <ul>
+                    <li>Matches will start at the scheduled time, and any delay may result in penalties.</li>
+                    <li>Each team must have a minimum of 7 players to start a match.</li>
+                    <li>Umpires' decisions are final and binding.</li>
+                </ul>
             </div>
         </div>
     </div>

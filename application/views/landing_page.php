@@ -316,7 +316,7 @@
         <div id="tournaments-section" class="section">
           <div class="section-header">
             <h4>Tournaments</h4>
-            <button class="btn btn-primary" onclick="location.href='<?php echo base_url();?>Welcome/enter_team'">Add Tournament</button>
+            <button class="btn btn-primary" onclick="location.href='<?php echo base_url();?>Welcome/add_tournament'">Add Tournament</button>
           </div>
           <div class="grid-container">
             <div class="card">
@@ -332,7 +332,7 @@
             <div class="card">
               <div class="card-body">
                 <img src="https://via.placeholder.com/400x225" alt="Tournament Logo">
-                <h5 class="card-title">Tournament 2</h5>
+                <h5 class="card-title"><a  href="<?php echo base_url();?>Welcome/tournament_main">Tournament 2</a></h5>
               </div>
               <div class="action-buttons">
                 <button class="btn btn-warning btn-sm">Edit</button>
