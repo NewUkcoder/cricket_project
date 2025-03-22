@@ -304,7 +304,7 @@
                   </div>
                   <div class="action-buttons">
                     <button class="btn btn-warning btn-sm">Edit</button>
-                    <button class="btn btn-danger btn-sm">Delete</button>
+                    
                   </div>
                 </div>
               <?php } ?>
@@ -326,18 +326,21 @@
               </div>
               <div class="action-buttons">
                 <button class="btn btn-warning btn-sm">Edit</button>
-                <button class="btn btn-danger btn-sm">Delete</button>
+                
               </div>
             </div>
             <div class="card">
+                <?php // var_dump($tournament);
+                if(!empty($tournament)) { foreach ($tournament as $league) { ?>
               <div class="card-body">
-                <img src="https://via.placeholder.com/400x225" alt="Tournament Logo">
-                <h5 class="card-title"><a  href="<?php echo base_url();?>Welcome/tournament_main">Tournament 2</a></h5>
+               
+                <h5 class="card-title"><a  href="<?php echo base_url();?>Welcome/tournament_main/<?php echo $league->league_id;?>"><?php echo $league->league_name;?></a></h5>
               </div>
               <div class="action-buttons">
                 <button class="btn btn-warning btn-sm">Edit</button>
-                <button class="btn btn-danger btn-sm">Delete</button>
+               
               </div>
+            <?php } } else { echo "Currently, no league available. Add league"; }?>
             </div>
           </div>
         </div>

@@ -40,16 +40,17 @@
             color: #ecf0f1; /* Light gray for email */
         }
 
-        nav ul {
+        /* Updated unique navigation styling */
+        .custom-nav ul {
             display: flex;
             list-style: none;
         }
 
-        nav ul li {
+        .custom-nav ul li {
             margin-left: 20px;
         }
 
-        nav ul li a {
+        .custom-nav ul li a {
             color: #fff;
             text-decoration: none;
             font-size: 1rem;
@@ -63,7 +64,7 @@
 
         /* Responsive Styles */
         @media (max-width: 768px) {
-            nav ul {
+            .custom-nav ul {
                 display: none;
                 flex-direction: column;
                 width: 100%;
@@ -73,11 +74,11 @@
                 left: 0;
             }
 
-            nav ul.active {
+            .custom-nav ul.active {
                 display: flex;
             }
 
-            nav ul li {
+            .custom-nav ul li {
                 margin: 10px 0;
                 text-align: center;
             }
@@ -97,14 +98,12 @@
         <div class="logo">
             <img src="https://via.placeholder.com/150x50?text=Your+Logo" alt="Logo"> <!-- Replace with your logo -->
             <?php if ($this->session->userdata('logged_in')){?>
-          
             <span class="user-email"><?php echo $this->session->userdata('email');?></span> <?php } ?><!-- Replace with user email -->
         </div>
-        <nav>
+        <nav class="custom-nav">
             <ul>
                 <li><a href="<?php echo base_url();?>Welcome/welcome_message">Home</a></li>
                 <li><a href="<?php echo site_url('Auth/logout'); ?>">Logout</a></li>
-              
             </ul>
         </nav>
         <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
@@ -112,10 +111,11 @@
 
     <script>
         function toggleMenu() {
-            const nav = document.querySelector('nav ul');
+            const nav = document.querySelector('.custom-nav ul');
             nav.classList.toggle('active');
         }
     </script>
 
     <!-- Example Content -->
-  
+</body>
+</html>

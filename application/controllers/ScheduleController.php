@@ -46,6 +46,7 @@ class ScheduleController extends CI_Controller {
                 'match_date'=>$match_date,
                 'match_type'=>ucwords($this->input->post('match_type')),
                 'overs'=>ucwords($this->input->post('overs')),
+                'league_id'=>$this->input->post('league_id'),
                 'location'=>ucwords($this->input->post('location')),
                 'series'=>ucwords($this->input->post('series')),
                 'umpire1'=>ucwords($this->input->post('umpire1')),

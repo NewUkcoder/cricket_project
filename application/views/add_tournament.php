@@ -72,41 +72,58 @@
                 <span>Basic League Registration</span>
             </div>
 
-            <form action="<?php echo base_url();?>LeagueController/add_league" method="POST">
+            <form action="<?php echo base_url();?>TournamentController/add_league" method="POST">
+
+                 <div class="form-group mb-3">
+                    <label for="league_name">Title</label>
+                    <input type="text" id="league_name" name="league_name" class="form-control" placeholder="Enter League Title" required>
+                </div>
+
                 <!-- City -->
                 <div class="form-group mb-3">
                     <label for="city">City</label>
-                    <input type="text" id="city" name="city" class="form-control" placeholder="Enter city" required>
+                    <input type="cou" id="city" name="city" class="form-control" placeholder="Enter city" required>
                 </div>
 
                 <!-- Country -->
                 <div class="form-group mb-3">
                     <label for="country">Country</label>
-                    <input type="text" id="country" name="country" class="form-control" placeholder="Enter country" required>
+                    <input type="country" id="country" name="country" class="form-control" placeholder="Enter country" required>
                 </div>
 
-                <!-- Email -->
+                <!-- Venue -->
                 <div class="form-group mb-3">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter email" required>
+                    <label for="venue">Venue</label>
+                    <input type="text" id="venue" name="venue" class="form-control" placeholder="Enter Venue" required>
                 </div>
+
+                <div class="form-group mb-3">
+                    <label for="Venue">Season</label>
+                    <input type="text" id="season" name="season" class="form-control" placeholder="Enter Season .i.e. 2025 or 1st etc" required>
+                </div>
+
+                 <div class="form-group mb-3">
+                    <label for="overs">Overs</label>
+                    <input type="number" id="overs" name="overs" class="form-control" placeholder="Enter Total Overs" required>
+                </div>
+
 
                 <!-- Phone -->
                 <div class="form-group mb-3">
-                    <label for="phone">Phone</label>
-                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter phone number">
+                    <label for="phone_number">Phone (it will be public.Enter if you are agree to share)</label>
+                    <input type="tel" id="phone_number" name="phone_number" class="form-control" placeholder="Enter your number">
                 </div>
 
                 <!-- Ball Type -->
                 <div class="form-group mb-3">
-                    <label for="ball_type">Ball Type</label>
-                    <select id="ball_type" name="ball_type" class="form-control" required>
-                        <option value="" disabled selected>Select ball type</option>
-                        <option value="leather">Leather</option>
-                        <option value="tape">Tape</option>
-                        <option value="tennis">Tennis</option>
-                    </select>
-                </div>
+          <label for="match-type" class="form-label">Match Type</label>
+          <select class="form-control" id="match-type" name="match_type" required>
+            <option value="Leather Ball">Leather Ball</option>
+            <option value="Tape Ball">Tape Ball</option>
+            <option value="Tennis Ball">Tennis Ball</option>
+            <option value="Others">Others</option>
+          </select>
+        </div>
 
                 <!-- Submit Button -->
                 <div class="form-group mb-3">

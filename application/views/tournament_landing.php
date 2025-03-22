@@ -13,56 +13,57 @@
         }
 
         body {
-      
             background-color: white;
             color: #333;
             font-size: 14px;
         }
 
-        header1 {
+        .external-header {
             background: white;
             color: #005f8d;
             text-align: center;
-            padding: 15px 0;
+            padding: 20px 0;
             border-bottom: 2px solid #005f8d;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        header1 h1 {
-            font-size: 2em;
+        .external-header h1 {
+            font-size: 2.5em;
             letter-spacing: 1px;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
         }
 
-        header1 .league-info {
+        .external-header .league-info {
             font-size: 1.1em;
             color: #666;
             margin-top: 10px;
         }
 
         /* Navigation Styles */
-        nav {
+        .main-nav {
             background-color: #005f8d;
             position: sticky;
             top: 0;
             z-index: 100;
-            overflow-x: auto;
-            white-space: nowrap;
             padding: 8px 0;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            white-space: nowrap; /* Prevent wrapping of navigation items */
         }
 
-        nav ul {
-            display: flex;
-            justify-content: center;
+        #main-nav-ul {
+            display: inline-block; /* Make the list inline */
             list-style-type: none;
             margin: 0;
             padding: 0;
         }
 
-        nav ul li {
+        #main-nav-ul li {
+            display: inline-block; /* Display list items inline */
             margin: 0 15px;
         }
 
-        nav ul li a {
+        #main-nav-ul li a {
             color: white;
             text-decoration: none;
             font-size: 1em;
@@ -72,9 +73,19 @@
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        nav ul li a:hover {
+        #main-nav-ul li a:hover {
             background-color: #00b0ff;
             transform: scale(1.05);
+        }
+
+        /* Hide scrollbar for a cleaner look (optional) */
+        .main-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .main-nav {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
         }
 
         /* Main Container */
@@ -168,6 +179,7 @@
             font-size: 1.4em;
             color: #005f8d;
             margin-bottom: 10px;
+            text-align: center;
         }
 
         .schedule-card .match-details {
@@ -189,7 +201,7 @@
 
         .result-card {
             background-color: #f9f9f9;
-            padding: 15px;
+            padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
@@ -204,30 +216,49 @@
         .result-card h4 {
             font-size: 1.4em;
             color: #005f8d;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .result-card .team-images img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #007bb5;
+        }
+
+        .result-card .team-images span {
+            font-size: 1.2em;
+            color: #005f8d;
+            font-weight: bold;
         }
 
         .result-card .result-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1em;
-            color: #666;
+            text-align: center;
+            margin-bottom: 15px;
         }
 
         .result-card .result-details p {
-            margin: 0;
+            font-size: 1.1em;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .result-card .result-details p strong {
+            color: #005f8d;
         }
 
         .result-card .view-scorecard-button {
             background-color: #007bb5;
             color: white;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1em;
             transition: background-color 0.3s ease;
+            display: block;
+            margin: 0 auto;
         }
 
         .result-card .view-scorecard-button:hover {
@@ -420,16 +451,19 @@
     </style>
 </head>
 <body>
-    <header1>
-        <h1>External Header Name</h1>
+    <div class="external-header">
+        <h1><?php echo $league['league_name']; ?></h1>
         <div class="league-info">
-            <p>Year: 2025 | City: New York | Country: USA</p>
+            <p>Season: <?php echo $league['season']; ?> | City: <?php echo $league['city']; ?> | Country: <?php echo $league['country']; ?> | Ball: <?php echo $league['match_type']; ?></p>
         </div>
-    </header1>
+        <div class="league-info">
+            <p>Venue: <?php echo $league['venue']; ?> | Phone: <?php echo $league['phone_number']; ?> | Overs: <?php echo $league['overs']; ?></p>
+        </div>
+    </div>
 
     <!-- Navigation Bar -->
-    <nav>
-        <ul>
+    <nav class="main-nav">
+        <ul id="main-nav-ul">
             <li><a href="#teams">Teams</a></li>
             <li><a href="#stats">Stats</a></li>
             <li><a href="#schedule">Schedule</a></li>
@@ -485,64 +519,61 @@
         <!-- Schedule Section -->
         <div id="schedule" class="section-title">Upcoming Matches</div>
         <div class="schedule-section">
-            <div class="schedule-card">
-                <div class="team-images">
-                    <img src="https://via.placeholder.com/70" alt="Team 1">
-                    <span>vs</span>
-                    <img src="https://via.placeholder.com/70" alt="Team 3">
-                </div>
-                <h4>Team 1: The Mighty Warriors of the Cricket League vs Team 3: The Fearless Fighters of the Cricket League</h4>
-                <div class="match-details">
-                    <p>Date: March 25, 2025</p>
-                    <p>Time: 3:00 PM</p>
-                    <p>Venue: Stadium A</p>
-                </div>
-            </div>
-
-            <div class="schedule-card">
-                <div class="team-images">
-                    <img src="https://via.placeholder.com/70" alt="Team 2">
-                    <span>vs</span>
-                    <img src="https://via.placeholder.com/70" alt="Team 4">
-                </div>
-                <h4>Glorious Champions Cricket League vs Unstoppable Titans Cricket League</h4>
-                <div class="match-details">
-                    <p>Date: March 26, 2025</p>
-                    <p>Time: 7:00 PM</p>
-                    <p>Venue: Stadium B</p>
-                </div>
-            </div>
+            <?php if (!empty($league_schedule)) { 
+                foreach ($league_schedule as $schedule) { ?>
+                    <div class="schedule-card">
+                        <div class="team-images">
+                            <img src="<?php echo $schedule->team_one_image; ?>" alt="Team 1">
+                            <span>vs</span>
+                            <img src="<?php echo $schedule->team_two_image; ?>" alt="Team 3">
+                        </div>
+                        <h4><?php echo $schedule->team_one_name; ?> vs <?php echo $schedule->team_two_name; ?></h4>
+                        <div class="match-details">
+                            <?php $date = $schedule->match_date; $formatted_date = date("d F Y", strtotime($date)); ?>
+                            <p><strong>Date:</strong> <?php echo $formatted_date; ?></p>
+                            <p><strong>Time:</strong> <?php echo $schedule->match_time; ?></p>
+                            <p><strong>Venue:</strong> <?php echo $schedule->location; ?></p>
+                        </div>
+                    </div>
+                <?php } 
+            } else { ?>
+                <h2>Currently no schedule is added.</h2>
+            <?php } ?>
         </div>
 
         <!-- Result Section -->
         <div id="result" class="section-title">Recent Match Results</div>
         <div class="result-section">
+            <!-- Result Card 1 -->
             <div class="result-card">
                 <div class="team-images">
                     <img src="https://via.placeholder.com/70" alt="Team 1">
                     <span>vs</span>
                     <img src="https://via.placeholder.com/70" alt="Team 2">
                 </div>
-                <h4>Team 1: The Mighty Warriors of the Cricket League vs Team 2: The Glorious Champions of the Cricket League</h4>
+                <h4>Team 1: The Mighty Warriors vs Team 2: The Glorious Champions</h4>
                 <div class="result-details">
-                    <p>Score: Team 1 - 250/7 | Team 2 - 240/8</p>
-                    <p>Result: Team 1 won by 10 runs</p>
+                    <p><strong>Score:</strong> Team 1 - 250/7 (50 overs) | Team 2 - 240/8 (50 overs)</p>
+                    <p><strong>Result:</strong> Team 1 won by 10 runs</p>
+                    <p><strong>Player of the Match:</strong> Player A (Team 1) - 120 runs & 3 wickets</p>
                 </div>
-                <button class="view-scorecard-button">View Scorecard</button>
+                <button class="view-scorecard-button">View Full Scorecard</button>
             </div>
 
-            <div class="team-card">
+            <!-- Result Card 2 -->
+            <div class="result-card">
                 <div class="team-images">
                     <img src="https://via.placeholder.com/70" alt="Team 3">
                     <span>vs</span>
                     <img src="https://via.placeholder.com/70" alt="Team 4">
                 </div>
-                <h4>Team 3: The Fearless Fighters of the Cricket League vs Team 4: The Unstoppable Titans of the Cricket League</h4>
+                <h4>Team 3: The Fearless Fighters vs Team 4: The Dominators</h4>
                 <div class="result-details">
-                    <p>Score: Team 3 - 180/5 | Team 4 - 120/9</p>
-                    <p>Result: Team 3 won by 60 runs</p>
+                    <p><strong>Score:</strong> Team 3 - 180/5 (20 overs) | Team 4 - 120/9 (20 overs)</p>
+                    <p><strong>Result:</strong> Team 3 won by 60 runs</p>
+                    <p><strong>Player of the Match:</strong> Player B (Team 3) - 85 runs & 2 wickets</p>
                 </div>
-                <button class="view-scorecard-button">View Scorecard</button>
+                <button class="view-scorecard-button">View Full Scorecard</button>
             </div>
         </div>
 
@@ -599,155 +630,54 @@
         <div id="teams" class="section-title">Teams</div>
         <div class="team-section">
             <!-- Team 1 -->
-            <div class="team-card">
-                <img src="https://via.placeholder.com/100" alt="Team 1">
-                <h4>Team 1: The Mighty Warriors of the Cricket League, Representing the Spirit of Sportsmanship and Excellence</h4>
-                <div class="player-stats">
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Top Batsman">
-                        <h5>Top Batsman</h5>
-                        <p>Player A - 890 runs</p>
+            <?php if (!empty($league_teams)) { 
+                foreach ($league_teams as $l_teams) { ?>
+                    <div class="team-card">
+                        <img src="<?php echo $l_teams['image_path']; ?>" alt="Team 1">
+                        <h4><a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $l_teams['team_id']; ?>"><?php echo $l_teams['team_name']; ?></a></h4>
+                        <div class="player-stats">
+                            <div class="player-info">
+                                <img src="https://via.placeholder.com/70" alt="Top Batsman">
+                                <h5>Top Batsman</h5>
+                                <p>Player A - 890 runs</p>
+                            </div>
+                            <div class="player-info">
+                                <img src="https://via.placeholder.com/70" alt="Top Bowler">
+                                <h5>Top Bowler</h5>
+                                <p>Player B - 40 wickets</p>
+                            </div>
+                            <div class="player-info">
+                                <img src="https://via.placeholder.com/70" alt="Highest Individual Score">
+                                <h5>Highest Individual Score</h5>
+                                <p>Player C - 180 runs</p>
+                                <a href="#" class="scorecard-link">View Scorecard</a>
+                            </div>
+                            <div class="player-info">
+                                <img src="https://via.placeholder.com/70" alt="Most Wicket-Taker">
+                                <h5>Most Wicket-Taker in a Match</h5>
+                                <p>Player D - 7 wickets</p>
+                                <a href="#" class="scorecard-link">View Scorecard</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Top Bowler">
-                        <h5>Top Bowler</h5>
-                        <p>Player B - 40 wickets</p>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Highest Individual Score">
-                        <h5>Highest Individual Score</h5>
-                        <p>Player C - 180 runs</p>
-                        <a href="#" class="scorecard-link">View Scorecard</a>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Most Wicket-Taker">
-                        <h5>Most Wicket-Taker in a Match</h5>
-                        <p>Player D - 7 wickets</p>
-                        <a href="#" class="scorecard-link">View Scorecard</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Team 2 -->
-            <div class="team-card">
-                <img src="https://via.placeholder.com/100" alt="Team 2">
-                <h4>Team 2: The Glorious Champions of the Cricket League, Known for Their Unmatched Skills and Determination</h4>
-                <div class="player-stats">
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Top Batsman">
-                        <h5>Top Batsman</h5>
-                        <p>Player E - 780 runs</p>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Top Bowler">
-                        <h5>Top Bowler</h5>
-                        <p>Player F - 35 wickets</p>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Highest Individual Score">
-                        <h5>Highest Individual Score</h5>
-                        <p>Player G - 160 runs</p>
-                        <a href="#" class="scorecard-link">View Scorecard</a>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Most Wicket-Taker">
-                        <h5>Most Wicket-Taker in a Match</h5>
-                        <p>Player H - 6 wickets</p>
-                        <a href="#" class="scorecard-link">View Scorecard</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Team 3 -->
-            <div class="team-card">
-                <img src="https://via.placeholder.com/100" alt="Team 3">
-                <h4>Team 3: The Fearless Fighters of the Cricket League, Always Ready to Take on Any Challenge with Grit and Passion</h4>
-                <div class="player-stats">
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Top Batsman">
-                        <h5>Top Batsman</h5>
-                        <p>Player I - 720 runs</p>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Top Bowler">
-                        <h5>Top Bowler</h5>
-                        <p>Player J - 30 wickets</p>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Highest Individual Score">
-                        <h5>Highest Individual Score</h5>
-                        <p>Player K - 150 runs</p>
-                        <a href="#" class="scorecard-link">View Scorecard</a>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Most Wicket-Taker">
-                        <h5>Most Wicket-Taker in a Match</h5>
-                        <p>Player L - 5 wickets</p>
-                        <a href="#" class="scorecard-link">View Scorecard</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Team 4 -->
-            <div class="team-card">
-                <img src="https://via.placeholder.com/100" alt="Team 4">
-                <h4>Team 4: The Unstoppable Titans of the Cricket League, Known for Their Dominance and Unyielding Spirit</h4>
-                <div class="player-stats">
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Top Batsman">
-                        <h5>Top Batsman</h5>
-                        <p>Player M - 600 runs</p>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Top Bowler">
-                        <h5>Top Bowler</h5>
-                        <p>Player N - 25 wickets</p>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Highest Individual Score">
-                        <h5>Highest Individual Score</h5>
-                        <p>Player O - 140 runs</p>
-                        <a href="#" class="scorecard-link">View Scorecard</a>
-                    </div>
-                    <div class="player-info">
-                        <img src="https://via.placeholder.com/70" alt="Most Wicket-Taker">
-                        <h5>Most Wicket-Taker in a Match</h5>
-                        <p>Player P - 4 wickets</p>
-                        <a href="#" class="scorecard-link">View Scorecard</a>
-                    </div>
-                </div>
-            </div>
+                <?php } 
+            } else { ?>
+                <h2>Currently, there is no registered team in the league yet.</h2>
+            <?php } ?>
         </div>
 
         <!-- League Rules Section -->
         <div id="rules" class="section-title">League Rules</div>
         <div class="rules-section">
             <div class="rules-card">
-                <h4>General Rules</h4>
                 <ul>
-                    <li>Each team consists of 11 players.</li>
-                    <li>Matches will be played in a T20 format.</li>
-                    <li>Each match will have a maximum of 20 overs per side.</li>
-                    <li>In case of a tie, a super over will be played.</li>
-                    <li>Teams must adhere to the ICC Code of Conduct.</li>
-                </ul>
-            </div>
-
-            <div class="rules-card">
-                <h4>Player Eligibility</h4>
-                <ul>
-                    <li>Players must be registered with the league before the start of the tournament.</li>
-                    <li>Each team can have a maximum of 4 overseas players.</li>
-                    <li>Players must be above 18 years of age.</li>
-                </ul>
-            </div>
-
-            <div class="rules-card">
-                <h4>Match Rules</h4>
-                <ul>
-                    <li>Matches will start at the scheduled time, and any delay may result in penalties.</li>
-                    <li>Each team must have a minimum of 7 players to start a match.</li>
-                    <li>Umpires' decisions are final and binding.</li>
+                    <?php if (!empty($league_rules)) { 
+                        foreach ($league_rules as $rule) { ?>
+                            <li> <?php echo $rule->league_rule; ?>.</li>
+                        <?php } 
+                    } else { 
+                        echo "No rules are mentioned yet. Add new rules of the league";
+                    } ?>
                 </ul>
             </div>
         </div>

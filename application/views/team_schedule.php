@@ -192,7 +192,8 @@
                         <img src="<?php echo $value->team_one_image;?>" alt="Team 5 Logo" class="team-logo">
                         <p class="team-name"><?php echo strtoupper(substr($value->team_one_name, 0, 3));?></p> <!-- Team initials -->
                     </div>
-                    <span><?php echo $value->match_date;?></span>
+                     <?php $date=$value->match_date; $formatted_date = date("d F Y", strtotime($date)); ?>
+                    <span><?php echo $formatted_date;?></span>
                     <div class="team-logo-container">
                         <img src="<?php echo $value->team_two_image;?>" alt="Team 6 Logo" class="team-logo">
                         <p class="team-name"><?php echo strtoupper(substr($value->team_two_name, 0, 3));?></p> <!-- Team initials -->

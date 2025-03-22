@@ -292,7 +292,6 @@ public function reject_match_request($main_id,$team_one_id)
 
       $this->load->view('header');
     $this->load->view('team_request',$team_data);
-
 }
 
 public function team_schedule($team_id)

@@ -23,10 +23,13 @@ class Welcome extends CI_Controller {
         parent::__construct();
         $this->load->model('Team_model');
         $this->load->model('Scorecard_model');
+          $this->load->model('Tournament_model');
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
         $this->load->library('upload');
         $this->load->library('session');
+
+          $this->load->library('user_agent');
 
 
         
@@ -116,10 +119,7 @@ if ($toss != 0) {
     $this->load->view('scorecard', $data);
 } else {
     // Show message if toss is equal to 0
-     echo "<script type='text/javascript'>
-            alert('Wait for scorecard entry, cannot proceed with the match details.');
-            window.history.back();
-          </script>";
+   redirect($this->agent->referrer());
 }
 
 	//var_dump($data);
@@ -170,6 +170,17 @@ if ($toss != 0) {
               {
                 $team_data['data']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
            	 }
+           	  $team_data['tournament']=$this->Tournament_model->get_league($user_id);
+             // var_dump($player_data);
+              if($team_data['tournament']==0)
+              {
+                $team_data['tournament']=0;
+              }
+              else
+              {
+                $team_data['tournament']=$this->Tournament_model->get_league($user_id);
+           	 }
+
            	 
            	$this->load->view('header');
 			$this->load->view('landing_page',$team_data);
@@ -335,16 +346,29 @@ public function scorecard_links($team1,$team2,$match_id)
 		$this->load->view('add_tournament');
 	}
 
-	public function tournament_landing()
+	public function tournament_landing($league_id)
 	{
+		 $team_data['league']=$this->Tournament_model->league_information($league_id);
+		   $team_data['league_teams']=$this->Tournament_model->get_league_teams($league_id);
+                    $team_data['league_schedule']=$this->Tournament_model->get_league_schedule($league_id);
+                     $team_data['league_rules']=$this->Tournament_model->get_league_rules($league_id);
 			$this->load->view('header');
-		$this->load->view('tournament_landing');
+		$this->load->view('tournament_landing',$team_data);
 	}
 
-	public function tournament_main()
+	public function tournament_main($league_id)
 	{
-			$this->load->view('header');
-		$this->load->view('tournament_main');
+		 $user_id=$this->session->userdata('user_id');
+                
+                 $team_data['league']=$this->Tournament_model->league_information($league_id);
+                  $team_data['team_request']=$this->Tournament_model->tournament_teams($league_id);
+                   $team_data['league_teams']=$this->Tournament_model->get_league_teams($league_id);
+                    $team_data['league_schedule']=$this->Tournament_model->get_league_schedule($league_id);
+                     $team_data['league_rules']=$this->Tournament_model->get_league_rules($league_id);
+
+                
+              $this->load->view('header');
+               $this->load->view('tournament_main',$team_data);
 	}
 
 	
