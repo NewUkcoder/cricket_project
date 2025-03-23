@@ -61,7 +61,40 @@ class TournamentController extends CI_Controller {
                 
                 );
               $this->Tournament_model->add_league($record);
-            $this->load->view('landing_page');
+             $team_data['team']=$this->Team_model->team_information(array('user_id'=>$user_id),'add_team');
+                 if($team_data['team']==0)
+              {
+                $team_data['team']=0;
+              }
+               else
+              {
+                 $team_data['team']=$this->Team_model->team_information(array('user_id'=>$user_id),'add_team');
+            }
+
+              $team_data['data']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
+             // var_dump($player_data);
+              if($team_data['data']==0)
+              {
+                $team_data['data']=0;
+              }
+              else
+              {
+                $team_data['data']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
+               }
+                $team_data['tournament']=$this->Tournament_model->get_league($user_id);
+             // var_dump($player_data);
+              if($team_data['tournament']==0)
+              {
+                $team_data['tournament']=0;
+              }
+              else
+              {
+                $team_data['tournament']=$this->Tournament_model->get_league($user_id);
+               }
+
+               
+              $this->load->view('header');
+                     $this->load->view('landing_page',$team_data);
 
     }
 
@@ -106,5 +139,31 @@ public function update_rules()
  $this->Tournament_model->update_rules($rule_id,$record);
  redirect($this->agent->referrer()); // Redirects to the previous page
 
+} 
+public function league_top_ten_scorer($league_id)
+
+{       $team_data['league']=$this->Tournament_model->league_information($league_id);
+       $team_data['top_ten_scorer']=$this->Tournament_model->get_top_10_batsmen($league_id);
+         $this->load->view('header');
+       $this->load->view('league_top_ten_scorer',$team_data);
 }
+
+public function league_top_ten_bowler($league_id)
+{
+          $team_data['league']=$this->Tournament_model->league_information($league_id);
+       $team_data['top_ten_player']=$this->Tournament_model->league_top_ten_bowler($league_id);
+         $this->load->view('header');
+       $this->load->view('league_top_ten_bowler',$team_data);
+}
+
+public function league_ten_individual_scorer($league_id)
+{
+          $team_data['league']=$this->Tournament_model->league_information($league_id);
+       $team_data['top_ten_player']=$this->Tournament_model->league_ten_individual_scorer($league_id);
+         $this->load->view('header');
+       $this->load->view('league_ten_individual_scorer',$team_data);
+}
+
+
+
 }

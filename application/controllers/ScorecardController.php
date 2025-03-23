@@ -157,7 +157,7 @@ class ScorecardController extends CI_Controller {
                 'bowler_player_id'=>$bowler_id,
                 'user_id'=>$this->session->userdata('user_id')
                 );
-        var_dump($record);
+       // var_dump($record);
        
         $this->Scorecard_model->insert_batting_first($record);
                if($batting_order==1)

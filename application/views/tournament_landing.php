@@ -475,32 +475,66 @@
 
     <div class="container">
         <!-- Top Players & Stats -->
-        <div id="stats" class="section-title">Top Players & Stats</div>
+        <div id="stats" class="section-title">League Top Players & Stats</div>
         <div class="statistics">
             <div class="stat-card">
-                <img src="https://via.placeholder.com/70" alt="Top Batsman">
+                 <?php // var_dump($league_top_scorer); 
+                 if ($league_top_scorer): ?>
+              <img src="<?php echo $league_top_scorer->player_image; ?>" alt="<?php echo $league_top_scorer->playerName; ?>">
                 <h4>Top Batsman</h4>
-                <p>Player Name - 890 runs</p>
-                <p class="team-name">Team 1</p>
+                <p><?php echo $league_top_scorer->playerName; ?> - <?php echo $league_top_scorer->total_runs; ?></p>
+                <p class="team-name"><?php echo $league_top_scorer->team_name; ?></p>
+                 <a href="<?php echo base_url();?>TournamentController/league_top_ten_scorer/<?php echo $league['league_id'];?>"> see more</a> 
+                 <?php else: ?>
+                     <h4>Top Batsman</h4>
+        <p>No top scorer found for this league.</p>
+    <?php endif; ?>
             </div>
 
             <div class="stat-card">
-                <img src="https://via.placeholder.com/70" alt="Top Bowler">
+
+                  <?php // var_dump($league_top_scorer); 
+                 if ($league_top_bowler): ?>
+                <img src="<?php echo $league_top_bowler->player_image; ?>" alt="<?php echo $league_top_bowler->playerName; ?>">
                 <h4>Top Bowler</h4>
-                <p>Player Name - 40 wickets</p>
-                <p class="team-name">Team 2</p>
+                <p><?php echo $league_top_bowler->playerName; ?> - <?php echo $league_top_bowler->total_wickets; ?> wickets</p>
+                <p class="team-name"><?php echo $league_top_bowler->team_name; ?></p>
+                 <a href="<?php echo base_url();?>TournamentController/league_top_ten_bowler/<?php echo $league['league_id'];?>"> see more</a>
+                 <?php else: ?>
+
+                     <h4>Top bowler</h4>
+        <p>No top Bowler found for this league.</p>
+    <?php endif; ?>
+
+                
             </div>
 
             <div class="stat-card">
-                <h4>Highest Individual Score</h4>
-                <p>Player Name - 180 runs</p>
-                <p class="team-name">Team 3</p>
+                  <?php // var_dump($league_top_scorer); 
+                 if ($league_highest_individual_score): ?>
+                <img src="<?php echo $league_highest_individual_score->player_image; ?>" alt="<?php echo $league_highest_individual_score->playerName; ?>">
+                <h4>Highest Individual Scorer</h4>
+                <p><?php echo $league_highest_individual_score->playerName; ?> - <?php echo $league_highest_individual_score->highest_score; ?> Runs</p>
+                <p class="team-name"><?php echo $league_highest_individual_score->team_name; ?></p>
+                 <a href="<?php echo base_url();?>TournamentController/league_ten_individual_scorer/<?php echo $league['league_id'];?>"> see more</a>
+                 <?php else: ?>
+                     <h4>Highest Individual Scorer</h4>
+        <p>No batsman found for this league.</p>
+    <?php endif; ?>
             </div>
 
             <div class="stat-card">
-                <h4>Highest Wicket Taker in a Match</h4>
-                <p>Player Name - 7 wickets</p>
-                <p class="team-name">Team 4</p>
+                  <?php // var_dump($league_highest_wicket_taker); 
+                 if ($league_highest_wicket_taker): ?>
+                <img src="<?php echo $league_highest_wicket_taker->player_image; ?>" alt="<?php echo $league_highest_wicket_taker->playerName; ?>">
+                <h4>Best Bowling in a Match</h4>
+                <p><?php echo $league_highest_wicket_taker->playerName; ?> - <?php echo $league_highest_wicket_taker->wickets;?>/<?php echo $league_highest_wicket_taker->given_runs;?></p>
+                <p class="team-name"><?php echo $league_highest_wicket_taker->team_name; ?></p>
+                 <?php else: ?>
+                      <h4>Best Bowling in a Match</h4>
+        <p>No batsman found for this league.</p>
+    <?php endif; ?>
+              
             </div>
 
             <div class="stat-card">

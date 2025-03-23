@@ -352,6 +352,11 @@ public function scorecard_links($team1,$team2,$match_id)
 		   $team_data['league_teams']=$this->Tournament_model->get_league_teams($league_id);
                     $team_data['league_schedule']=$this->Tournament_model->get_league_schedule($league_id);
                      $team_data['league_rules']=$this->Tournament_model->get_league_rules($league_id);
+                      $team_data['league_top_scorer']=$this->Tournament_model->league_top_scorer($league_id);
+                       $team_data['league_top_bowler']=$this->Tournament_model->league_top_bowler($league_id);
+                         $team_data['league_highest_individual_score']=$this->Tournament_model->league_highest_individual_score($league_id);
+                          $team_data['league_highest_wicket_taker']=$this->Tournament_model->league_highest_wicket_taker($league_id);
+                     
 			$this->load->view('header');
 		$this->load->view('tournament_landing',$team_data);
 	}
