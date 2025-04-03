@@ -146,6 +146,7 @@ public function get_player_team($data) {
     // Build the query
     $this->db->select('
         add_team.team_name, 
+         add_team.team_id,
         add_team.image_path as team_image_path, 
         add_player.playerName, 
         add_player.image_path as player_image_path, 
@@ -197,7 +198,9 @@ public function get_player_team($data) {
         AVG(bf.runs) as average_runs,
         SUM(bf.runs >= 100) as centuries,
         SUM(bf.runs >= 50 AND bf.runs < 100) as fifties,
-        MAX(bf.runs) as highest_score
+        MAX(bf.runs) as highest_score,
+        SUM(bf.fours) as fours,
+        SUM(bf.sixes) as sixes
     ');
     $this->db->from('batting_first bf');
     $this->db->join('add_schedule asch', 'bf.match_id = asch.match_id');
@@ -213,7 +216,9 @@ public function get_player_team($data) {
         'average_runs' => $leather_ball_result->average_runs,
         'centuries' => $leather_ball_result->centuries,
         'fifties' => $leather_ball_result->fifties,
-        'highest_score' => $leather_ball_result->highest_score
+        'highest_score' => $leather_ball_result->highest_score,
+        'fours'=>$leather_ball_result->fours,
+        'sixes'=>$leather_ball_result->sixes
     ];
 
     // Tape Ball Stats
@@ -223,7 +228,9 @@ public function get_player_team($data) {
         AVG(bf.runs) as average_runs,
         SUM(bf.runs >= 100) as centuries,
         SUM(bf.runs >= 50 AND bf.runs < 100) as fifties,
-        MAX(bf.runs) as highest_score
+        MAX(bf.runs) as highest_score,
+         SUM(bf.fours) as fours,
+        SUM(bf.sixes) as sixes
     ');
     $this->db->from('batting_first bf');
     $this->db->join('add_schedule asch', 'bf.match_id = asch.match_id');
@@ -239,7 +246,9 @@ public function get_player_team($data) {
         'average_runs' => $tape_ball_result->average_runs,
         'centuries' => $tape_ball_result->centuries,
         'fifties' => $tape_ball_result->fifties,
-        'highest_score' => $tape_ball_result->highest_score
+        'highest_score' => $tape_ball_result->highest_score,
+        'fours'=>$tape_ball_result->fours,
+        'sixes'=>$tape_ball_result->sixes
     ];
 
     // Tennis Ball Stats
@@ -249,7 +258,9 @@ public function get_player_team($data) {
         AVG(bf.runs) as average_runs,
         SUM(bf.runs >= 100) as centuries,
         SUM(bf.runs >= 50 AND bf.runs < 100) as fifties,
-        MAX(bf.runs) as highest_score
+        MAX(bf.runs) as highest_score,
+         SUM(bf.fours) as fours,
+        SUM(bf.sixes) as sixes
     ');
     $this->db->from('batting_first bf');
     $this->db->join('add_schedule asch', 'bf.match_id = asch.match_id');
@@ -265,7 +276,9 @@ public function get_player_team($data) {
         'average_runs' => $tennis_ball_result->average_runs,
         'centuries' => $tennis_ball_result->centuries,
         'fifties' => $tennis_ball_result->fifties,
-        'highest_score' => $tennis_ball_result->highest_score
+        'highest_score' => $tennis_ball_result->highest_score,
+        'fours'=>$tennis_ball_result->fours,
+        'sixes'=>$tennis_ball_result->sixes
     ];
 
     return $result;
@@ -323,6 +336,7 @@ public function calculate_player_bowling_stats($player_id) {
     public function get_active_teams($player_id) {
         // Fetch team names where status is 1
         $this->db->select('t.team_name');
+        $this->db->select('t.team_id');
         $this->db->from('player_team pt');
         $this->db->join('add_team t', 'pt.team_id = t.team_id');
         $this->db->join('add_player p', 'pt.player_id = p.player_id');

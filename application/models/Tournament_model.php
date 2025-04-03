@@ -312,5 +312,309 @@ public function league_highest_wicket_taker($league_id) {
         }
     }
 
+   
+
+    public function league_top_ten_bowler_of_match($league_id)
+    {
+          $this->db->select('ap.playerName, ap.player_id, ap.image_path AS player_image, 
+                           at.team_name, at.team_id, at.image_path AS team_image, 
+                           fb.wickets, fb.given_runs, fb.match_id');
+        $this->db->from('bowling_first fb');
+        $this->db->join('add_schedule asch', 'fb.match_id = asch.match_id'); // Join with add_schedule
+        $this->db->join('add_player ap', 'fb.player_id = ap.player_id'); // Join with add_player
+        $this->db->join('add_team at', 'fb.bowling_team = at.team_id'); // Join with add_team
+        $this->db->where('asch.league_id', $league_id); // Filter by league_id
+        $this->db->order_by('fb.wickets', 'DESC'); // Order by wickets in descending order
+        $this->db->order_by('fb.given_runs', 'ASC'); // Order by given_runs in ascending order
+        $this->db->limit(10); // Limit to the highest wicket-taker
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->result(); // Return the highest wicket-taker's details as an object
+        } else {
+            return false; // No data found
+        }
+    }
+
+     public function get_highest_team_score($league_id) {
+        $this->db->select('at.team_name, at.team_id, at.image_path AS team_image, 
+                          MAX(bf.total_runs) AS highest_team_score, t_overs,wickets');
+        $this->db->from('add_schedule asch');
+        $this->db->join('total_score bf', 'asch.match_id = bf.match_id');
+        $this->db->join('add_team at', 'bf.batting_team = at.team_id'); // Join with team table
+        $this->db->where('asch.league_id', $league_id); // Filter by league
+        $this->db->group_by('bf.batting_team'); // Group by team to find their highest score
+        $this->db->order_by('highest_team_score', 'DESC'); // Order by highest score
+        $this->db->limit(1); // Get only the top team
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->row(); // Return team details with highest score
+        } else {
+            return false; // No data found
+        }
+
+    }
+
+      public function league_lowest_team_score($league_id) {
+        $this->db->select('at.team_name, at.team_id, at.image_path AS team_image, 
+                          MIN(bf.total_runs) AS highest_team_score, t_overs,wickets');
+        $this->db->from('add_schedule asch');
+        $this->db->join('total_score bf', 'asch.match_id = bf.match_id');
+        $this->db->join('add_team at', 'bf.batting_team = at.team_id'); // Join with team table
+        $this->db->where('asch.league_id', $league_id); // Filter by league
+        $this->db->group_by('bf.batting_team'); // Group by team to find their highest score
+        $this->db->order_by('highest_team_score', 'ASC'); // Order by highest score
+        $this->db->limit(1); // Get only the top team
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->row(); // Return team details with highest score
+        } else {
+            return false; // No data found
+        }
+}
+
+public function league_top_five_team_score($league_id){
+ $this->db->select('at.team_name, at.team_id, at.image_path AS team_image, 
+                          MAX(bf.total_runs) AS highest_team_score, t_overs,wickets, asch.match_id');
+        $this->db->from('add_schedule asch');
+        $this->db->join('total_score bf', 'asch.match_id = bf.match_id');
+        $this->db->join('add_team at', 'bf.batting_team = at.team_id'); // Join with team table
+        $this->db->where('asch.league_id', $league_id); // Filter by league
+        $this->db->group_by('bf.batting_team'); // Group by team to find their highest score
+        $this->db->order_by('highest_team_score', 'DESC'); // Order by highest score
+        $this->db->limit(5); // Get only the top team
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->result(); // Return team details with highest score
+        } else {
+            return false; // No data found
+        }
+}
+
+public function league_lowest_five_score($league_id){
+ $this->db->select('at.team_name, at.team_id, at.image_path AS team_image, 
+                          MAX(bf.total_runs) AS highest_team_score, t_overs,wickets, asch.match_id');
+        $this->db->from('add_schedule asch');
+        $this->db->join('total_score bf', 'asch.match_id = bf.match_id');
+        $this->db->join('add_team at', 'bf.batting_team = at.team_id'); // Join with team table
+        $this->db->where('asch.league_id', $league_id); // Filter by league
+        $this->db->group_by('bf.batting_team'); // Group by team to find their highest score
+        $this->db->order_by('highest_team_score', 'ASC'); // Order by highest score
+        $this->db->limit(5); // Get only the top team
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->result(); // Return team details with highest score
+        } else {
+            return false; // No data found
+        }
+}
+
+public function invite_tournament($email) {
+        // Join the user table and add_team table using user_id
+        $this->db->select('add_league.league_name, add_league.league_id');
+        $this->db->from('users');  // Assuming your users table is named 'users'
+        $this->db->join('add_league', 'add_league.user_id = users.user_id');  // Join using user_id
+        $this->db->where('users.email', $email);  // Filter by email
+        
+        $query = $this->db->get();
+       // var_dump($query->result());
+        // Log or print the query to check if it's correct
+        log_message('debug', $this->db->last_query());  // Logs the query
+        
+        // Return result if available
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        
+        return null;  // If no result is found
+    }
+
+  
+
+
+     public function join_tournament($league_id, $team_id)
+{
+
+
+    // Query to check if already exists
+    $this->db->select('*');
+    $this->db->from('league_teams');
+    $this->db->where('(league_id = ' . $league_id . ' AND team_id = ' . $team_id . ') ');
+    $query = $this->db->get();
+
+    // If a match exists, return an error message
+    if ($query->row()) {
+
+         $this->session->set_flashdata('message', ' Team is already in this league list.');
+            $this->session->set_flashdata('message_type', 'error');
+
+         return false;
+    }
+
+    // If no match exists, insert the new match
+    $data = [
+        'league_id' => $league_id,
+        'team_id' => $team_id,
+        'status' => 0,
+        'joined_at' => date('Y-m-d H:i:s')
+    ];
+
+    // Insert the new match into the match_team table
+    $this->db->insert('league_teams', $data);
+     $this->session->set_flashdata('message', 'Request to join this leauge is sent successfully');
+$this->session->set_flashdata('message_type', 'success');
+    // Get the inserted match IDs (team_one_id and team_two_id)
+    //$inserted_id = $this->db->insert_id();  // Gets the last inserted ID
+    return true; // Match successfully created
+}
+
+
+public function league_teams($league_id) {
+    // Get all active teams in the league
+    $this->db->select('at.team_id, at.team_name, at.image_path AS team_image');
+    $this->db->from('league_teams lt');
+    $this->db->join('add_team at', 'lt.team_id = at.team_id');
+    $this->db->where('lt.league_id', $league_id);
+    $this->db->where('lt.status', 1); // Active teams only
+    $teams = $this->db->get()->result_array();
+
+    if (empty($teams)) {
+        return ['message' => 'No active teams found for this league'];
+    }
+
+    $results = [];
+
+    foreach ($teams as $team) {
+        $team_id = $team['team_id'];
+        $team_info = [
+            'team_id' => $team['team_id'],
+            'team_name' => $team['team_name'],
+            'team_image' => $team['team_image']
+        ];
+
+        // 1️⃣ Top Batsman (Most Total Runs)
+        $top_scorer = $this->db->query("
+            SELECT bf.player_id, ap.playerName as player_name, ap.image_path as player_image, SUM(bf.runs) AS total_runs
+            FROM batting_first bf
+            JOIN add_schedule s ON bf.match_id = s.match_id
+            JOIN add_player ap ON bf.player_id = ap.player_id
+            WHERE s.league_id = ? AND bf.batting_team = ?
+            GROUP BY bf.player_id, ap.playerName, ap.image_path
+            ORDER BY total_runs DESC
+            LIMIT 1
+        ", [$league_id, $team_id])->row_array();
+
+        // 2️⃣ Best Individual Scorer (Highest Runs in a Single Match)
+        $highest_individual_score = $this->db->query("
+            SELECT bf.player_id, ap.playerName as player_name, ap.image_path as player_image, MAX(bf.runs) AS runs
+            FROM batting_first bf
+            JOIN add_schedule s ON bf.match_id = s.match_id
+            JOIN add_player ap ON bf.player_id = ap.player_id
+            WHERE s.league_id = ? AND bf.batting_team = ?
+            GROUP BY bf.player_id, ap.playerName, ap.image_path
+            ORDER BY runs DESC
+            LIMIT 1
+        ", [$league_id, $team_id])->row_array();
+
+        // 3️⃣ Top Bowler (Most Total Wickets)
+        $top_bowler_data = $this->db->query("
+            SELECT bf.player_id, ap.playerName as player_name, ap.image_path as player_image, SUM(bf.wickets) AS total_wickets
+            FROM bowling_first bf
+            JOIN add_schedule s ON bf.match_id = s.match_id
+            JOIN add_player ap ON bf.player_id = ap.player_id
+            WHERE s.league_id = ? AND bf.bowling_team = ?
+            GROUP BY bf.player_id, ap.playerName, ap.image_path
+            ORDER BY total_wickets DESC
+            LIMIT 1
+        ", [$league_id, $team_id])->row_array();
+
+        // 4️⃣ Best Bowling Performance (Most Wickets in a Single Match + Given Runs)
+        $best_bowling_data = $this->db->query("
+            SELECT bf.player_id, ap.playerName as player_name, ap.image_path as player_image, 
+                   bf.wickets, bf.given_runs,
+                   CONCAT(bf.wickets, '/', bf.given_runs) AS bowling_figures
+            FROM bowling_first bf
+            JOIN add_schedule s ON bf.match_id = s.match_id
+            JOIN add_player ap ON bf.player_id = ap.player_id
+            WHERE s.league_id = ? AND bf.bowling_team = ?
+            ORDER BY bf.wickets DESC, bf.given_runs ASC
+            LIMIT 1
+        ", [$league_id, $team_id])->row_array();
+
+        $results[] = [
+            'team_info' => $team_info,
+            'top_scorer' => $top_scorer,
+            'highest_individual_score' => $highest_individual_score,
+            'top_bowler' => $top_bowler_data ? $top_bowler_data['player_name'] : null,
+            'top_bowler_image' => $top_bowler_data ? $top_bowler_data['player_image'] : null,
+            'top_bowler_wickets' => $top_bowler_data ? $top_bowler_data['total_wickets'] : null,
+            'best_bowler' => $best_bowling_data ? $best_bowling_data['player_name'] : null,
+            'best_bowling_image' => $best_bowling_data ? $best_bowling_data['player_image'] : null,
+            'best_bowling_figures' => $best_bowling_data ? $best_bowling_data['bowling_figures'] : null
+        ];
+    }
+
+    return $results;
+}
+
+public function get_match_results_by_league_with_batting_order($league_id)
+{
+    // Select required columns from all tables
+    $this->db->select('
+        add_schedule.match_id,
+        add_schedule.match_date,
+        add_schedule.match_time,
+        match_result.win_team,
+        match_result.lost_team,
+        match_result.result_statement,
+        -- Aggregate the scores from the total_score table based on batting_order
+        SUM(CASE WHEN total_score.batting_order = 1 THEN total_score.total_runs ELSE 0 END) AS total_runs_batting_order_1,
+        SUM(CASE WHEN total_score.batting_order = 2 THEN total_score.total_runs ELSE 0 END) AS total_runs_batting_order_2,
+        GROUP_CONCAT(CASE WHEN total_score.batting_order = 1 THEN total_score.batting_team ELSE NULL END) AS batting_team_batting_order_1,
+        GROUP_CONCAT(CASE WHEN total_score.batting_order = 2 THEN total_score.batting_team ELSE NULL END) AS batting_team_batting_order_2,
+        SUM(CASE WHEN total_score.batting_order = 1 THEN total_score.t_overs ELSE 0 END) AS total_overs_batting_order_1,
+        SUM(CASE WHEN total_score.batting_order = 2 THEN total_score.t_overs ELSE 0 END) AS total_overs_batting_order_2,
+        SUM(CASE WHEN total_score.batting_order = 1 THEN total_score.wickets ELSE 0 END) AS wickets_batting_order_1,
+        SUM(CASE WHEN total_score.batting_order = 2 THEN total_score.wickets ELSE 0 END) AS wickets_batting_order_2,
+        win_team.team_name AS win_team_name,
+        win_team.image_path AS win_team_image,
+        lost_team.team_name AS lost_team_name,
+        lost_team.image_path AS lost_team_image
+    ');
+    
+    // Join the tables
+    $this->db->from('add_schedule');
+    $this->db->join('match_result', 'add_schedule.match_id = match_result.match_id', 'inner');
+    $this->db->join('total_score', 'add_schedule.match_id = total_score.match_id', 'left');
+    
+    // Join add_team table for both winning and losing teams
+    $this->db->join('add_team AS win_team', 'match_result.win_team = win_team.team_id', 'inner');
+    $this->db->join('add_team AS lost_team', 'match_result.lost_team = lost_team.team_id', 'inner');
+    
+    // Filter by league_id
+    $this->db->where('add_schedule.league_id', $league_id);
+    
+    // Group by match_id (since we want to consolidate batting orders into one row per match)
+    $this->db->group_by('add_schedule.match_id');
+    
+    // Execute the query
+    $query = $this->db->get();
+    
+    // Check if any results were found
+    if ($query->num_rows() > 0) {
+        return $query->result();  // Return results as an array of objects
+    } else {
+        return false;  // No records found
+    }
+}
+
+
+
+
+
 
 }

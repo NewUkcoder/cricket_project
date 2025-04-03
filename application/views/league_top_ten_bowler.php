@@ -195,6 +195,10 @@
 <body>
     <div class="stats-table">
         <div class="table-header">
+              <a href="javascript:history.back()" class="back-link">
+                <span class="back-arrow">←</span>
+                Back
+            </a>
             <h1><?php echo $league['league_name']; ?></h1>
             <p> League Top Bowler</p>
         </div>

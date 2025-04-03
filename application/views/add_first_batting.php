@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Cricket Scorecard Admin</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -13,6 +13,7 @@
       font-size: 0.85rem;
       color: #333;
       margin-bottom: 60px; /* Space for fixed footer */
+      -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
     }
     .container {
       max-width: 900px;
@@ -47,6 +48,9 @@
       font-size: 0.9rem;
       color: #333;
       margin-top: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .vs-badge {
       background-color: #007bff;
@@ -76,6 +80,8 @@
       font-weight: 500;
       display: inline-block;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      max-width: 100%;
+      white-space: normal;
     }
     .toss-text {
       font-size: 0.9rem;
@@ -84,6 +90,7 @@
       text-align: center;
       padding: 4px 8px;
       font-size: 0.8rem;
+      vertical-align: middle;
     }
     .table th {
       background-color: #007bff;
@@ -91,17 +98,21 @@
       font-size: 0.9rem;
     }
     .action-btn {
-      background-color: #28a745;
       color: white;
       border: none;
-      padding: 4px 8px;
       border-radius: 5px;
       font-size: 0.8rem;
       margin: 2px;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 8px;
+      min-width: 60px;
     }
     .action-btn:hover {
-      background-color: #218838;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .action-btn.delete-btn {
       background-color: #dc3545;
@@ -111,27 +122,28 @@
     }
     .action-btn.edit-btn {
       background-color: #ffc107;
+      color: #212529;
     }
     .action-btn.edit-btn:hover {
       background-color: #e0a800;
     }
     .action-btn-container {
       display: flex;
-      justify-content: flex-start; /* Left-aligned */
-      gap: 5px;
-      margin-top: 10px;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 15px;
+      flex-wrap: wrap;
     }
     .action-btn-container .btn {
-      font-size: 0.8rem;
-      padding: 6px;
-      width: auto; /* Adjust width for smaller screens */
+      font-size: 0.85rem;
+      padding: 8px 12px;
+      flex: 1;
+      min-width: 120px;
+      white-space: nowrap;
     }
     .next-btn {
       background-color: #17a2b8;
       color: white;
-      padding: 6px;
-      border-radius: 5px;
-      font-size: 0.8rem;
     }
     .next-btn:hover {
       background-color: #138496;
@@ -151,66 +163,142 @@
     }
     .footer-links {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       width: 100%;
+      flex-wrap: wrap;
     }
     .footer-links a {
       text-decoration: none;
       color: #007bff;
-      padding: 6px 10px;
+      padding: 6px 8px;
       font-size: 0.8rem;
       font-weight: bold;
       text-align: center;
       border-radius: 5px;
       transition: background-color 0.3s;
+      margin: 2px;
+      flex: 1;
+      min-width: 60px;
     }
     .footer-links a:hover {
       background-color: #e2e6ea;
     }
+    .modal-dialog {
+      margin: 10px auto;
+    }
+    .modal-content {
+      border-radius: 10px;
+    }
+    .modal-body {
+      padding: 15px;
+    }
+    .form-control, .form-select {
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.75rem;
+    }
+    .player-dismissal {
+      font-size: 0.75rem;
+      color: #6c757d;
+      margin-top: 3px;
+    }
 
     /* Mobile Responsiveness */
     @media (max-width: 768px) {
-      .team-info img {
-        width: 25px;
-        height: 25px;
+      body {
+        font-size: 0.8rem;
+      }
+      .container {
+        padding: 5px;
+      }
+      .team-logo {
+        width: 30px;
+        height: 30px;
+      }
+      .vs-badge {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+      }
+      .team-name {
+        font-size: 0.8rem;
+      }
+      .toss-badge {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
       }
       .table th, .table td {
-        font-size: 0.75rem;
-        padding: 3px 6px;
-      }
-      .table th:nth-child(2), .table td:nth-child(2),
-      .table th:nth-child(3), .table td:nth-child(3),
-      .table th:nth-child(4), .table td:nth-child(4),
-      .table th:nth-child(5), .table td:nth-child(5),
-      .table th:nth-child(6), .table td:nth-child(6),
-      .table th:nth-child(7), .table td:nth-child(7) {
-        width: auto;
-      }
-      .action-btn-container {
-        flex-direction: row; /* Stack buttons vertically on mobile */
-        align-items: flex-start; /* Left-aligned */
-      }
-      .action-btn-container .btn {
-        /* Full width for smaller screens */
-        margin-bottom: 5px; /* Space between stacked buttons */
-        font-size: 0.7rem; /* Smaller buttons */
-        padding: 3px 6px;
+        font-size: 0.7rem;
+        padding: 3px 5px;
       }
       .action-btn {
-        font-size: 0.7rem; /* Smaller buttons */
-        padding: 3px 6px;
+        font-size: 0.7rem;
+        padding: 4px 6px;
+        min-width: 50px;
       }
-      .next-btn {
-        font-size: 0.7rem; /* Smaller buttons */
-        padding: 3px 6px;
+      .action-btn-container .btn {
+        font-size: 0.75rem;
+        padding: 6px 8px;
+        min-width: 100px;
       }
-      .btn-primary, .btn-success {
-        font-size: 0.7rem; /* Smaller buttons */
-        padding: 3px 6px;
+      .footer-links a {
+        font-size: 0.7rem;
+        padding: 4px 6px;
+      }
+      .modal-dialog {
+        margin: 5px;
+        max-width: 95%;
+      }
+      .modal-body {
+        padding: 10px;
+      }
+      .form-control, .form-select {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
+      .btn-sm {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .team-card {
+        padding: 5px;
+      }
+      .vs-badge {
+        margin: 0 5px;
+      }
+      .table th, .table td {
+        font-size: 0.65rem;
+      }
+      .action-btn-container {
+        flex-direction: column;
+        gap: 5px;
+      }
+      .action-btn-container .btn {
+        width: 100%;
+      }
+      .footer-links {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 5px;
+        justify-content: flex-start;
+      }
+      .footer-links a {
+        flex: 0 0 auto;
+        white-space: nowrap;
       }
     }
   </style>
-
+</head>
 <body>
   <?php 
     // PHP code for handling toss and other data
@@ -244,20 +332,20 @@
       <div class="d-flex justify-content-center align-items-center">
         <!-- Team 1 -->
         <?php foreach($team_one as $t_one) { ?>
-          <div class="team-card text-center mx-2">
+          <div class="team-card text-center mx-1">
             <img src="<?php echo $t_one->image_path;?>" alt="Team 1" class="team-logo">
             <div class="team-name mt-1"><?php echo $t_one->team_name;?></div>
           </div>
         <?php } ?>
 
         <!-- VS Badge -->
-        <div class="vs-badge mx-3">
+        <div class="vs-badge mx-2">
           <span class="vs-text">VS</span>
         </div>
 
         <!-- Team 2 -->
         <?php foreach($team_two as $t_two) { ?>
-          <div class="team-card text-center mx-2">
+          <div class="team-card text-center mx-1">
             <img src="<?php echo $t_two->image_path;?>" alt="Team 2" class="team-logo">
             <div class="team-name mt-1"><?php echo $t_two->team_name;?></div>
           </div>
@@ -279,49 +367,59 @@
         <thead>
           <tr>
             <th>Player</th>
-            <th>Runs</th>
-            <th>Balls</th>
+            <th>R</th>
+            <th>B</th>
             <th>4s</th>
             <th>6s</th>
-            <th>Strike Rate</th>
-           
+            <th>SR</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <?php if($bat_first == null) { ?>
-            <tr><td colspan="9" class="text-center">Add batting record of first innings</td></tr>
+            <tr><td colspan="7" class="text-center">Add batting record of first innings</td></tr>
           <?php } else { 
             foreach($bat_first as $bat) { 
               $strike_rate = ($bat->balls > 0) ? round(($bat->runs / $bat->balls) * 100, 2) : 0;
               ?>
               <tr>
-                <td><b><?php echo $bat->playerName; ?></b><p><?php echo $bat->dismissal;?> <?php  if ($bat->dismissal === 'Not Out' || $bat->dismissal === 'Run Out') {
-   echo "" ; }else { echo ", " . $bat->bowler_name;}
-  ?></p></td>
+                <td class="text-start">
+                  <b><?php echo $bat->playerName; ?></b>
+                  <div class="player-dismissal">
+                    <?php echo $bat->dismissal;?> 
+                    <?php if ($bat->dismissal !== 'Not Out' && $bat->dismissal !== 'Run Out') {
+                      echo ", " . $bat->bowler_name;
+                    } ?>
+                  </div>
+                </td>
                 <td><?php echo $bat->runs; ?></td>
                 <td><?php echo $bat->balls; ?></td>
                 <td><?php echo $bat->fours; ?></td>
                 <td><?php echo $bat->sixes; ?></td>
                 <td><?php echo $strike_rate; ?></td>
-                
                 <td>
-                  <button class="action-btn edit-btn btn-sm" data-bs-toggle="modal" data-bs-target="#editScorecardModal"
-                          data-match-id="<?php echo $match_id;?>"
-                          data-player-id="<?php echo $bat->player_id;?>"
-                          data-batting-order="<?php echo $bat->batting_order;?>"
-                          data-runs="<?php echo $bat->runs;?>"
-                          data-balls="<?php echo $bat->balls;?>"
-                          data-fours="<?php echo $bat->fours;?>"
-                          data-sixes="<?php echo $bat->sixes;?>"
-                          data-dismissal="<?php echo $bat->dismissal ?? ''; ?>"
-                          data-bowler-id="<?php echo $bat->bowler_id ?? ''; ?>">Edit</button>
-                  <form action="<?php echo base_url(); ?>/ScorecardController/delete_score" method="POST" style="display:inline;">
-                    <input type="hidden" name="match_id" value="<?php echo $match_id; ?>">
-                    <input type="hidden" name="player_id" value="<?php echo $bat->player_id; ?>">
-                    <input type="hidden" name="batting_order" value="1">
-                    <button type="submit" class="action-btn delete-btn btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
-                  </form>
+                  <div class="d-flex flex-wrap justify-content-center">
+                    <button class="action-btn edit-btn" data-bs-toggle="modal" data-bs-target="#editScorecardModal"
+                            data-match-id="<?php echo $match_id;?>"
+                            data-player-id="<?php echo $bat->player_id;?>"
+                            data-batting-order="<?php echo $bat->batting_order;?>"
+                            data-runs="<?php echo $bat->runs;?>"
+                            data-balls="<?php echo $bat->balls;?>"
+                            data-fours="<?php echo $bat->fours;?>"
+                            data-sixes="<?php echo $bat->sixes;?>"
+                            data-dismissal="<?php echo $bat->dismissal ?? ''; ?>"
+                            data-bowler-id="<?php echo $bat->bowler_id ?? ''; ?>">
+                      <i class="bi bi-pencil-fill"></i> Edit
+                    </button>
+                    <form action="<?php echo base_url(); ?>/ScorecardController/delete_score" method="POST" style="display:inline;">
+                      <input type="hidden" name="match_id" value="<?php echo $match_id; ?>">
+                      <input type="hidden" name="player_id" value="<?php echo $bat->player_id; ?>">
+                      <input type="hidden" name="batting_order" value="1">
+                      <button type="submit" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this record?')">
+                        <i class="bi bi-trash-fill"></i> Delete
+                      </button>
+                    </form>
+                  </div>
                 </td>
               </tr>
             <?php } } ?>
@@ -331,47 +429,51 @@
             <td colspan="4"><strong><?php echo $totalExtras; ?></strong></td>
             <td>
               <?php if($get_extra1!=0){ foreach($get_extra1 as $t_extra) {?>
-                <button class="action-btn edit-extras-btn btn-sm" data-bs-toggle="modal" data-bs-target="#editExtrasModal"
+                <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#editExtrasModal"
                         data-match-id="<?php echo $match_id; ?>"
                         data-batting-order="<?php echo $t_extra->batting_order; ?>"
                         data-wides="<?php echo $t_extra->wides; ?>"
                         data-no-balls="<?php echo $t_extra->no_balls; ?>"
                         data-byes="<?php echo $t_extra->byes; ?>"
-                        data-leg-byes="<?php echo $t_extra->leg_byes; ?>">Edit</button>
+                        data-leg-byes="<?php echo $t_extra->leg_byes; ?>">Edit Extras</button>
               <?php } }else { ?>
-                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#extrasModal">Add Extras</button>
+                <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#extrasModal">Add Extras</button>
               <?php } ?>
             </td>
           </tr>
           <!-- Total Score Row -->
           <tr>
             <td colspan="2"><strong>Total Score</strong></td>
-            <td colspan="4"><strong><?php if($all_score == 0) { echo "Add total runs and fall of wickets by clicking on add total runs"; ?></td>
-            <td><button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#totalRunsModal">Add Total Runs</button></td>
+            <td colspan="4"><strong><?php if($all_score == 0) { echo "Add total runs and wickets"; ?></td>
+            <td><button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#totalRunsModal">Add Total</button></td>
             <?php } else { echo $total_score; ?>/<?php echo $wickets; ?></strong></td>
             <td>
               <?php foreach($all_score as $t_score) { ?>
-                <button class="action-btn edit-btn btn-sm" data-bs-toggle="modal" data-bs-target="#editTotalScoreModal"
+                <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#editTotalScoreModal"
                         data-total-runs="<?php echo $t_score->total_runs; ?>"
                         data-wickets="<?php echo $t_score->wickets; ?>"
                         data-match-id="<?php echo $t_score->match_id; ?>"
-                        data-batting-order="<?php echo $t_score->batting_order; ?>">Edit</button>
+                        data-batting-order="<?php echo $t_score->batting_order; ?>">Edit Total</button>
               <?php } } ?>
             </td>
           </tr>
         </tbody>
       </table>
       <div class="action-btn-container">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scorecardModal">Insert Scorecard</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scorecardModal">
+          <i class="bi bi-plus-circle-fill"></i> Add Player
+        </button>
         <a href="<?php echo base_url();?>Welcome/scorecard_links//<?php echo $bowl_first;?>/<?php echo $batting_first;?>/<?php echo $match_id;?>">
-          <button class="btn btn-success next-btn">NEXT</button>
+          <button class="btn btn-success next-btn">
+            <i class="bi bi-arrow-right-circle-fill"></i> Next Inning
+          </button>
         </a>
       </div>
     </div>
   </div>
 
-
- <div class="modal fade" id="extrasModal" tabindex="-1" aria-labelledby="extrasModalLabel" aria-hidden="true">
+  <!-- Extras Modal -->
+  <div class="modal fade" id="extrasModal" tabindex="-1" aria-labelledby="extrasModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -384,32 +486,33 @@
             <input type="hidden" value="<?php echo $batting_first;?>" name="batting_team_id">
             <input type="hidden" value="1" name="batting_order">
             <div class="mb-3">
-              <label for="extras-runs" class="form-label">Wide</label>
-              <input type="number" class="form-control" id="extras-runs" name="wides">
+              <label for="wides" class="form-label">Wides</label>
+              <input type="number" class="form-control" id="wides" name="wides" min="0">
             </div>
             <div class="mb-3">
-              <label for="extras-runs" class="form-label">No Ball</label>
-              <input type="number" class="form-control" id="extras-runs" name="no_balls">
+              <label for="no-balls" class="form-label">No Balls</label>
+              <input type="number" class="form-control" id="no-balls" name="no_balls" min="0">
             </div>
             <div class="mb-3">
-              <label for="extras-runs" class="form-label">Byes</label>
-              <input type="number" class="form-control" id="extras-runs" name="byes">
+              <label for="byes" class="form-label">Byes</label>
+              <input type="number" class="form-control" id="byes" name="byes" min="0">
             </div>
             <div class="mb-3">
-              <label for="extras-runs" class="form-label">Leg Byes</label>
-              <input type="number" class="form-control" id="extras-runs" name="leg_byes">
+              <label for="leg-byes" class="form-label">Leg Byes</label>
+              <input type="number" class="form-control" id="leg-byes" name="leg_byes" min="0">
             </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Submit</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save Extras</button>
+            </div>
           </form>
+        </div>
       </div>
     </div>
   </div>
 
- <div class="modal fade" id="totalRunsModal" tabindex="-1" aria-labelledby="totalRunsModalLabel" aria-hidden="true">
+  <!-- Total Runs Modal -->
+  <div class="modal fade" id="totalRunsModal" tabindex="-1" aria-labelledby="totalRunsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -420,31 +523,35 @@
           <form action="<?php echo base_url();?>/ScorecardController/insert_total_score" method="POST">
             <div class="mb-3">
               <label for="total-runs" class="form-label">Total Runs</label>
-              <input type="number" class="form-control" id="total-runs" name="total_runs" required>
-              <label for="t-overs" class="form-label">Total Overs</label>
-              <input type="number" class="form-control" id="t-overs" name="t_overs" required>
-              <label for="total-runs" class="form-label">Wickets</label>
-              <input type="number" class="form-control" id="total-runs" name="wickets" required>
-              <input type="hidden" value="<?php echo $match_id;?>" name="match_id">
-              <input type="hidden" value="<?php echo $batting_first;?>" name="batting_team_id">
-              <input type="hidden" value="1" name="batting_order">
+              <input type="number" class="form-control" id="total-runs" name="total_runs" min="0" required>
             </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Submit</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+            <div class="mb-3">
+              <label for="t-overs" class="form-label">Total Overs</label>
+              <input type="number" class="form-control" id="t-overs" name="t_overs" min="0" step="0.1" required>
+            </div>
+            <div class="mb-3">
+              <label for="wickets" class="form-label">Wickets</label>
+              <input type="number" class="form-control" id="wickets" name="wickets" min="0" max="10" required>
+            </div>
+            <input type="hidden" value="<?php echo $match_id;?>" name="match_id">
+            <input type="hidden" value="<?php echo $batting_first;?>" name="batting_team_id">
+            <input type="hidden" value="1" name="batting_order">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save Total</button>
+            </div>
           </form>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal for Scorecard Form -->
+  <!-- Scorecard Modal -->
   <div class="modal fade" id="scorecardModal" tabindex="-1" aria-labelledby="scorecardModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="scorecardModalLabel">Insert Scorecard</h5>
+          <h5 class="modal-title" id="scorecardModalLabel">Add Player Score</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -463,21 +570,25 @@
                 <?php } ?>
               </select>
             </div>
-            <div class="mb-3">
-              <label for="runs" class="form-label">Runs</label>
-              <input type="number" class="form-control" id="runs" name="runs" required>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="runs" class="form-label">Runs</label>
+                <input type="number" class="form-control" id="runs" name="runs" min="0" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="balls" class="form-label">Balls</label>
+                <input type="number" class="form-control" id="balls" name="balls" min="0" required>
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="balls" class="form-label">Balls</label>
-              <input type="number" class="form-control" id="balls" name="balls" required>
-            </div>
-            <div class="mb-3">
-              <label for="fours" class="form-label">4s</label>
-              <input type="number" class="form-control" id="fours" name="fours" required>
-            </div>
-            <div class="mb-3">
-              <label for="sixes" class="form-label">6s</label>
-              <input type="number" class="form-control" id="sixes" name="sixes" required>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="fours" class="form-label">4s</label>
+                <input type="number" class="form-control" id="fours" name="fours" min="0">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="sixes" class="form-label">6s</label>
+                <input type="number" class="form-control" id="sixes" name="sixes" min="0">
+              </div>
             </div>
             <div class="mb-3">
               <label for="dismissal" class="form-label">Dismissal</label>
@@ -500,77 +611,82 @@
                 <?php } ?>
               </select>
             </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Submit</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save Score</button>
+            </div>
           </form>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal for Edit Scorecard -->
+  <!-- Edit Scorecard Modal -->
   <div class="modal fade" id="editScorecardModal" tabindex="-1" aria-labelledby="editScorecardModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editScorecardModalLabel">Edit Scorecard</h5>
+          <h5 class="modal-title" id="editScorecardModalLabel">Edit Player Score</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form action="<?php echo base_url();?>/ScorecardController/edit_score" method="POST">
-  <input type="hidden" id="edit-match-id" name="match_id">
-  <input type="hidden" id="edit-player-id" name="player_id">
-  <input type="hidden" value="1" name="batting_order">
-  <div class="mb-3">
-    <label for="edit-runs" class="form-label">Runs</label>
-    <input type="number" class="form-control" id="edit-runs" name="runs" required>
-  </div>
-  <div class="mb-3">
-    <label for="edit-balls" class="form-label">Balls</label>
-    <input type="number" class="form-control" id="edit-balls" name="balls" required>
-  </div>
-  <div class="mb-3">
-    <label for="edit-fours" class="form-label">4s</label>
-    <input type="number" class="form-control" id="edit-fours" name="fours" required>
-  </div>
-  <div class="mb-3">
-    <label for="edit-sixes" class="form-label">6s</label>
-    <input type="number" class="form-control" id="edit-sixes" name="sixes" required>
-  </div>
-  <div class="mb-3">
-    <label for="edit-dismissal" class="form-label">Dismissal</label>
-    <select class="form-select" id="edit-dismissal" name="dismissal">
-       <option value="">Select Here</option required>
-      <option value="Not Out">Not Out</option>
-      <option value="Bowled">Bowled</option>
-      <option value="Caught">Caught</option>
-      <option value="LBW">LBW</option>
-      <option value="Run Out">Run Out</option>
-      <option value="Stumped">Stumped</option>
-      <option value="Hit Wicket">Hit Wicket</option>
-    </select>
-  </div>
-  <div class="mb-3" id="edit-bowler-section">
-    <label for="edit-bowler-name" class="form-label">Bowler Name</label>
-    <select class="form-select" id="edit-bowler-name" name="bowler_id">
-      <option value="" disabled selected>Select Bowler</option>
-      <?php foreach($bowler_info as $bowler) { ?>
-        <option value="<?php echo $bowler->player_id;?>"><?php echo $bowler->playerName;?></option>
-      <?php } ?>
-    </select>
-  </div>
-  <div class="modal-footer">
-    <button type="submit" class="btn btn-primary">Update</button>
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-  </div>
-</form>
+            <input type="hidden" id="edit-match-id" name="match_id">
+            <input type="hidden" id="edit-player-id" name="player_id">
+            <input type="hidden" value="1" name="batting_order">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="edit-runs" class="form-label">Runs</label>
+                <input type="number" class="form-control" id="edit-runs" name="runs" min="0" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="edit-balls" class="form-label">Balls</label>
+                <input type="number" class="form-control" id="edit-balls" name="balls" min="0" required>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="edit-fours" class="form-label">4s</label>
+                <input type="number" class="form-control" id="edit-fours" name="fours" min="0">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="edit-sixes" class="form-label">6s</label>
+                <input type="number" class="form-control" id="edit-sixes" name="sixes" min="0">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="edit-dismissal" class="form-label">Dismissal</label>
+              <select class="form-select" id="edit-dismissal" name="dismissal">
+                <option value="">Select Here</option required>
+                <option value="Not Out">Not Out</option>
+                <option value="Bowled">Bowled</option>
+                <option value="Caught">Caught</option>
+                <option value="LBW">LBW</option>
+                <option value="Run Out">Run Out</option>
+                <option value="Stumped">Stumped</option>
+                <option value="Hit Wicket">Hit Wicket</option>
+              </select>
+            </div>
+            <div class="mb-3" id="edit-bowler-section">
+              <label for="edit-bowler-name" class="form-label">Bowler Name</label>
+              <select class="form-select" id="edit-bowler-name" name="bowler_id">
+                <option value="" disabled selected>Select Bowler</option>
+                <?php foreach($bowler_info as $bowler) { ?>
+                  <option value="<?php echo $bowler->player_id;?>"><?php echo $bowler->playerName;?></option>
+                <?php } ?>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update Score</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal for Edit Extras -->
+  <!-- Edit Extras Modal -->
   <div class="modal fade" id="editExtrasModal" tabindex="-1" aria-labelledby="editExtrasModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -584,31 +700,31 @@
             <input type="hidden" value="1" name="batting_order">
             <div class="mb-3">
               <label for="edit-wides" class="form-label">Wides</label>
-              <input type="number" class="form-control" id="edit-wides" name="wides" required>
+              <input type="number" class="form-control" id="edit-wides" name="wides" min="0" required>
             </div>
             <div class="mb-3">
               <label for="edit-no-balls" class="form-label">No Balls</label>
-              <input type="number" class="form-control" id="edit-no-balls" name="no_balls" required>
+              <input type="number" class="form-control" id="edit-no-balls" name="no_balls" min="0" required>
             </div>
             <div class="mb-3">
               <label for="edit-byes" class="form-label">Byes</label>
-              <input type="number" class="form-control" id="edit-byes" name="byes" required>
+              <input type="number" class="form-control" id="edit-byes" name="byes" min="0" required>
             </div>
             <div class="mb-3">
               <label for="edit-leg-byes" class="form-label">Leg Byes</label>
-              <input type="number" class="form-control" id="edit-leg-byes" name="leg_byes" required>
+              <input type="number" class="form-control" id="edit-leg-byes" name="leg_byes" min="0" required>
             </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Submit</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update Extras</button>
+            </div>
           </form>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal for Edit Total Score -->
+  <!-- Edit Total Score Modal -->
   <div class="modal fade" id="editTotalScoreModal" tabindex="-1" aria-labelledby="editTotalScoreModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -622,21 +738,21 @@
             <input type="hidden" value="1" name="batting_order">
             <div class="mb-3">
               <label for="edit-total-runs" class="form-label">Total Runs</label>
-              <input type="number" class="form-control" id="edit-total-runs" name="total_runs" required>
+              <input type="number" class="form-control" id="edit-total-runs" name="total_runs" min="0" required>
             </div>
             <div class="mb-3">
               <label for="edit-wickets" class="form-label">Wickets</label>
-              <input type="number" class="form-control" id="edit-wickets" name="wickets" required>
+              <input type="number" class="form-control" id="edit-wickets" name="wickets" min="0" max="10" required>
             </div>
             <div class="mb-3">
-              <label for="t-overs" class="form-label">Total Overs</label>
-              <input type="number" class="form-control" id="t-overs" name="t_overs" required>
+              <label for="edit-t-overs" class="form-label">Total Overs</label>
+              <input type="number" class="form-control" id="edit-t-overs" name="t_overs" min="0" step="0.1" required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" form="editTotalScoreForm" class="btn btn-primary">Update Total</button>
             </div>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" form="editTotalScoreForm" class="btn btn-primary">Update</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -674,102 +790,85 @@
 
     // Trigger the change event on page load to set the initial state for the edit modal
     document.getElementById('edit-dismissal').dispatchEvent(new Event('change'));
+
+    // Populate edit modals
+    document.addEventListener('DOMContentLoaded', function() {
+      // Edit Scorecard Modal
+      var editScorecardModal = document.getElementById('editScorecardModal');
+      editScorecardModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        document.getElementById('edit-match-id').value = button.getAttribute('data-match-id');
+        document.getElementById('edit-player-id').value = button.getAttribute('data-player-id');
+        document.getElementById('edit-runs').value = button.getAttribute('data-runs');
+        document.getElementById('edit-balls').value = button.getAttribute('data-balls');
+        document.getElementById('edit-fours').value = button.getAttribute('data-fours');
+        document.getElementById('edit-sixes').value = button.getAttribute('data-sixes');
+        document.getElementById('edit-dismissal').value = button.getAttribute('data-dismissal');
+        document.getElementById('edit-bowler-name').value = button.getAttribute('data-bowler-id');
+      });
+
+      // Edit Extras Modal
+      var editExtrasModal = document.getElementById('editExtrasModal');
+      editExtrasModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        document.getElementById('edit-match-id').value = button.getAttribute('data-match-id');
+        document.getElementById('edit-wides').value = button.getAttribute('data-wides');
+        document.getElementById('edit-no-balls').value = button.getAttribute('data-no-balls');
+        document.getElementById('edit-byes').value = button.getAttribute('data-byes');
+        document.getElementById('edit-leg-byes').value = button.getAttribute('data-leg-byes');
+      });
+
+      // Edit Total Score Modal
+      var editTotalScoreModal = document.getElementById('editTotalScoreModal');
+      editTotalScoreModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        document.getElementById('edit-total-match-id').value = button.getAttribute('data-match-id');
+        document.getElementById('edit-total-runs').value = button.getAttribute('data-total-runs');
+        document.getElementById('edit-wickets').value = button.getAttribute('data-wickets');
+      });
+    });
+
+    function validateScorecard() {
+      // Get input values
+      const runs = parseInt(document.getElementById('runs').value) || 0;
+      const balls = parseInt(document.getElementById('balls').value) || 0;
+      const fours = parseInt(document.getElementById('fours').value) || 0;
+      const sixes = parseInt(document.getElementById('sixes').value) || 0;
+
+      // Validate 4s and 6s
+      const runsFromBoundaries = (fours * 4) + (sixes * 6);
+      if (runsFromBoundaries > runs) {
+        alert(`The combination of 4s and 6s (${runsFromBoundaries} runs) exceeds the total runs (${runs}). Please correct your entries.`);
+        return false;
+      }
+
+      // Validate Strike Rate
+      if (balls > 0) {
+        const strikeRate = (runs / balls) * 100;
+        if (strikeRate > 600) {
+          alert(`The strike rate of ${strikeRate.toFixed(2)} seems unusually high. Please verify the runs and balls entered.`);
+          return false;
+        }
+      } else if (runs > 0) {
+        alert("Balls cannot be zero when runs are scored.");
+        return false;
+      }
+
+      return true;
+    }
   </script>
-
-
 
   <!-- Footer Section -->
   <div class="footer">
     <div class="footer-links">
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-      <a href="#">FAQ</a>
+      <a href="#"><i class="bi bi-house-door"></i> Home</a>
+      <a href="#"><i class="bi bi-info-circle"></i> About</a>
+      <a href="#"><i class="bi bi-envelope"></i> Contact</a>
+      <a href="#"><i class="bi bi-question-circle"></i> FAQ</a>
     </div>
   </div>
 
-  <!-- Bootstrap JS & jQuery -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- JavaScript to Populate the Edit Modal -->
-  <script>
-   document.addEventListener('DOMContentLoaded', function() {
-  var editScorecardModal = document.getElementById('editScorecardModal');
-  editScorecardModal.addEventListener('show.bs.modal', function (event) {
-    var button = event.relatedTarget; // Button that triggered the modal
-    var matchId = button.getAttribute('data-match-id');
-    var playerId = button.getAttribute('data-player-id');
-    var battingOrder = button.getAttribute('data-batting-order');
-    var runs = button.getAttribute('data-runs');
-    var balls = button.getAttribute('data-balls');
-    var fours = button.getAttribute('data-fours');
-    var sixes = button.getAttribute('data-sixes');
-    var dismissal = button.getAttribute('data-dismissal');
-    var bowlerId = button.getAttribute('data-bowler-id');
-
-    // Update the modal's content
-    var modalBodyInputMatchId = editScorecardModal.querySelector('#edit-match-id');
-    var modalBodyInputPlayerId = editScorecardModal.querySelector('#edit-player-id');
-    var modalBodyInputRuns = editScorecardModal.querySelector('#edit-runs');
-    var modalBodyInputBalls = editScorecardModal.querySelector('#edit-balls');
-    var modalBodyInputFours = editScorecardModal.querySelector('#edit-fours');
-    var modalBodyInputSixes = editScorecardModal.querySelector('#edit-sixes');
-    var modalBodyInputDismissal = editScorecardModal.querySelector('#edit-dismissal');
-    var modalBodyInputBowlerId = editScorecardModal.querySelector('#edit-bowler-name');
-
-    modalBodyInputMatchId.value = matchId;
-    modalBodyInputPlayerId.value = playerId;
-    modalBodyInputRuns.value = runs;
-    modalBodyInputBalls.value = balls;
-    modalBodyInputFours.value = fours;
-    modalBodyInputSixes.value = sixes;
-    modalBodyInputDismissal.value = dismissal;
-    modalBodyInputBowlerId.value = bowlerId;
-  });
-});
-  </script>
-   <script>
-  function validateScorecard() {
-    // Get input values
-    const runs = parseInt(document.getElementById('runs').value);
-    const balls = parseInt(document.getElementById('balls').value);
-    const fours = parseInt(document.getElementById('fours').value);
-    const sixes = parseInt(document.getElementById('sixes').value);
-
-    // Validate 4s and 6s
-    const maxFours = Math.floor(runs / 4); // Maximum possible 4s
-    const maxSixes = Math.floor(runs / 6); // Maximum possible 6s
-      const runsFromBoundaries = (fours * 4) + (sixes * 6); // Total runs from 4s and 6s
-    if (runsFromBoundaries > runs) {
-      alert(`The combination of 4s and 6s exceeds the total runs. 
-             Runs from boundaries: ${runsFromBoundaries}, Total runs: ${runs}.`);
-      return false;
-    }
-
-    if (fours > maxFours) {
-      alert(`Number of 4s cannot exceed ${maxFours} for ${runs} runs.`);
-      return false;
-    }
-
-    if (sixes > maxSixes) {
-      alert(`Number of 6s cannot exceed ${maxSixes} for ${runs} runs.`);
-      return false;
-    }
-
-    // Validate Strike Rate
-    if (balls > 0) {
-      const strikeRate = (runs / balls) * 100;
-      if (strikeRate > 600) {
-        alert(`Strike rate cannot exceed 600. Current strike rate is ${strikeRate.toFixed(2)}.`);
-        return false;
-      }
-    } else {
-      alert("Balls cannot be zero for strike rate calculation.");
-      return false;
-    }
-
-    return true; // Form will submit if validations pass
-  }
-</script>
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </body>
 </html>

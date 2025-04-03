@@ -14,6 +14,7 @@ class PlayerController extends CI_Controller {
         $this->load->library('upload');
         
         $this->load->database();
+           $this->load->library('user_agent');
         if($this->session->userdata('logged')!=true)
     {
     
@@ -87,8 +88,9 @@ class PlayerController extends CI_Controller {
          $this->Player_model->add_match_player($record);
           echo "<script type='text/javascript'>
             alert('Player of the Match is selected.');
-            window.history.back();
+           
           </script>";
+          redirect($this->agent->referrer());
 
 
 
@@ -120,6 +122,7 @@ class PlayerController extends CI_Controller {
                  $player_data['player_stats'] = $this->Player_model->calculate_player_stats($player_id);
                   $player_data['bowling_stats'] = $this->Player_model->calculate_player_bowling_stats($player_id);
                //   var_dump($player_data['bowling_stats']);
+                 // var_dump($player_data);
              
                     $this->load->view('header');
                 $this->load->view('profile_player',$player_data);

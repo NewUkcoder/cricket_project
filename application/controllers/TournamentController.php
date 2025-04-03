@@ -164,6 +164,82 @@ public function league_ten_individual_scorer($league_id)
        $this->load->view('league_ten_individual_scorer',$team_data);
 }
 
+public function league_top_ten_bowler_of_match($league_id)
+{
+
+          $team_data['league']=$this->Tournament_model->league_information($league_id);
+       $team_data['top_ten_player']=$this->Tournament_model->league_top_ten_bowler_of_match($league_id);
+         $this->load->view('header');
+       $this->load->view('league_top_ten_bowler_of_match',$team_data);
+
+}
+
+
+
+public function get_highest_team_score($league_id)
+{
+
+          $team_data['league']=$this->Tournament_model->league_information($league_id);
+       $team_data['top_ten_player']=$this->Tournament_model->get_highest_team_score($league_id);
+         $this->load->view('header');
+       $this->load->view('get_highest_team_score',$team_data);
+
+}
+
+public function league_top_five_team_score($league_id)
+{
+
+          $team_data['league']=$this->Tournament_model->league_information($league_id);
+       $team_data['top_five_teams']=$this->Tournament_model->league_top_five_team_score($league_id);
+         $this->load->view('header');
+       $this->load->view('league_top_five_team_score',$team_data);
+
+}
+
+public function league_lowest_five_score($league_id)
+{
+
+          $team_data['league']=$this->Tournament_model->league_information($league_id);
+       $team_data['top_five_teams']=$this->Tournament_model->league_lowest_five_score($league_id);
+         $this->load->view('header');
+       $this->load->view('league_lowest_five_score',$team_data);
+
+}
+
+public function join_tournament($team_id)
+{
+        $team_data['team_id']=$team_id;
+        $this->load->view('header');
+       $this->load->view('join_tournament',$team_data);
+
+}
+
+public function find_tournament()
+    {
+        $search_query = $this->input->post('email', TRUE);
+
+        $team_id = $this->input->post('team_id', TRUE);
+     //   echo $player_id;
+        // If a search query is provided, search teams, otherwise show all teams
+        $data['team_id']=$team_id;
+        $data['tournament'] = $this->Tournament_model->invite_tournament($search_query);
+
+        // Load the view and pass the teams data
+        $this->load->view('join_tournament', $data);
+    }
+
+
+      public function tournament_team($league_id,$team_id) {
+   
+    $result = $this->Tournament_model->join_tournament( $league_id,$team_id);
+      $team_data['team_stats']=$this->Team_model->get_team_stats($team_id);
+              $team_data['data']=$this->Team_model->get_team($team_id);
+             // var_dump($team_data);
+                $this->load->view('header');
+                $this->load->view('team_profile',$team_data);
+    
+        
+}
 
 
 }

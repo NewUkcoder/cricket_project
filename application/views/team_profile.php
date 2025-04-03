@@ -431,25 +431,10 @@
 
         <!-- Horizontal Link Bar -->
         <div class="link-bar">
-             <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-            <a href="#" class="join-tournament">Join Tournament</a>
+          <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+            <a href="<?php echo base_url();?>Welcome/team_admin/<?php echo $team_id;?>" class="dashboard">Dashboard</a>
               <?php endif; ?>
-
-             <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-            <a href="<?php echo base_url();?>TeamController/invite_team/<?php echo $team_id;?>" class="invite-team" title="Invite Team">Invite Team</a>
-              <?php endif; ?>
-
-             <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-            <a href="<?php echo base_url();?>TeamController/match_request/<?php echo $team_id;?>" class="match-request" title="Team Request">Play Match</a>
-              <?php endif; ?>
-
-               <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-            <a href="<?php echo base_url();?>TeamController/player_request/<?php echo $team_id;?>" class="player-request" title="Player Request">Player Request <span>(2)</span></a>
-                  <?php endif; ?>
-
-             <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-            <a href="<?php echo base_url();?>TeamController/team_request/<?php echo $team_id;?>" class="match-request" title="Match Request">Team Request</a>
-              <?php endif; ?>
+            
             <a href="<?php echo base_url();?>TeamController/team_schedule/<?php echo $team_id;?>">View Schedule</a>
 
           

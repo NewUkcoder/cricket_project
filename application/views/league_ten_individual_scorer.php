@@ -42,7 +42,8 @@
 
         /* Header Section */
         .table-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(155deg, var(--primary), var(--secondary));
+            
             padding: 1.5rem;
             text-align: center;
         }
@@ -195,6 +196,10 @@
 <body>
     <div class="stats-table">
         <div class="table-header">
+              <a href="javascript:history.back()" class="back-link">
+                <span class="back-arrow">←</span>
+                Back
+            </a>
             <h1><?php echo $league['league_name']; ?></h1>
             <p> League Top Individual Performance</p>
         </div>

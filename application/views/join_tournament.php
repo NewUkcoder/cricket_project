@@ -101,7 +101,7 @@
 
         <!-- Search Form -->
         <div class="mb-4 search-form">
-            <form action="<?php echo site_url('TeamController/find_team'); ?>" method="POST" class="d-flex flex-column flex-sm-row">
+            <form action="<?php echo site_url('TournamentController/find_tournament'); ?>" method="POST" class="d-flex flex-column flex-sm-row">
                 <input type="hidden" value="<?php echo $team_id; ?>" name="team_id">
                 <input type="email" name="email" class="form-control me-2" placeholder="Enter team admin's email" value="<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>" required>
                 <button type="submit" class="btn btn-primary">Search</button>
@@ -113,11 +113,11 @@
 
         <!-- Display Teams -->
         <div id="team-list">
-            <?php if (!empty($teams)): ?>
-                <?php foreach ($teams as $team): ?>
-                    <div class="team-item" onclick="window.location.href='<?php echo base_url();?>TeamController/insert_match/<?php echo $team->team_id;?>/<?php echo  $team_id; ?>'">
-                        <span class="team-name"><?php echo $team->team_name; ?></span>
-                        <button class="view-btn">Join Team</button>
+            <?php if (!empty($tournament)): ?>
+                <?php foreach ($tournament as $league): ?>
+                    <div class="team-item" onclick="window.location.href='<?php echo base_url();?>TournamentController/tournament_team/<?php echo $league->league_id;?>/<?php echo  $team_id; ?>'">
+                        <span class="team-name"><?php echo $league->league_name; ?></span>
+                        <button class="view-btn">Join Tournament</button>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>

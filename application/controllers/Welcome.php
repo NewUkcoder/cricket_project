@@ -113,8 +113,9 @@ if ($toss != 0) {
     $data['first_bowling_inning'] = $this->Scorecard_model->get_bowling_first_details($match_id);
     $data['second_inning'] = $this->Scorecard_model->get_batting_second_details($match_id);
     $data['second_bowling_inning'] = $this->Scorecard_model->get_bowling_second_details($match_id);
+    $data['player_of_match'] = $this->Scorecard_model->get_player_of_match($match_id);
 
-    // Load views
+   // var_dump($data);
     $this->load->view('header');
     $this->load->view('scorecard', $data);
 } else {
@@ -356,6 +357,16 @@ public function scorecard_links($team1,$team2,$match_id)
                        $team_data['league_top_bowler']=$this->Tournament_model->league_top_bowler($league_id);
                          $team_data['league_highest_individual_score']=$this->Tournament_model->league_highest_individual_score($league_id);
                           $team_data['league_highest_wicket_taker']=$this->Tournament_model->league_highest_wicket_taker($league_id);
+                          $team_data['league_highest_team_score']=$this->Tournament_model->get_highest_team_score($league_id);
+                           $team_data['league_lowest_team_score']=$this->Tournament_model->league_lowest_team_score($league_id);
+                             $team_data['league_teams']=$this->Tournament_model->league_teams($league_id);
+
+                              $team_data['match_results']=$this->Tournament_model->get_match_results_by_league_with_batting_order($league_id);
+                        //  var_dump($team_data['match_result']);
+                          
+                             
+                           //  var_dump($team_data['league_teams']);
+
                      
 			$this->load->view('header');
 		$this->load->view('tournament_landing',$team_data);
@@ -374,6 +385,21 @@ public function scorecard_links($team1,$team2,$match_id)
                 
               $this->load->view('header');
                $this->load->view('tournament_main',$team_data);
+	}
+
+		public function team_admin($team_id)
+	{
+		 $user_id=$this->session->userdata('user_id');
+		   $team_data['requests']=$this->Team_model->get_player_request($team_id);
+		    $team_data['team_names'] = $this->Team_model->team_request($team_id);
+		                  $team_data['captain']=$this->Team_model->team_captain($team_id);
+               $team_data['team_id']=$team_id;
+  $team_data['data']=$this->Team_model->get_team($team_id);
+   $team_data['opposition_team'] = $this->Team_model->get_match_teams($team_id);
+    $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team_id);
+                
+              $this->load->view('header');
+               $this->load->view('team_admin',$team_data);
 	}
 
 	

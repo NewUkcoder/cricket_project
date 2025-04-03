@@ -2,723 +2,1096 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cricket League</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $league['league_name']; ?> | Cricket League</title>
     <style>
-        /* Reset and Universal Styles */
+        /* Modern Base Styles */
+        :root {
+            --primary-color: #005f8d;
+            --secondary-color: #007bb5;
+            --accent-color: #ff6b35;
+            --text-color: #333;
+            --light-text: #777;
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --section-spacing: 20px;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: white;
-            color: #333;
-            font-size: 14px;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 15px;
+            padding-bottom: 70px;
         }
 
-        .external-header {
-            background: white;
-            color: #005f8d;
-            text-align: center;
-            padding: 20px 0;
-            border-bottom: 2px solid #005f8d;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .external-header h1 {
-            font-size: 2.5em;
-            letter-spacing: 1px;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
-        }
-
-        .external-header .league-info {
-            font-size: 1.1em;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        /* Navigation Styles */
-        .main-nav {
-            background-color: #005f8d;
+        /* Header Styles */
+        .league-header {
+            background: linear-gradient(135deg, var(--primary-color), #003d5c);
+            color: white;
+            padding: 15px 15px 10px;
             position: sticky;
             top: 0;
             z-index: 100;
-            padding: 8px 0;
-            overflow-x: auto; /* Enable horizontal scrolling */
-            white-space: nowrap; /* Prevent wrapping of navigation items */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        #main-nav-ul {
-            display: inline-block; /* Make the list inline */
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        #main-nav-ul li {
-            display: inline-block; /* Display list items inline */
-            margin: 0 15px;
-        }
-
-        #main-nav-ul li a {
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
             color: white;
             text-decoration: none;
-            font-size: 1em;
-            padding: 6px 12px;
-            display: block;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-bottom: 10px;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: rgba(255,255,255,0.15);
+            transition: background-color 0.2s;
         }
 
-        #main-nav-ul li a:hover {
-            background-color: #00b0ff;
-            transform: scale(1.05);
+        .back-btn:hover {
+            background-color: rgba(255,255,255,0.25);
         }
 
-        /* Hide scrollbar for a cleaner look (optional) */
-        .main-nav::-webkit-scrollbar {
+        .league-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .league-meta {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            line-height: 1.4;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .league-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .league-meta i {
+            font-size: 14px;
+        }
+
+        /* Navigation */
+        .nav-scroll {
+            background: var(--card-bg);
+            padding: 12px 15px;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            position: sticky;
+            top: 140px;
+            z-index: 90;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             display: none;
         }
 
-        .main-nav {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
+        .nav-scroll::-webkit-scrollbar {
+            display: none;
         }
 
-        /* Main Container */
+        .nav-link {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0 5px;
+            background: #f0f0f0;
+            color: var(--primary-color);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-link.active, .nav-link:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--light-text);
+            font-size: 11px;
+            padding: 5px;
+            flex: 1;
+            max-width: 20%;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        /* Main Content */
         .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            padding: 15px;
         }
 
-        /* Section Titles */
         .section-title {
-            margin-bottom: 25px;
-            font-size: 1.6em;
-            color: #005f8d;
-            text-align: center;
-            border-bottom: 3px solid #007bb5;
-            padding-bottom: 10px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin: var(--section-spacing) 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--secondary-color);
+            font-weight: 700;
+            position: sticky;
+            top: 140px;
+            background: var(--bg-color);
+            z-index: 50;
+            padding-top: 5px;
         }
 
-        /* Top Players & Stats Section */
-        .statistics {
+        /* Stats Cards */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: var(--section-spacing);
         }
 
         .stat-card {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.2s;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
         }
 
-        .stat-card img {
-            width: 80px;
-            height: 80px;
+        .stat-img {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            margin-bottom: 15px;
-            border: 3px solid #007bb5;
+            object-fit: cover;
+            border: 3px solid var(--secondary-color);
+            margin: 0 auto 8px;
         }
 
-        .stat-card h4 {
-            font-size: 1.4em;
-            color: #005f8d;
-            margin-bottom: 10px;
+        .stat-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
         }
 
-        .stat-card p {
-            font-size: 1.1em;
-            color: #666;
+        .stat-value {
+            font-size: 12px;
+            color: var(--text-color);
+            margin-bottom: 3px;
+            font-weight: 500;
         }
 
-        .stat-card .team-name {
-            font-size: 1.1em;
-            color: #007bb5;
-            font-weight: bold;
-            margin-top: 10px;
+        .stat-team {
+            font-size: 11px;
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 5px;
         }
 
-        /* Schedule Section */
-        .schedule-section {
-            margin-top: 40px;
+        .see-more {
+            font-size: 11px;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 5px;
+            font-weight: 600;
         }
 
-        .schedule-card {
-            background-color: #f9f9f9;
+        /* Match Cards */
+        .match-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
             padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            margin-bottom: 12px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.2s;
         }
 
-        .schedule-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        .match-card:hover {
+            transform: translateY(-3px);
         }
 
-        .schedule-card h4 {
-            font-size: 1.4em;
-            color: #005f8d;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .schedule-card .match-details {
+        .team-vs {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 1.1em;
-            color: #666;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
         }
 
-        .schedule-card .match-details p {
-            margin: 0;
+        .team-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--secondary-color);
         }
 
-        /* Result Section */
-        .result-section {
-            margin-top: 40px;
+        .vs-text {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 14px;
         }
 
+        .match-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .match-details {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .match-detail {
+            display: flex;
+            align-items: center;
+        }
+
+        .match-detail strong {
+            margin-right: 8px;
+            color: var(--primary-color);
+            min-width: 60px;
+            font-weight: 600;
+        }
+
+        /* Results Section - Enhanced */
         .result-card {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: var(--box-shadow);
+            border-left: 4px solid var(--accent-color);
+            transition: transform 0.2s;
         }
 
         .result-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
         }
 
-        .result-card h4 {
-            font-size: 1.4em;
-            color: #005f8d;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .result-card .team-images img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 3px solid #007bb5;
-        }
-
-        .result-card .team-images span {
-            font-size: 1.2em;
-            color: #005f8d;
-            font-weight: bold;
-        }
-
-        .result-card .result-details {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .result-card .result-details p {
-            font-size: 1.1em;
-            color: #666;
-            margin: 5px 0;
-        }
-
-        .result-card .result-details p strong {
-            color: #005f8d;
-        }
-
-        .result-card .view-scorecard-button {
-            background-color: #007bb5;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .result-card .view-scorecard-button:hover {
-            background-color: #005f8d;
-        }
-
-        /* Team Section */
-        .team-section {
-            margin-top: 40px;
-        }
-
-        .team-card {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .team-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .team-card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            border: 3px solid #007bb5;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .team-card h4 {
-            font-size: 1.4em;
-            color: #005f8d;
-            margin-bottom: 20px;
-            text-align: center;
-            word-wrap: break-word;
-        }
-
-        .team-card .player-stats {
+        .result-header {
             display: flex;
             justify-content: space-between;
-            gap: 20px;
-            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 8px;
         }
 
-        .team-card .player-stats .player-info {
+        .result-date {
+            font-size: 12px;
+            color: var(--light-text);
+            font-weight: 500;
+        }
+
+        .result-status {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .result-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .result-team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             flex: 1;
-            min-width: 200px;
+        }
+
+        .result-team-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        .result-team-name {
+            font-size: 13px;
+            font-weight: 600;
             text-align: center;
         }
 
-        .team-card .player-stats .player-info img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-            border: 2px solid #007bb5;
+        .result-vs {
+            font-weight: 700;
+            color: var(--primary-color);
+            padding: 0 10px;
         }
 
-        .team-card .player-stats .player-info h5 {
-            font-size: 1.2em;
-            color: #005f8d;
-            margin-bottom: 10px;
+        .result-score {
+            font-size: 13px;
+            margin: 10px 0;
+            text-align: center;
+            line-height: 1.5;
+            font-weight: 500;
         }
 
-        .team-card .player-stats .player-info p {
-            font-size: 1em;
-            color: #666;
-            margin: 5px 0;
+        .result-outcome {
+            font-weight: 700;
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
-        .team-card .player-stats .player-info .scorecard-link {
-            color: #007bb5;
+        .view-scorecard {
+            display: block;
+            width: 100%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
             text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
+            font-weight: 600;
+            transition: background-color 0.2s;
         }
 
-        .team-card .player-stats .player-info .scorecard-link:hover {
-            color: #005f8d;
+        .view-scorecard:hover {
+            background-color: var(--secondary-color);
         }
 
         /* Points Table */
         .points-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
+            margin-bottom: var(--section-spacing);
+            font-size: 13px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
             overflow: hidden;
-        }
-
-        .points-table th,
-        .points-table td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
+            box-shadow: var(--box-shadow);
         }
 
         .points-table th {
-            background-color: #007bb5;
+            background: var(--primary-color);
             color: white;
-            font-size: 1.1em;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .points-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
         }
 
         .points-table tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background: #f9f9f9;
         }
 
-        .points-table tr:hover {
-            background-color: #f1f1f1;
+        .highlight {
+            font-weight: 700;
+            color: var(--primary-color);
         }
 
-        .points-table .highlight {
-            font-weight: bold;
-            color: #007bb5;
-        }
-
-        /* Team Images Styling */
-        .team-images {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .team-images img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 3px solid #007bb5;
-        }
-
-        .team-images span {
-            font-size: 1.2em;
-            color: #005f8d;
-            font-weight: bold;
-        }
-
-        /* League Rules Section */
-        .rules-section {
-            margin-top: 40px;
-        }
-
-        .rules-card {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .rules-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .rules-card h4 {
-            font-size: 1.4em;
-            color: #005f8d;
-            margin-bottom: 10px;
-        }
-
-        .rules-card ul {
-            list-style-type: disc;
-            padding-left: 20px;
-        }
-
-        .rules-card ul li {
-            font-size: 1.1em;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        footer {
-            background-color: #005f8d;
-            color: white;
-            text-align: center;
+        /* Teams Section */
+        .team-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
             padding: 15px;
-            margin-top: 40px;
+            margin-bottom: 12px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.2s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .team-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .team-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--secondary-color);
+            margin-right: 12px;
+        }
+
+        .team-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .player-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .player-stat {
+            text-align: center;
+        }
+
+        .player-stat-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--secondary-color);
+            margin: 0 auto 5px;
+        }
+
+        .player-stat-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 3px;
+        }
+
+        .player-stat-value {
+            font-size: 12px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        /* Rules Section */
+        .rules-list {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            font-size: 14px;
+        }
+
+        .rules-list li {
+            margin-bottom: 10px;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .rules-list li:before {
+            content: "•";
+            color: var(--accent-color);
+            position: absolute;
+            left: 5px;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            font-size: 14px;
+            color: var(--light-text);
+            margin-bottom: var(--section-spacing);
+        }
+
+        /* Desktop Optimizations */
+        @media (min-width: 768px) {
+            body {
+                padding-bottom: 0;
+            }
+            
+            .bottom-nav {
+                display: none;
+            }
+            
+            .nav-scroll {
+                display: block;
+                top: 160px;
+                padding: 12px 20px;
+            }
+            
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .league-header {
+                padding: 20px 25px 15px;
+            }
+
+            .league-title {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 15px;
+            }
+
+            .section-title {
+                top: 160px;
+                font-size: 1.4rem;
+            }
+            
+            .player-stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .match-details {
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="external-header">
-        <h1><?php echo $league['league_name']; ?></h1>
-        <div class="league-info">
-            <p>Season: <?php echo $league['season']; ?> | City: <?php echo $league['city']; ?> | Country: <?php echo $league['country']; ?> | Ball: <?php echo $league['match_type']; ?></p>
+    <header class="league-header">
+        <a href="javascript:history.back()" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </a>
+        <h1 class="league-title"><?php echo $league['league_name']; ?></h1>
+        <div class="league-meta">
+            <span><i class="fas fa-calendar-alt"></i> <?php echo $league['season']; ?></span>
+            <span><i class="fas fa-map-marker-alt"></i> <?php echo $league['city']; ?>, <?php echo $league['country']; ?></span>
+            <span><i class="fas fa-baseball-ball"></i> <?php echo $league['match_type']; ?></span>
+            <span><i class="fas fa-clock"></i> <?php echo $league['overs']; ?> Overs</span>
+            <span><i class="fas fa-stadium"></i> <?php echo $league['venue']; ?></span>
         </div>
-        <div class="league-info">
-            <p>Venue: <?php echo $league['venue']; ?> | Phone: <?php echo $league['phone_number']; ?> | Overs: <?php echo $league['overs']; ?></p>
-        </div>
-    </div>
+    </header>
 
-    <!-- Navigation Bar -->
-    <nav class="main-nav">
-        <ul id="main-nav-ul">
-            <li><a href="#teams">Teams</a></li>
-            <li><a href="#stats">Stats</a></li>
-            <li><a href="#schedule">Schedule</a></li>
-            <li><a href="#points-table">Points Table</a></li>
-            <li><a href="#result">Results</a></li>
-            <li><a href="#rules">League Rules</a></li>
-        </ul>
+    <nav class="nav-scroll">
+        <a href="#stats" class="nav-link active"><i class="fas fa-chart-line"></i> Top Stats</a>
+        <a href="#schedule" class="nav-link"><i class="fas fa-calendar-day"></i> Schedule</a>
+        <a href="#results" class="nav-link"><i class="fas fa-trophy"></i> Results</a>
+        <a href="#points" class="nav-link"><i class="fas fa-table"></i> Points</a>
+        <a href="#teams" class="nav-link"><i class="fas fa-users"></i> Teams</a>
+        <a href="#rules" class="nav-link"><i class="fas fa-book"></i> Rules</a>
     </nav>
 
     <div class="container">
-        <!-- Top Players & Stats -->
-        <div id="stats" class="section-title">League Top Players & Stats</div>
-        <div class="statistics">
+        <!-- Top Stats Section -->
+        <h2 class="section-title" id="stats">
+            <i class="fas fa-chart-line"></i> League Top Performers
+        </h2>
+        <div class="stats-grid">
+            <!-- Top Batsman -->
             <div class="stat-card">
-                 <?php // var_dump($league_top_scorer); 
-                 if ($league_top_scorer): ?>
-              <img src="<?php echo $league_top_scorer->player_image; ?>" alt="<?php echo $league_top_scorer->playerName; ?>">
-                <h4>Top Batsman</h4>
-                <p><?php echo $league_top_scorer->playerName; ?> - <?php echo $league_top_scorer->total_runs; ?></p>
-                <p class="team-name"><?php echo $league_top_scorer->team_name; ?></p>
-                 <a href="<?php echo base_url();?>TournamentController/league_top_ten_scorer/<?php echo $league['league_id'];?>"> see more</a> 
-                 <?php else: ?>
-                     <h4>Top Batsman</h4>
-        <p>No top scorer found for this league.</p>
-    <?php endif; ?>
+                <?php if ($league_top_scorer): ?>
+                    <img src="<?php echo $league_top_scorer->player_image; ?>" alt="<?php echo $league_top_scorer->playerName; ?>" class="stat-img">
+                    <h3 class="stat-title">Top Batsman</h3>
+                    <p class="stat-value"><?php echo $league_top_scorer->playerName; ?></p>
+                    <p class="stat-value"><strong><?php echo $league_top_scorer->total_runs; ?> Runs</strong></p>
+                    <p class="stat-team"><?php echo $league_top_scorer->team_name; ?></p>
+                    <a href="<?php echo base_url();?>TournamentController/league_top_ten_scorer/<?php echo $league['league_id'];?>" class="see-more">
+                        <i class="fas fa-arrow-right"></i> See more
+                    </a>
+                <?php else: ?>
+                    <h3 class="stat-title">Top Batsman</h3>
+                    <p class="stat-value">No data available</p>
+                <?php endif; ?>
             </div>
 
+            <!-- Top Bowler -->
             <div class="stat-card">
-
-                  <?php // var_dump($league_top_scorer); 
-                 if ($league_top_bowler): ?>
-                <img src="<?php echo $league_top_bowler->player_image; ?>" alt="<?php echo $league_top_bowler->playerName; ?>">
-                <h4>Top Bowler</h4>
-                <p><?php echo $league_top_bowler->playerName; ?> - <?php echo $league_top_bowler->total_wickets; ?> wickets</p>
-                <p class="team-name"><?php echo $league_top_bowler->team_name; ?></p>
-                 <a href="<?php echo base_url();?>TournamentController/league_top_ten_bowler/<?php echo $league['league_id'];?>"> see more</a>
-                 <?php else: ?>
-
-                     <h4>Top bowler</h4>
-        <p>No top Bowler found for this league.</p>
-    <?php endif; ?>
-
-                
+                <?php if ($league_top_bowler): ?>
+                    <img src="<?php echo $league_top_bowler->player_image; ?>" alt="<?php echo $league_top_bowler->playerName; ?>" class="stat-img">
+                    <h3 class="stat-title">Top Bowler</h3>
+                    <p class="stat-value"><?php echo $league_top_bowler->playerName; ?></p>
+                    <p class="stat-value"><strong><?php echo $league_top_bowler->total_wickets; ?> Wickets</strong></p>
+                    <p class="stat-team"><?php echo $league_top_bowler->team_name; ?></p>
+                    <a href="<?php echo base_url();?>TournamentController/league_top_ten_bowler/<?php echo $league['league_id'];?>" class="see-more">
+                        <i class="fas fa-arrow-right"></i> See more
+                    </a>
+                <?php else: ?>
+                    <h3 class="stat-title">Top Bowler</h3>
+                    <p class="stat-value">No data available</p>
+                <?php endif; ?>
             </div>
 
+            <!-- Highest Individual Score -->
             <div class="stat-card">
-                  <?php // var_dump($league_top_scorer); 
-                 if ($league_highest_individual_score): ?>
-                <img src="<?php echo $league_highest_individual_score->player_image; ?>" alt="<?php echo $league_highest_individual_score->playerName; ?>">
-                <h4>Highest Individual Scorer</h4>
-                <p><?php echo $league_highest_individual_score->playerName; ?> - <?php echo $league_highest_individual_score->highest_score; ?> Runs</p>
-                <p class="team-name"><?php echo $league_highest_individual_score->team_name; ?></p>
-                 <a href="<?php echo base_url();?>TournamentController/league_ten_individual_scorer/<?php echo $league['league_id'];?>"> see more</a>
-                 <?php else: ?>
-                     <h4>Highest Individual Scorer</h4>
-        <p>No batsman found for this league.</p>
-    <?php endif; ?>
+                <?php if ($league_highest_individual_score): ?>
+                    <img src="<?php echo $league_highest_individual_score->player_image; ?>" alt="<?php echo $league_highest_individual_score->playerName; ?>" class="stat-img">
+                    <h3 class="stat-title">Highest Score</h3>
+                    <p class="stat-value"><?php echo $league_highest_individual_score->playerName; ?></p>
+                    <p class="stat-value"><strong><?php echo $league_highest_individual_score->highest_score; ?> Runs</strong></p>
+                    <p class="stat-team"><?php echo $league_highest_individual_score->team_name; ?></p>
+                    <a href="<?php echo base_url();?>TournamentController/league_ten_individual_scorer/<?php echo $league['league_id'];?>" class="see-more">
+                        <i class="fas fa-arrow-right"></i> See more
+                    </a>
+                <?php else: ?>
+                    <h3 class="stat-title">Highest Score</h3>
+                    <p class="stat-value">No data available</p>
+                <?php endif; ?>
             </div>
 
+            <!-- Best Bowling -->
             <div class="stat-card">
-                  <?php // var_dump($league_highest_wicket_taker); 
-                 if ($league_highest_wicket_taker): ?>
-                <img src="<?php echo $league_highest_wicket_taker->player_image; ?>" alt="<?php echo $league_highest_wicket_taker->playerName; ?>">
-                <h4>Best Bowling in a Match</h4>
-                <p><?php echo $league_highest_wicket_taker->playerName; ?> - <?php echo $league_highest_wicket_taker->wickets;?>/<?php echo $league_highest_wicket_taker->given_runs;?></p>
-                <p class="team-name"><?php echo $league_highest_wicket_taker->team_name; ?></p>
-                 <?php else: ?>
-                      <h4>Best Bowling in a Match</h4>
-        <p>No batsman found for this league.</p>
-    <?php endif; ?>
-              
+                <?php if ($league_highest_wicket_taker): ?>
+                    <img src="<?php echo $league_highest_wicket_taker->player_image; ?>" alt="<?php echo $league_highest_wicket_taker->playerName; ?>" class="stat-img">
+                    <h3 class="stat-title">Best Bowling</h3>
+                    <p class="stat-value"><?php echo $league_highest_wicket_taker->playerName; ?></p>
+                    <p class="stat-value"><strong><?php echo $league_highest_wicket_taker->wickets; ?>/<?php echo $league_highest_wicket_taker->given_runs; ?></strong></p>
+                    <p class="stat-team"><?php echo $league_highest_wicket_taker->team_name; ?></p>
+                    <a href="<?php echo base_url();?>TournamentController/league_top_ten_bowler_of_match/<?php echo $league['league_id'];?>" class="see-more">
+                        <i class="fas fa-arrow-right"></i> See more
+                    </a>
+                <?php else: ?>
+                    <h3 class="stat-title">Best Bowling</h3>
+                    <p class="stat-value">No data available</p>
+                <?php endif; ?>
             </div>
 
+            <!-- Highest Team Score -->
             <div class="stat-card">
-                <h4>Highest Team Score</h4>
-                <p>Team Name - 320/5</p>
-                <p class="team-name">Team 1</p>
+                <?php if ($league_highest_team_score): ?>
+                    <img src="<?php echo $league_highest_team_score->team_image; ?>" alt="<?php echo $league_highest_team_score->team_name; ?>" class="stat-img">
+                    <h3 class="stat-title">Highest Team Score</h3>
+                    <p class="stat-value"><?php echo $league_highest_team_score->team_name; ?></p>
+                    <p class="stat-value"><strong><?php echo $league_highest_team_score->highest_team_score; ?>/<?php echo $league_highest_team_score->wickets; ?></strong></p>
+                    <p class="stat-value"><?php echo $league_highest_team_score->t_overs; ?> overs</p>
+                    <a href="<?php echo base_url();?>TournamentController/league_top_five_team_score/<?php echo $league['league_id'];?>" class="see-more">
+                        <i class="fas fa-arrow-right"></i> See more
+                    </a>
+                <?php else: ?>
+                    <h3 class="stat-title">Highest Team</h3>
+                    <p class="stat-value">No data available</p>
+                <?php endif; ?>
             </div>
 
+            <!-- Lowest Team Score -->
             <div class="stat-card">
-                <h4>Lowest Team Score</h4>
-                <p>Team Name - 50 all out</p>
-                <p class="team-name">Team 4</p>
+                <?php if ($league_lowest_team_score): ?>
+                    <img src="<?php echo $league_lowest_team_score->team_image; ?>" alt="<?php echo $league_lowest_team_score->team_name; ?>" class="stat-img">
+                    <h3 class="stat-title">Lowest Team Score</h3>
+                    <p class="stat-value"><?php echo $league_lowest_team_score->team_name; ?></p>
+                    <p class="stat-value"><strong><?php echo $league_lowest_team_score->highest_team_score; ?>/<?php echo $league_lowest_team_score->wickets; ?></strong></p>
+                    <p class="stat-value"><?php echo $league_lowest_team_score->t_overs; ?> overs</p>
+                    <a href="<?php echo base_url();?>TournamentController/league_lowest_five_score/<?php echo $league['league_id'];?>" class="see-more">
+                        <i class="fas fa-arrow-right"></i> See more
+                    </a>
+                <?php else: ?>
+                    <h3 class="stat-title">Lowest Team</h3>
+                    <p class="stat-value">No data available</p>
+                <?php endif; ?>
             </div>
         </div>
 
         <!-- Schedule Section -->
-        <div id="schedule" class="section-title">Upcoming Matches</div>
-        <div class="schedule-section">
-            <?php if (!empty($league_schedule)) { 
-                foreach ($league_schedule as $schedule) { ?>
-                    <div class="schedule-card">
-                        <div class="team-images">
-                            <img src="<?php echo $schedule->team_one_image; ?>" alt="Team 1">
-                            <span>vs</span>
-                            <img src="<?php echo $schedule->team_two_image; ?>" alt="Team 3">
+        <h2 class="section-title" id="schedule">
+            <i class="fas fa-calendar-day"></i> Upcoming Matches
+        </h2>
+        <?php if (!empty($league_schedule)): ?>
+            <?php foreach ($league_schedule as $schedule): ?>
+                <div class="match-card">
+                    <div class="team-vs">
+                        <img src="<?php echo $schedule->team_one_image; ?>" alt="<?php echo $schedule->team_one_name; ?>" class="team-img">
+                        <span class="vs-text">vs</span>
+                        <img src="<?php echo $schedule->team_two_image; ?>" alt="<?php echo $schedule->team_two_name; ?>" class="team-img">
+                    </div>
+                    <h3 class="match-title"><?php echo $schedule->team_one_name; ?> vs <?php echo $schedule->team_two_name; ?></h3>
+                    <div class="match-details">
+                        <div class="match-detail">
+                            <strong><i class="far fa-calendar"></i> Date:</strong> <?php echo date("d M Y", strtotime($schedule->match_date)); ?>
                         </div>
-                        <h4><?php echo $schedule->team_one_name; ?> vs <?php echo $schedule->team_two_name; ?></h4>
-                        <div class="match-details">
-                            <?php $date = $schedule->match_date; $formatted_date = date("d F Y", strtotime($date)); ?>
-                            <p><strong>Date:</strong> <?php echo $formatted_date; ?></p>
-                            <p><strong>Time:</strong> <?php echo $schedule->match_time; ?></p>
-                            <p><strong>Venue:</strong> <?php echo $schedule->location; ?></p>
+                        <div class="match-detail">
+                            <strong><i class="far fa-clock"></i> Time:</strong> <?php echo $schedule->match_time; ?>
+                        </div>
+                        <div class="match-detail">
+                            <strong><i class="fas fa-map-marker-alt"></i> Venue:</strong> <?php echo $schedule->location; ?>
+                        </div>
+                        <div class="match-detail">
+                            <strong><i class="fas fa-baseball-ball"></i> Overs:</strong> <?php echo $league['overs']; ?>
                         </div>
                     </div>
-                <?php } 
-            } else { ?>
-                <h2>Currently no schedule is added.</h2>
-            <?php } ?>
-        </div>
-
-        <!-- Result Section -->
-        <div id="result" class="section-title">Recent Match Results</div>
-        <div class="result-section">
-            <!-- Result Card 1 -->
-            <div class="result-card">
-                <div class="team-images">
-                    <img src="https://via.placeholder.com/70" alt="Team 1">
-                    <span>vs</span>
-                    <img src="https://via.placeholder.com/70" alt="Team 2">
                 </div>
-                <h4>Team 1: The Mighty Warriors vs Team 2: The Glorious Champions</h4>
-                <div class="result-details">
-                    <p><strong>Score:</strong> Team 1 - 250/7 (50 overs) | Team 2 - 240/8 (50 overs)</p>
-                    <p><strong>Result:</strong> Team 1 won by 10 runs</p>
-                    <p><strong>Player of the Match:</strong> Player A (Team 1) - 120 runs & 3 wickets</p>
-                </div>
-                <button class="view-scorecard-button">View Full Scorecard</button>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="empty-state">
+                <i class="far fa-calendar-times fa-2x" style="margin-bottom: 10px;"></i>
+                <p>No upcoming matches scheduled yet</p>
             </div>
+        <?php endif; ?>
 
-            <!-- Result Card 2 -->
-            <div class="result-card">
-                <div class="team-images">
-                    <img src="https://via.placeholder.com/70" alt="Team 3">
-                    <span>vs</span>
-                    <img src="https://via.placeholder.com/70" alt="Team 4">
+        <!-- Results Section - Enhanced -->
+        <h2 class="section-title" id="results">
+            <i class="fas fa-trophy"></i> Recent Results
+        </h2>
+        <?php if (!empty($match_results)): ?>
+            <?php foreach ($match_results as $match): ?>
+                <div class="result-card">
+                    <div class="result-header">
+                        <span class="result-date">
+                            <i class="far fa-calendar-alt"></i> <?php echo date("d M Y", strtotime($match->match_date)); ?>
+                            <i class="far fa-clock" style="margin-left: 10px;"></i> <?php echo $match->match_time; ?>
+                        </span>
+                        <span class="result-status">COMPLETED</span>
+                    </div>
+                    
+                    <div class="result-teams">
+                        <div class="result-team">
+                            <img src="<?php echo base_url($match->win_team_image); ?>" alt="<?php echo $match->win_team_name; ?>" class="result-team-logo">
+                            <span class="result-team-name"><?php echo $match->win_team_name; ?></span>
+                        </div>
+                        
+                        <span class="result-vs">vs</span>
+                        
+                        <div class="result-team">
+                            <img src="<?php echo base_url($match->lost_team_image); ?>" alt="<?php echo $match->lost_team_name; ?>" class="result-team-logo">
+                            <span class="result-team-name"><?php echo $match->lost_team_name; ?></span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-score">
+                        <p><strong>1st Innings:</strong> <?php echo $match->batting_team_batting_order_1; ?> <?php echo $match->total_runs_batting_order_1; ?>/<?php echo $match->wickets_batting_order_1; ?> in <?php echo $match->total_overs_batting_order_1; ?> overs</p>
+                        <p><strong>2nd Innings:</strong> <?php echo $match->batting_team_batting_order_2; ?> <?php echo $match->total_runs_batting_order_2; ?>/<?php echo $match->wickets_batting_order_2; ?> in <?php echo $match->total_overs_batting_order_2; ?> overs</p>
+                    </div>
+                    
+                    <div class="result-outcome">
+                        <?php echo $match->result_statement; ?>
+                    </div>
+                    
+                    <!-- <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo $match->team_one_id; ?>/<?php echo $match->team_two_id; ?>/<?php echo $match->match_id; ?>" class="view-scorecard"> -->
+                        <i class="fas fa-file-alt"></i> View Full Scorecard
+                    </a>
                 </div>
-                <h4>Team 3: The Fearless Fighters vs Team 4: The Dominators</h4>
-                <div class="result-details">
-                    <p><strong>Score:</strong> Team 3 - 180/5 (20 overs) | Team 4 - 120/9 (20 overs)</p>
-                    <p><strong>Result:</strong> Team 3 won by 60 runs</p>
-                    <p><strong>Player of the Match:</strong> Player B (Team 3) - 85 runs & 2 wickets</p>
-                </div>
-                <button class="view-scorecard-button">View Full Scorecard</button>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="empty-state">
+                <i class="far fa-frown fa-2x" style="margin-bottom: 10px;"></i>
+                <p>No match results available yet</p>
             </div>
-        </div>
+        <?php endif; ?>
 
         <!-- Points Table -->
-        <div id="points-table" class="section-title">Points Table</div>
+        <h2 class="section-title" id="points">
+            <i class="fas fa-table"></i> Points Table
+        </h2>
         <table class="points-table">
             <thead>
                 <tr>
-                    <th>Position</th>
+                    <th>#</th>
                     <th>Team</th>
-                    <th>Matches</th>
-                    <th>Wins</th>
-                    <th>Losses</th>
-                    <th>Points</th>
+                    <th>P</th>
+                    <th>W</th>
+                    <th>L</th>
+                    <th>NR</th>
+                    <th>Pts</th>
+                    <th>NRR</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="highlight">1</td>
-                    <td>Team 1</td>
-                    <td>10</td>
-                    <td>8</td>
-                    <td>2</td>
-                    <td>16</td>
-                </tr>
-                <tr>
-                    <td class="highlight">2</td>
-                    <td>Team 2</td>
-                    <td>10</td>
-                    <td>7</td>
-                    <td>3</td>
-                    <td>14</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Team 3</td>
-                    <td>10</td>
-                    <td>6</td>
-                    <td>4</td>
-                    <td>12</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Team 4</td>
-                    <td>10</td>
-                    <td>4</td>
-                    <td>6</td>
-                    <td>8</td>
-                </tr>
+                <?php if (!empty($points_table)): ?>
+                    <?php foreach ($points_table as $index => $team): ?>
+                        <tr>
+                            <td class="<?php echo $index < 3 ? 'highlight' : ''; ?>"><?php echo $index + 1; ?></td>
+                            <td style="text-align: left; padding-left: 15px;">
+                                <img src="<?php echo $team->team_image; ?>" alt="<?php echo $team->team_name; ?>" style="width: 25px; height: 25px; border-radius: 50%; vertical-align: middle; margin-right: 8px;">
+                                <?php echo $team->team_name; ?>
+                            </td>
+                            <td><?php echo $team->matches_played; ?></td>
+                            <td><?php echo $team->wins; ?></td>
+                            <td><?php echo $team->losses; ?></td>
+                            <td><?php echo $team->no_results; ?></td>
+                            <td><strong><?php echo $team->points; ?></strong></td>
+                            <td><?php echo number_format($team->net_run_rate, 3); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 20px;">
+                            <i class="far fa-frown" style="margin-right: 5px;"></i>
+                            No points data available
+                        </td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
 
-        <!-- Team Section -->
-        <div id="teams" class="section-title">Teams</div>
-        <div class="team-section">
-            <!-- Team 1 -->
-            <?php if (!empty($league_teams)) { 
-                foreach ($league_teams as $l_teams) { ?>
-                    <div class="team-card">
-                        <img src="<?php echo $l_teams['image_path']; ?>" alt="Team 1">
-                        <h4><a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $l_teams['team_id']; ?>"><?php echo $l_teams['team_name']; ?></a></h4>
-                        <div class="player-stats">
-                            <div class="player-info">
-                                <img src="https://via.placeholder.com/70" alt="Top Batsman">
-                                <h5>Top Batsman</h5>
-                                <p>Player A - 890 runs</p>
-                            </div>
-                            <div class="player-info">
-                                <img src="https://via.placeholder.com/70" alt="Top Bowler">
-                                <h5>Top Bowler</h5>
-                                <p>Player B - 40 wickets</p>
-                            </div>
-                            <div class="player-info">
-                                <img src="https://via.placeholder.com/70" alt="Highest Individual Score">
-                                <h5>Highest Individual Score</h5>
-                                <p>Player C - 180 runs</p>
-                                <a href="#" class="scorecard-link">View Scorecard</a>
-                            </div>
-                            <div class="player-info">
-                                <img src="https://via.placeholder.com/70" alt="Most Wicket-Taker">
-                                <h5>Most Wicket-Taker in a Match</h5>
-                                <p>Player D - 7 wickets</p>
-                                <a href="#" class="scorecard-link">View Scorecard</a>
-                            </div>
-                        </div>
-                    </div>
-                <?php } 
-            } else { ?>
-                <h2>Currently, there is no registered team in the league yet.</h2>
-            <?php } ?>
-        </div>
+        <!-- Teams Section -->
+<!-- Teams Section -->
+<h2 class="section-title" id="teams">
+    <i class="fas fa-users"></i> Teams
+</h2>
 
-        <!-- League Rules Section -->
-        <div id="rules" class="section-title">League Rules</div>
-        <div class="rules-section">
-            <div class="rules-card">
-                <ul>
-                    <?php if (!empty($league_rules)) { 
-                        foreach ($league_rules as $rule) { ?>
-                            <li> <?php echo $rule->league_rule; ?>.</li>
-                        <?php } 
-                    } else { 
-                        echo "No rules are mentioned yet. Add new rules of the league";
-                    } ?>
-                </ul>
+<?php if (!empty($league_teams) && is_array($league_teams)): ?>
+    <?php foreach ($league_teams as $team): ?>
+        <?php if (!empty($team) && (isset($team['team_info']) || isset($team['top_scorer']) || isset($team['top_bowler']))): ?>
+            <div class="team-card">
+                <div class="team-header">
+                    <?php $team_image = isset($team['team_info']['team_image']) ? $team['team_info']['team_image'] : base_url('assets/images/default-team.png'); ?>
+                    <img src="<?php echo $team_image; ?>" alt="Team Logo" class="team-logo">
+                    
+                    <h3 class="team-name">
+                        <?php if (isset($team['team_info']['team_id']) && isset($team['team_info']['team_name'])): ?>
+                            <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $team['team_info']['team_id']; ?>">
+                                <?php echo $team['team_info']['team_name']; ?>
+                            </a>
+                        <?php else: ?>
+                            Team
+                        <?php endif; ?>
+                    </h3>
+                </div>
+                
+                <div class="player-stats">
+                    <!-- Top Batsman -->
+                    <div class="player-stat">
+                        <h4 class="player-stat-title">Top Batsman</h4>
+                        <?php if (isset($team['top_scorer']) && !empty($team['top_scorer'])): ?>
+                            <?php $batsman_image = isset($team['top_scorer']['player_image']) ? $team['top_scorer']['player_image'] : base_url('assets/images/default-player.png'); ?>
+                            <img src="<?php echo $batsman_image; ?>" alt="Top Batsman" class="player-stat-img">
+                            <p class="player-stat-value"><?php echo $team['top_scorer']['player_name'] ?? 'N/A'; ?></p>
+                            <p class="player-stat-value"><strong><?php echo $team['top_scorer']['total_runs'] ?? '0'; ?> runs</strong></p>
+                        <?php else: ?>
+                            <p class="stat-value">No data available</p>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Highest Score -->
+                    <div class="player-stat">
+                        <h4 class="player-stat-title">Highest Score</h4>
+                        <?php if (isset($team['highest_individual_score']) && !empty($team['highest_individual_score'])): ?>
+                            <?php $hs_image = isset($team['highest_individual_score']['player_image']) ? $team['highest_individual_score']['player_image'] : base_url('assets/images/default-player.png'); ?>
+                            <img src="<?php echo $hs_image; ?>" alt="Highest Score" class="player-stat-img">
+                            <p class="player-stat-value"><?php echo $team['highest_individual_score']['player_name'] ?? 'N/A'; ?></p>
+                            <p class="player-stat-value"><strong><?php echo $team['highest_individual_score']['runs'] ?? '0'; ?> runs</strong></p>
+                        <?php else: ?>
+                            <p class="stat-value">No data available</p>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Top Bowler -->
+                    <div class="player-stat">
+                        <h4 class="player-stat-title">Top Bowler</h4>
+                        <?php if (isset($team['top_bowler']) && !empty($team['top_bowler'])): ?>
+                            <?php $bowler_image = isset($team['top_bowler_image']) ? $team['top_bowler_image'] : base_url('assets/images/default-player.png'); ?>
+                            <img src="<?php echo $bowler_image; ?>" alt="Top Bowler" class="player-stat-img">
+                            <p class="player-stat-value"><?php echo $team['top_bowler'] ?? 'N/A'; ?></p>
+                            <p class="player-stat-value"><strong><?php echo $team['top_bowler_wickets'] ?? '0'; ?> wickets</strong></p>
+                        <?php else: ?>
+                            <p class="stat-value">No data available</p>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Best Bowling -->
+                    <div class="player-stat">
+                        <h4 class="player-stat-title">Best Bowling</h4>
+                        <?php if (isset($team['best_bowler']) && !empty($team['best_bowler'])): ?>
+                            <?php $best_bowler_image = isset($team['best_bowling_image']) ? $team['best_bowling_image'] : base_url('assets/images/default-player.png'); ?>
+                            <img src="<?php echo $best_bowler_image; ?>" alt="Best Bowling" class="player-stat-img">
+                            <p class="player-stat-value"><?php echo $team['best_bowler'] ?? 'N/A'; ?></p>
+                            <p class="player-stat-value"><strong><?php echo $team['best_bowling_figures'] ?? 'N/A'; ?></strong></p>
+                        <?php else: ?>
+                            <p class="stat-value">No data available</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    
+    <?php if (empty(array_filter($league_teams))): ?>
+        <div class="empty-state">
+            <i class="fas fa-user-slash fa-2x" style="margin-bottom: 10px;"></i>
+            <p>No teams registered yet</p>
+        </div>
+    <?php endif; ?>
+<?php else: ?>
+    <div class="empty-state">
+        <i class="fas fa-user-slash fa-2x" style="margin-bottom: 10px;"></i>
+        <p>No teams registered yet</p>
+    </div>
+<?php endif; ?>
+
+        <!-- Rules Section -->
+        <h2 class="section-title" id="rules">
+            <i class="fas fa-book"></i> League Rules
+        </h2>
+        <div class="rules-list">
+            <?php if (!empty($league_rules)): ?>
+                <ul>
+                    <?php foreach ($league_rules as $rule): ?>
+                        <li><?php echo $rule->league_rule; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-circle fa-2x" style="margin-bottom: 10px;"></i>
+                    <p>No rules specified yet</p>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2025 Cricket League</p>
-    </footer>
+    <!-- Bottom Navigation (Mobile Only) -->
+    <nav class="bottom-nav">
+        <a href="#stats" class="nav-item active">
+            <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
+            <span>Stats</span>
+        </a>
+        <a href="#schedule" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-calendar-day"></i></span>
+            <span>Schedule</span>
+        </a>
+        <a href="#results" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-trophy"></i></span>
+            <span>Results</span>
+        </a>
+        <a href="#points" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-table"></i></span>
+            <span>Points</span>
+        </a>
+        <a href="#teams" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-users"></i></span>
+            <span>Teams</span>
+        </a>
+    </nav>
+
+    <script>
+        // Enhanced JavaScript for better interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation handling
+            const navItems = document.querySelectorAll('.nav-item, .nav-link');
+            const sections = document.querySelectorAll('section[id], .section-title');
+            
+            // Highlight active nav item based on scroll position
+            function highlightNav() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (pageYOffset >= (sectionTop - 150)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === `#${current}`) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', highlightNav);
+            highlightNav(); // Run once on load
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 120,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Update URL without page reload
+                        history.pushState(null, null, targetId);
+                    }
+                });
+            });
+            
+            // Responsive navigation handling
+            function checkScreenSize() {
+                const bottomNav = document.querySelector('.bottom-nav');
+                const horizontalNav = document.querySelector('.nav-scroll');
+                
+                if (window.innerWidth >= 768) {
+                    bottomNav.style.display = 'none';
+                    horizontalNav.style.display = 'block';
+                } else {
+                    bottomNav.style.display = 'flex';
+                    horizontalNav.style.display = 'none';
+                }
+            }
+            
+            window.addEventListener('resize', checkScreenSize);
+            checkScreenSize();
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.stat-card, .match-card, .result-card, .team-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-5px)';
+                    card.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.12)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -672,4 +672,15 @@ public function update_extras($match_id, $batting_order, $data) {
 
     return $result_statement;
 }
+ public function get_player_of_match($match_id) {
+        $this->db->select('p.player_id, p.playerName, p.image_path');
+        $this->db->from('match_player mp');
+        $this->db->join('add_player p', 'mp.player_id = p.player_id');
+        $this->db->where('mp.match_id', $match_id);
+      
+        $this->db->limit(1);
+        
+        $query = $this->db->get();
+        return $query->row();
+}
 }

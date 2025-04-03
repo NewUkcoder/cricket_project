@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Cricket Leaderboard - Modern Design</title>
+
     <style>
         /* Modern Color Scheme */
         :root {
@@ -200,12 +195,12 @@
                 Back
             </a>
             <h1><?php echo $league['league_name']; ?></h1>
-            <p> League Highest Scorer</p>
+            <p> League Top Bowlers Match Performance</p>
         </div>
 
-        <?php 
+        <?php //var_dump($top_ten_player);
         $rank = 1;
-        foreach($top_ten_scorer as $scorer) { ?>
+        foreach($top_ten_player as $scorer) { ?>
             <div class="table-row">
                 <div class="rank <?php echo $rank <= 3 ? 'rank-top' : ''; ?>">
                     <?php echo $rank++; ?>
@@ -219,7 +214,7 @@
                         <span class="player-team"><?php echo $scorer->team_name;?></span>
                     </div>
                 </div>
-                <div class="total-score"><?php echo $scorer->total_runs;?></div>
+                <div class="total-score"><?php echo $scorer->given_runs;?>/<?php echo $scorer->wickets;?></div>
             </div>
         <?php } ?>
     </div>
