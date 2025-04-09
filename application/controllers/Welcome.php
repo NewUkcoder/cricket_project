@@ -402,5 +402,12 @@ public function scorecard_links($team1,$team2,$match_id)
                $this->load->view('team_admin',$team_data);
 	}
 
+	public function choose_squad()
+	{
+
+              $this->load->view('header');
+               $this->load->view('choose_squad');
+	}
+
 	
 }

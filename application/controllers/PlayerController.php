@@ -269,6 +269,77 @@ class PlayerController extends CI_Controller {
                 
     }
 
+   
+
+    public function update_profile_picture($player_id) {
+        // Load necessary helpers and models
+        $this->load->helper(array('form', 'url'));
+        $this->load->model('Player_Model');
+        
+        // Check if a file is uploaded
+        if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
+            // Configure upload settings
+            $config['upload_path'] = './uploads/';
+            $config['allowed_types'] = 'jpg|jpeg|png|gif';
+            $config['max_size'] = 2048;  // 2MB max size
+            $config['file_name'] = 'profile_' . $player_id . '_' . time();  // Unique file name to avoid conflicts
+            
+            // Load upload library with the above config
+            $this->load->library('upload', $config);
+            
+            // Perform the file upload
+            if (!$this->upload->do_upload('profile_pic')) {
+                // If upload fails, set error message
+                $error = $this->upload->display_errors();
+                $this->session->set_flashdata('error', $error);
+                redirect('PlayerController/update_player/' . $player_id);
+            } else {
+                // Get the uploaded file data
+                $upload_data = $this->upload->data();
+                
+                // Prepare image path for saving to the database
+                $image_path = 'uploads/' . $upload_data['file_name'];
+                
+                // Call the model function to update the image path in the database
+                $update_result = $this->Player_Model->update_profile_picture($player_id, $image_path);
+                
+                // Check if the update was successful
+                if ($update_result) {
+                    $this->session->set_flashdata('success', 'Profile picture updated successfully!');
+                } else {
+                    $this->session->set_flashdata('error', 'Error updating profile picture!');
+                }
+                
+                // Redirect to the profile edit page
+                redirect('PlayerController/update_player/' . $player_id);
+            }
+        } else {
+            // No file uploaded or there was an error
+            $this->session->set_flashdata('error', 'No valid file uploaded or upload error occurred!');
+            redirect('PlayerController/update_player/' . $player_id);
+        }
+    }
+
+    public function update_field($player_id, $field_name) {
+        // Get the new value from the POST request
+        $new_value = $this->input->post($field_name);
+
+        // Update the specific field using the model
+        $update_successful = $this->Player_model->update_player_field($player_id, $field_name, $new_value);
+
+        // Redirect back to the player profile page with a message
+        if ($update_successful) {
+            $this->session->set_flashdata('message', ucfirst($field_name) . ' updated successfully.');
+        } else {
+            $this->session->set_flashdata('message', 'Error updating ' . $field_name);
+        }
+
+        // Redirect to the player profile edit page
+        redirect('PlayerController/update_player/' . $player_id);
+    }
+
+
+
    }
 
 

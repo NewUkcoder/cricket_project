@@ -8,14 +8,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #4361ee;
-      --primary-hover: #3a56d4;
-      --secondary-color: #3f37c9;
-      --accent-color: #4895ef;
-      --danger-color: #f72585;
-      --warning-color: #f8961e;
-      --success-color: #4cc9f0;
-      --light-bg: #f8f9fa;
+      --primary-color: #006D77; /* Deep Teal */
+      --primary-hover: #005A62; /* Darker Teal */
+      --secondary-color: #283618; /* Dark Olive */
+      --accent-color: #FEFAE0; /* Cream */
+      --danger-color: #BC4749; /* Muted Red */
+      --warning-color: #DDA15E; /* Warm Tan */
+      --success-color: #606C38; /* Muted Olive Green */
+      --light-bg: #F8F1E9; /* Warm Off-White */
       --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
       --card-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       --border-radius: 12px;
@@ -25,7 +25,7 @@
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--light-bg);
-      color: #2b2d42;
+      color: var(--secondary-color);
       line-height: 1.6;
       margin: 0;
       padding: 0;
@@ -73,7 +73,7 @@
       font-size: 1.25rem;
       font-weight: 600;
       margin: 0.5rem 0;
-      color: #2b2d42;
+      color: var(--secondary-color);
     }
 
     .player-section p {
@@ -84,17 +84,32 @@
 
     .player-section a {
       display: inline-block;
-      margin-top: 1rem;
-      color: var(--primary-color);
+      margin-top: 0.5rem;
       text-decoration: none;
       font-weight: 500;
       font-size: 0.9rem;
       transition: var(--transition);
     }
 
-    .player-section a:hover {
-      color: var(--primary-hover);
-      text-decoration: underline;
+    /* Unique View Profile Button Style */
+    .btn-view-profile {
+      background: linear-gradient(135deg, var(--primary-color), #008B97); /* Gradient from Deep Teal to Lighter Teal */
+      color: #fff;
+      border: none;
+      border-radius: 20px; /* More rounded */
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .btn-view-profile:hover {
+      background: linear-gradient(135deg, var(--primary-hover), #007A85);
+      color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 109, 119, 0.2); /* Glow effect */
+      transform: translateY(-2px);
     }
 
     /* Link Bar for Teams and Tournaments */
@@ -137,7 +152,7 @@
 
     .link-bar button:hover {
       color: var(--primary-color);
-      background-color: rgba(67, 97, 238, 0.1);
+      background-color: rgba(0, 109, 119, 0.1);
     }
 
     /* Teams and Tournaments Section */
@@ -163,7 +178,7 @@
       font-size: 1.4rem;
       font-weight: 600;
       margin: 0;
-      color: #2b2d42;
+      color: var(--secondary-color);
     }
 
     .grid-container {
@@ -209,7 +224,7 @@
     }
 
     .card-title a {
-      color: #2b2d42;
+      color: var(--secondary-color);
       text-decoration: none;
       transition: var(--transition);
     }
@@ -237,11 +252,13 @@
     .btn-primary {
       background-color: var(--primary-color);
       border-color: var(--primary-color);
+      color: #fff;
     }
 
     .btn-primary:hover {
       background-color: var(--primary-hover);
       border-color: var(--primary-hover);
+      color: #fff;
     }
 
     .btn-warning {
@@ -251,18 +268,19 @@
     }
 
     .btn-warning:hover {
-      background-color: #e68a19;
-      border-color: #e68a19;
+      background-color: #c98f4c; /* Darker Warm Tan */
+      border-color: #c98f4c;
     }
 
     .btn-danger {
       background-color: var(--danger-color);
       border-color: var(--danger-color);
+      color: #fff;
     }
 
     .btn-danger:hover {
-      background-color: #e5177a;
-      border-color: #e5177a;
+      background-color: #a83d3f; /* Darker Muted Red */
+      border-color: #a83d3f;
     }
 
     /* Empty state styles */
@@ -289,6 +307,54 @@
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
+    }
+
+    /* Profile image upload styles */
+    .profile-image-container {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .profile-image-upload {
+      position: absolute;
+      bottom: 10px;
+      right: 0;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .profile-image-upload:hover {
+      background-color: var(--primary-hover);
+      transform: scale(1.1);
+    }
+    
+    .profile-image-upload input {
+      display: none;
+    }
+    
+    .default-profile-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      border: 3px solid var(--primary-color);
+    }
+    
+    .default-profile-icon i {
+      font-size: 2.5rem;
+      color: #6c757d;
     }
 
     /* Responsive styles */
@@ -369,12 +435,31 @@
               <button class="btn btn-primary">Register as a Player</button>
             </a>
           <?php } else  { ?>
-              <img src="<?php echo $data['image_path']; ?>" alt="User Photo">
+              <?php if (!empty($data['image_path'])) { ?>
+                <div class="profile-image-container">
+                  <img src="<?php echo $data['image_path']; ?>" alt="User Photo">
+                  <a href="<?php echo base_url(); ?>PlayerController/update_player_picture/<?php echo $data['player_id']; ?>" class="profile-image-upload" title="Update Picture">
+                    <i class="fas fa-camera"></i>
+                  </a>
+                </div>
+              <?php } else { ?>
+                <div class="profile-image-container">
+                  <div class="default-profile-icon">
+                    <i class="fas fa-user"></i>
+                  </div>
+                  <a href="<?php echo base_url(); ?>PlayerController/update_player_picture/<?php echo $data['player_id']; ?>" class="profile-image-upload" title="Upload Picture">
+                    <i class="fas fa-camera"></i>
+                  </a>
+                </div>
+              <?php } ?>
               <h5><?php echo $data['playerName']; ?></h5>
               <p>Role: <?php echo $data['player_role']; ?></p>
               <p>City: <?php echo $data['city']; ?></p>
-              <a href="<?php echo base_url(); ?>PlayerController/profile_player">View Profile</a>
-            <?php } ?>
+              <div class="action-buttons">
+                <a href="<?php echo base_url(); ?>PlayerController/profile_player/<?php echo $data['player_id']; ?>" class="btn-view-profile">View Profile</a>
+                <a href="<?php echo base_url(); ?>PlayerController/update_player/<?php echo $data['player_id']; ?>" class="btn btn-warning btn-sm">Edit Profile</a>
+              </div>
+          <?php } ?>
         </div>
       </div>
 
@@ -456,29 +541,23 @@
   </div>
 
   <script>
-    // Function to toggle sections
     function showSection(sectionId) {
-      // Hide all sections
       document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
       });
-
-      // Show the selected section
       document.getElementById(`${sectionId}-section`).classList.add('active');
-
-      // Update link bar buttons
       document.querySelectorAll('.link-bar button').forEach(button => {
         button.classList.remove('active');
       });
       event.currentTarget.classList.add('active');
     }
 
-    // Initialize the default section
     document.addEventListener('DOMContentLoaded', () => {
-      showSection('teams'); // Show Teams section by default
+      showSection('teams');
     });
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

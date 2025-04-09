@@ -457,20 +457,17 @@ if ($query->num_rows() > 0) {
 
 
 
-    public function update_bowling_stats($player_id, $match_id, $overs, $given_runs, $wickets,$bowling_order) {
-        $data = array(
-            'overs' => $overs,
-            'given_runs' => $given_runs,
-            'wickets' => $wickets
-
-        );
-
-        // Update the record with the new bowling stats
-        $this->db->where('player_id', $player_id);
-        $this->db->where('match_id', $match_id);
-       // $this->db->where('bowling_order', $bowling_order);
-        return $this->db->update('bowling_first', $data);
-    }
+  public function update_bowling_stats($player_id, $match_id, $overs, $given_runs, $wickets, $bowling_order) {
+    $data = array(
+        'overs' => $overs,
+        'given_runs' => $given_runs,
+        'wickets' => $wickets
+    );
+    $this->db->where('player_id', $player_id);
+    $this->db->where('match_id', $match_id);
+ //   $this->db->where('bowling_order', $bowling_order);
+    return $this->db->update('bowling_first', $data); // Adjust table name as per your schema
+}
 
 
 

@@ -12,6 +12,7 @@ class ScorecardController extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
         $this->load->library('upload');
+          $this->load->library('user_agent');
         
         $this->load->database();
             if($this->session->userdata('logged')!=true)
@@ -295,9 +296,9 @@ class ScorecardController extends CI_Controller {
     }
 
     
-    public function show_bowling_first($bowl_first,$batting_first,$match_id)
+    public function show_bowling_first($batting_first,$bowling_first,$match_id)
     {
-
+        
        
          $user_id=$this->session->userdata('user_id');
 $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
@@ -319,10 +320,10 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
              $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
 
 
-            $data['bowling_first']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowl_first,'match_id'=>$match_id),'bowling_first');
+             $data['bowling_first']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowling_first,'match_id'=>$match_id),'bowling_first');
             
              $data['decision']=$data['decision'];
-       // var_dump($data['bowling_first']);
+     //  var_dump($data['bowling_first']);
   //var_dump( $data['player_info']);
                 $this->load->view('header');
             $this->load->view('add_first_bowling', $data);
@@ -388,13 +389,15 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
                 $team2=$data['team_two_id'];
                 $win_team=$data['toss_winner'];
                 $bowl_second=$data['bat_first'];
-
+            //    var_dump($bowl_second);
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
             $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
             $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
             $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
             $data['bowling_second']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowl_second,'match_id'=>$match_id),'bowling_first');
+        //    var_dump( $data['bowling_second']);
+
             $data['player_info']=$this->Scorecard_model->player_info($match_id);
             
              $data['decision']=$data['decision'];
@@ -446,7 +449,7 @@ $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$ma
          
     }
 
-     public function show_bowling_second($batting_second,$bowling_second, $match_id)
+     public function show_bowling_second($bowling_second,$batting_second, $match_id)
     {
 
       
@@ -791,9 +794,9 @@ public function edit_score() {
     
     if($batting_order==1)
     {
-     $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
+     $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id));
                 
-
+//var_dump($data);
                 
                 $team1=$data['team_one_id'];
                 $team2=$data['team_two_id'];
@@ -912,80 +915,67 @@ public function edit_score() {
             $this->load->view('add_second_batting', $data);
     }
     }
-       public function edit_bowling() {
-$user_id=$this->session->userdata('user_id');
-  $player_id = $this->input->post('player_id');
-  $bowling_order=$this->input->post('bowling_order');
+      public function edit_bowling() {
+    $user_id = $this->session->userdata('user_id');
+    $player_id = $this->input->post('player_id');
+    $bowling_order = $this->input->post('bowling_order');
+    $match_id = $this->input->post('match_id');  
+    $overs = $this->input->post('overs');
+    $given_runs = $this->input->post('given_runs');
+    $wickets = $this->input->post('wickets');
 
-  $match_id = $this->input->post('match_id');  
-  $overs = $this->input->post('overs');
-  $given_runs = $this->input->post('given_runs');
-  $wickets = $this->input->post('wickets');
+    // Prepare the data array correctly (fixed syntax errors)
+    $record = array(
+        'overs' => $overs,
+        'given_runs' => $given_runs,
+        'wickets' => $wickets
+    );
+   // var_dump($player_id,$match_id);
 
-  $record=array(
-                '$overs'=>$overs,
-                ' given_runs'=> $given_runs,
-                'wickets'=>$wickets
-                );
- // var_dump($record);
-  // Update the bowling record in the database
-  $this->Scorecard_model->update_bowling_stats($player_id, $match_id, $overs, $given_runs, $wickets,$bowling_order);
-  
-  if($bowling_order == 1)
-  {
-    $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-                
+    // Update the bowling record in the database
+    $this->Scorecard_model->update_bowling_stats($player_id, $match_id, $overs, $given_runs, $wickets, $bowling_order);
 
-                
-                $team1=$data['team_one_id'];
-                $team2=$data['team_two_id'];
-                $win_team=$data['toss_winner'];
-                $bowling_first=$data['bowl_first'];
+    // Redirect based on bowling order
+    if ($bowling_order == 1) {
+        $data = $this->Scorecard_model->get_toss(array('user_id' => $user_id, 'match_id' => $match_id), 'toss');
+        $team1 = $data['team_one_id'];
+        $team2 = $data['team_two_id'];
+        $win_team = $data['toss_winner'];
+        $bowling_first = $data['bowl_first'];
 
-                  $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-                
-            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
-            $data['bowling_first']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowling_first,'match_id'=>$match_id),'bowling_first');
-          //  var_dump($data['bowling_first']);
-             $data['player_info']=$this->Scorecard_model->player_info_second($match_id);
-            // var_dump($data['player_info']);
-             $data['decision']=$data['decision'];
-        //var_dump($data);
+        $data['toss_id'] = $this->Scorecard_model->get_toss(array('user_id' => $user_id, 'match_id' => $match_id), 'toss');
+        $data['team_one'] = $this->Team_model->team_information(array('team_id' => $team1), 'add_team');
+        $data['team_two'] = $this->Team_model->team_information(array('team_id' => $team2), 'add_team');
+        $data['toss_winner'] = $this->Team_model->team_information(array('team_id' => $win_team), 'add_team');
+        $data['bowling_first'] = $this->Scorecard_model->get_bowling(array('bowling_team' => $bowling_first, 'match_id' => $match_id), 'bowling_first');
+        $data['player_info'] = $this->Scorecard_model->player_info_second($match_id);
+        $data['decision'] = $data['decision'];
 
-                $this->load->view('header');
-            $this->load->view('add_first_bowling', $data);
-        
+        $this->load->view('header');
+        $this->load->view('add_first_bowling', $data);
+    } elseif ($bowling_order == 2) {
+        $data = $this->Scorecard_model->get_toss(array('user_id' => $user_id, 'match_id' => $match_id), 'toss');
+        $team1 = $data['team_one_id'];
+        $team2 = $data['team_two_id'];
+        $win_team = $data['toss_winner'];
+        $bowl_second = $data['bat_first'];
+
+        $data['toss_id'] = $this->Scorecard_model->get_toss(array('user_id' => $user_id, 'match_id' => $match_id), 'toss');
+        $data['team_one'] = $this->Team_model->team_information(array('team_id' => $team1), 'add_team');
+        $data['team_two'] = $this->Team_model->team_information(array('team_id' => $team2), 'add_team');
+        $data['toss_winner'] = $this->Team_model->team_information(array('team_id' => $win_team), 'add_team');
+        $data['bowling_second'] = $this->Scorecard_model->get_bowling(array('bowling_team' => $bowl_second, 'match_id' => $match_id), 'bowling_first');
+        $data['player_info'] = $this->Scorecard_model->player_info($match_id);
+        $data['decision'] = $data['decision'];
+
+        $this->load->view('header');
+        $this->load->view('add_second_bowling', $data);
+    } else {
+        // Handle invalid bowling order (optional)
+        log_message('error', 'Invalid bowling_order received: ' . $bowling_order);
+        show_error('Invalid bowling order');
     }
-
-    if($bowling_order==2)
-    {
-         $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-                
-
-                
-                $team1=$data['team_one_id'];
-                $team2=$data['team_two_id'];
-                $win_team=$data['toss_winner'];
-                $bowl_second=$data['bat_first'];
-
-                  $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-                
-            $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
-            $data['team_two']=$this->Team_model->team_information(array('team_id'=>$team2),'add_team');
-            $data['toss_winner']=$this->Team_model->team_information(array('team_id'=>$win_team),'add_team');
-            $data['bowling_second']=$this->Scorecard_model->get_bowling(array('bowling_team'=>$bowl_second,'match_id'=>$match_id),'bowling_first');
-            $data['player_info']=$this->Scorecard_model->player_info($match_id);
-            
-             $data['decision']=$data['decision'];
-        //var_dump($data);
-
-                $this->load->view('header');
-            $this->load->view('add_second_bowling', $data);
-
-    }
-  }
+}
 
 }
      

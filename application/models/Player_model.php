@@ -351,4 +351,35 @@ public function calculate_player_bowling_stats($player_id) {
 }
 
 
+
+
+    public function update_profile_picture($player_id, $image_path) {
+        // Prepare data to update
+        $data = array(
+            'image_path' => $image_path
+        );
+        
+        // Update the image path in the database for the given player ID
+        $this->db->where('player_id', $player_id);
+        return $this->db->update('add_player', $data); // 'add_player' is your table name
+    }
+
+    public function update_player_field($player_id, $field_name, $new_value) {
+        // Validate the field name to make sure it's a valid column
+        $valid_fields = ['playerName', 'city', 'date_of_birth', 'batting_style', 'bowling_style', 'player_role', 'additional_info'];
+        
+        if (in_array($field_name, $valid_fields)) {
+            // Prepare the data for the update
+            $data = [$field_name => $new_value];
+
+            // Update the field in the database
+            $this->db->where('player_id', $player_id);
+            return $this->db->update('add_player', $data);
+        }
+
+        // Return false if the field name is not valid
+        return false;
+    }
+
+
 }

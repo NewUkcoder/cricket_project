@@ -13,25 +13,25 @@
         }
 
         body {
-            background-color: #f8f9fa;
+            background-color: #f4f6f9;
             color: #333;
-            line-height: 1.4;
-            padding: 10px;
+            line-height: 1.5;
+            padding: 15px;
             min-height: 100vh;
         }
 
         .scorecard-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
             background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
         .match-header {
-            padding: 12px;
+            padding: 15px;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             text-align: center;
@@ -44,8 +44,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
         .team {
@@ -56,17 +56,17 @@
         }
 
         .team-logo {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             object-fit: contain;
             border-radius: 50%;
             background: white;
-            padding: 2px;
-            margin-bottom: 3px;
+            padding: 3px;
+            margin-bottom: 5px;
         }
 
         .team-name {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
@@ -75,26 +75,20 @@
         }
 
         .vs-text {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
             color: #ffcc00;
             flex-shrink: 0;
         }
 
         .match-info {
-            font-size: 11px;
+            font-size: 12px;
             opacity: 0.9;
-            margin-top: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-top: 5px;
         }
 
         .scorecard-nav {
-            padding: 8px 12px;
-            max-height: calc(100vh - 240px);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            padding: 15px;
         }
 
         .nav-card {
@@ -102,11 +96,11 @@
             justify-content: space-between;
             align-items: center;
             background: #f8f9fa;
-            border-radius: 6px;
-            padding: 10px 12px;
-            margin-bottom: 8px;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
             transition: all 0.2s ease;
-            border-left: 3px solid #2a5298;
+            border-left: 4px solid #2a5298;
         }
 
         .nav-card:hover {
@@ -114,87 +108,72 @@
         }
 
         .nav-text {
-            flex: 1;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .nav-team {
-            font-size: 11px;
+            font-size: 12px;
             color: #6c757d;
-            margin-top: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-top: 3px;
         }
 
         .nav-btn {
             background: #2a5298;
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
-            font-size: 11px;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             text-decoration: none;
             white-space: nowrap;
-            margin-left: 8px;
-            flex-shrink: 0;
         }
 
         .motm-section {
-            padding: 12px;
+            padding: 15px;
+            background: #f9fafb;
             border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-            background: #f8f9fa;
         }
 
         .motm-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 8px;
             color: #2a5298;
+            margin-bottom: 10px;
         }
 
         .motm-display {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             background: white;
-            border-radius: 6px;
-            padding: 8px 10px;
-            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .motm-player-img {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             object-fit: cover;
-            flex-shrink: 0;
         }
 
         .motm-player-name {
-            flex: 1;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            flex: 1;
         }
 
         .motm-edit-btn {
             background: none;
             border: none;
             color: #2a5298;
-            font-size: 11px;
+            font-size: 12px;
             cursor: pointer;
             font-weight: 500;
-            flex-shrink: 0;
         }
 
         .popup-overlay {
@@ -203,67 +182,71 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 12px;
+            padding: 15px;
         }
 
         .popup-content {
             background: white;
             width: 100%;
-            max-width: 320px;
-            border-radius: 10px;
-            padding: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 340px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .popup-title {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             color: #2a5298;
         }
 
         .popup-select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 12px;
-            font-size: 13px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
 
         .popup-submit {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             background: #2a5298;
             color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 13px;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
         }
 
-        @media (max-width: 400px) {
-            .team-logo {
-                width: 32px;
-                height: 32px;
+        @media (max-width: 480px) {
+            .scorecard-container {
+                max-width: 100%;
             }
-            
+
+            .team-logo {
+                width: 36px;
+                height: 36px;
+            }
+
             .team-name {
+                font-size: 14px;
+            }
+
+            .vs-text {
                 font-size: 13px;
             }
-            
-            .vs-text {
-                font-size: 12px;
-            }
-            
-            .scorecard-nav {
-                max-height: calc(100vh - 220px);
+
+            .nav-text {
+                font-size: 13px;
             }
         }
     </style>
@@ -293,42 +276,37 @@
                     <div class="nav-text">Team Squads</div>
                     <div class="nav-team">Both Teams</div>
                 </div>
-                <a href="" class="nav-btn">Edit</a>
+                <a href="" class="nav-btn">Currently in Progress</a>
+                <!-- <a href="<?php echo base_url();?>Welcome/choose_squad/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a> -->
             </div>
-            
             <div class="nav-card">
                 <div>
                     <div class="nav-text">1st Innings Batting</div>
                     <div class="nav-team"><?php echo $toss_information['bat_first_name'];?></div>
                 </div>
-                <a href="<?php echo base_url();?>ScorecardController/add_first_batting/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Edit</a>
+                <a href="<?php echo base_url();?>ScorecardController/add_first_batting/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a>
             </div>
-            
             <div class="nav-card">
                 <div>
                     <div class="nav-text">1st Innings Bowling</div>
                     <div class="nav-team"><?php echo $toss_information['bowl_first_name'];?></div>
                 </div>
-                <a href="<?php echo base_url();?>ScorecardController/show_bowling_first/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Edit</a>
+                <a href="<?php echo base_url();?>ScorecardController/show_bowling_first/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a>
             </div>
-            
             <div class="nav-card">
                 <div>
                     <div class="nav-text">2nd Innings Batting</div>
                     <div class="nav-team"><?php echo $toss_information['bowl_first_name'];?></div>
                 </div>
-                <a href="<?php echo base_url();?>ScorecardController/add_second_batting/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Edit</a>
+                <a href="<?php echo base_url();?>ScorecardController/add_second_batting/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a>
             </div>
-            
             <div class="nav-card">
                 <div>
                     <div class="nav-text">2nd Innings Bowling</div>
                     <div class="nav-team"><?php echo $toss_information['bat_first_name'];?></div>
                 </div>
-                <a href="<?php echo base_url();?>ScorecardController/show_bowling_second/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Edit</a>
+                <a href="<?php echo base_url();?>ScorecardController/show_bowling_second/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a>
             </div>
-
-            <!-- Moved Player of the Match before Full Scorecard -->
             <div class="motm-section">
                 <div class="motm-title">Player of the Match</div>
                 <?php if (empty($player_of_match['player_id'])) { ?>
@@ -341,7 +319,6 @@
                     </div>
                 <?php } ?>
             </div>
-            
             <div class="nav-card">
                 <div>
                     <div class="nav-text">Full Scorecard</div>
