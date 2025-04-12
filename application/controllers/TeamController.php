@@ -86,6 +86,7 @@ class TeamController extends CI_Controller {
                 $team_data['team_stats']=$this->Team_model->get_team_stats($team_id);
               $team_data['data']=$this->Team_model->get_team($team_id);
               $team_data['captain']=$this->Team_model->team_captain($team_id);
+               $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team_id);
 
            // var_dump($team_data);
                 $this->load->view('header');

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Team Management Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Base Styles - Mobile First */
         :root {
@@ -31,10 +32,15 @@
             --radius-md: 8px;
             --radius-lg: 12px;
             --transition: all 0.2s ease;
+            --match-upcoming: #3498db;
+            --match-live: #e74c3c;
+            --match-completed: #2ecc71;
         }
         
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
@@ -63,6 +69,23 @@
             box-shadow: var(--shadow-sm);
             position: relative;
             border-left: 4px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .tm-header-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .tm-header-content {
+            flex: 1;
+            min-width: 0;
         }
         
         .tm-header h1 {
@@ -79,6 +102,29 @@
             font-size: 0.9em;
             color: var(--light-text);
             margin: 5px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tm-header p i {
+            font-size: 0.9em;
+        }
+        
+        .tm-social-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        
+        .tm-social-link {
+            color: var(--light-text);
+            font-size: 1.1em;
+            transition: var(--transition);
+        }
+        
+        .tm-social-link:hover {
+            color: var(--primary-color);
         }
         
         /* Navigation - Horizontal Scroll for Mobile */
@@ -116,6 +162,13 @@
             white-space: nowrap;
             transition: var(--transition);
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .tm-nav-item i {
+            font-size: 14px;
         }
         
         .tm-nav-item.active, .tm-nav-item:hover {
@@ -141,6 +194,23 @@
         
         .internal-link:hover {
             background-color: var(--internal-hover);
+        }
+        
+        /* Badges */
+        .tm-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            background: var(--danger-color);
+            color: white;
+            font-size: 11px;
+            padding: 0 5px;
+            border-radius: 10px;
+            margin-left: 5px;
+            font-weight: bold;
+            vertical-align: middle;
         }
         
         /* Sections */
@@ -170,6 +240,39 @@
             padding: 5px 10px;
         }
         
+        .tm-section-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Filter Controls */
+        .tm-filter-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .tm-filter-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .tm-filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .tm-filter-btn:hover:not(.active) {
+            background: rgba(0,0,0,0.05);
+        }
+        
         /* Cards - Compact Layout */
         .tm-card {
             display: grid;
@@ -186,6 +289,7 @@
         
         .tm-card:hover {
             box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
         }
         
         .tm-card:last-child {
@@ -223,6 +327,19 @@
             text-overflow: ellipsis;
         }
         
+        .tm-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--lighter-text);
+            margin-top: 5px;
+        }
+        
+        .tm-card-meta i {
+            font-size: 10px;
+        }
+        
         /* Button Group */
         .tm-btn-group {
             display: flex;
@@ -242,10 +359,10 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 5px;
         }
         
         .tm-btn i {
-            margin-right: 5px;
             font-size: 14px;
         }
         
@@ -346,10 +463,12 @@
             border-radius: var(--radius-md);
             border: 1px solid rgba(0,0,0,0.05);
             transition: var(--transition);
+            position: relative;
         }
         
         .tm-captain-card:hover {
             box-shadow: var(--shadow-sm);
+            transform: translateY(-3px);
         }
         
         .tm-captain-card h4 {
@@ -375,6 +494,12 @@
             font-weight: 500;
         }
         
+        .tm-captain-stats {
+            font-size: 11px;
+            color: var(--light-text);
+            margin-top: 5px;
+        }
+        
         /* Empty State */
         .tm-empty-state {
             text-align: center;
@@ -394,10 +519,49 @@
             margin-bottom: 8px;
             gap: 10px;
             flex-wrap: wrap;
+            transition: var(--transition);
+        }
+
+        .tm-schedule-line:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         .tm-schedule-line.admin-match {
             border-left: 3px solid var(--warning-color);
+        }
+
+        .tm-schedule-status {
+            position: absolute;
+            top: -6px;
+            right: 10px;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .tm-schedule-status.upcoming {
+            background: var(--match-upcoming);
+            color: white;
+        }
+
+        .tm-schedule-status.live {
+            background: var(--match-live);
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        .tm-schedule-status.completed {
+            background: var(--match-completed);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
         }
 
         .tm-schedule-teams {
@@ -470,6 +634,13 @@
             color: var(--light-text);
         }
 
+        .tm-schedule-venue {
+            font-size: 11px;
+            color: var(--light-text);
+            margin-top: 3px;
+            white-space: nowrap;
+        }
+
         .tm-schedule-actions {
             display: flex;
             gap: 6px;
@@ -481,40 +652,408 @@
             gap: 6px;
         }
 
-        /* Mobile Responsiveness */
-        @media (max-width: 480px) {
-            .tm-schedule-line {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            
-            .tm-schedule-meta {
-                flex-direction: row;
-                align-items: center;
-                gap: 10px;
-                min-width: auto;
-            }
-            
-            .tm-schedule-actions {
-                justify-content: flex-end;
-                margin-top: 5px;
-            }
-            
-            .tm-schedule-team {
-                min-width: calc(50% - 20px);
-            }
-            
-            .tm-team-you {
-                position: absolute;
-                left: 0;
-                bottom: -14px;
-                font-size: 9px;
-                margin-left: 36px; /* image width + margin */
-            }
+        /* Team Management Specific Styles */
+        .team-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        /* Modals */
+        .team-row {
+            background: var(--section-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .team-row:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .team-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+            border: 2px solid white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .team-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .team-info h3 {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .team-info p {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--light-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .team-contact {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .team-contact a {
+            color: var(--light-text);
+            font-size: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .team-contact a:hover {
+            color: var(--primary-color);
+        }
+
+        .team-contact i {
+            font-size: 12px;
+        }
+
+        .insert-section {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .insert-section button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .insert-section button:hover {
+            background: var(--primary-hover);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .insert-section button i {
+            font-size: 14px;
+        }
+
+        .team-row button {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--warning-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .team-row button:hover {
+            background: var(--warning-hover);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .team-row button i {
+            font-size: 12px;
+        }
+
+        /* Stats Cards */
+        .tm-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tm-stat-card {
+            background: var(--section-bg);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .tm-stat-value {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 3px;
+        }
+
+        .tm-stat-label {
+            font-size: 12px;
+            color: var(--light-text);
+        }
+
+        /* Loading States */
+        .tm-loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .tm-loading-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Toast Notifications */
+        .tm-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: tmToastFadeIn 0.3s ease;
+            max-width: 90%;
+        }
+
+        .tm-toast.success {
+            background: var(--success-color);
+        }
+
+        .tm-toast.error {
+            background: var(--danger-color);
+        }
+
+        .tm-toast.warning {
+            background: var(--warning-color);
+        }
+
+        @keyframes tmToastFadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Team Management Modal */
+        .tm-management-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px 0;
+            backdrop-filter: blur(3px);
+        }
+
+        .tm-management-modal-content {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            width: 90%;
+            max-width: 400px;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: var(--shadow-md);
+            animation: tmModalFadeIn 0.3s ease;
+        }
+
+        .tm-management-modal-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tm-management-modal-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .tm-management-modal-close {
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--light-text);
+            transition: var(--transition);
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .tm-management-modal-close:hover {
+            color: var(--danger-color);
+        }
+
+        .tm-management-form-group {
+            margin-bottom: 15px;
+        }
+
+        .tm-management-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .tm-management-form-group input,
+        .tm-management-form-group select,
+        .tm-management-form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .tm-management-form-group input:focus,
+        .tm-management-form-group select:focus,
+        .tm-management-form-group textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .tm-management-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tm-photo-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .tm-photo-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 10px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-text);
+        }
+
+        .tm-photo-upload-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tm-photo-upload-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Confirmation Modal */
+        .tm-confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px 0;
+            backdrop-filter: blur(3px);
+        }
+
+        .tm-confirm-modal-content {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            width: 90%;
+            max-width: 400px;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: var(--shadow-md);
+            animation: tmModalFadeIn 0.3s ease;
+            text-align: center;
+        }
+
+        .tm-confirm-icon {
+            font-size: 3em;
+            color: var(--danger-color);
+            margin-bottom: 15px;
+        }
+
+        .tm-confirm-text {
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .tm-confirm-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Modals (for Team Information) */
         .tm-modal {
             display: none;
             position: fixed;
@@ -631,19 +1170,6 @@
             font-weight: bold;
         }
         
-        /* Badges for counts */
-        .tm-badge {
-            display: inline-block;
-            background: var(--danger-color);
-            color: white;
-            font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: 5px;
-            font-weight: bold;
-            vertical-align: middle;
-        }
-        
         /* Responsive Adjustments */
         @media (min-width: 768px) {
             .tm-container {
@@ -678,46 +1204,116 @@
             .tm-captain-card {
                 padding: 18px;
             }
+
+            .tm-stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tm-schedule-line {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            
+            .tm-schedule-meta {
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+                min-width: auto;
+            }
+            
+            .tm-schedule-actions {
+                justify-content: flex-end;
+                margin-top: 5px;
+            }
+            
+            .tm-schedule-team {
+                min-width: calc(50% - 20px);
+            }
+            
+            .tm-team-you {
+                position: absolute;
+                left: 0;
+                bottom: -14px;
+                font-size: 9px;
+                margin-left: 36px;
+            }
+
+            .team-row {
+                padding: 10px;
+            }
+
+            .team-info h3 {
+                font-size: 13px;
+            }
+
+            .team-info p {
+                font-size: 12px;
+            }
+
+            .team-row button {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+
+            .insert-section button {
+                font-size: 12px;
+                padding: 7px 14px;
+            }
+
+            .tm-management-modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .tm-confirm-modal-content {
+                width: 95%;
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="tm-container">
         <header class="tm-header">
-             <a href="<?php echo base_url();?>TeamController/team_profile/<?php echo $team_id;?>" class="tm-nav-item internal-link"><h1><?php echo $data['team_name']; ?></h1></a>
-            <p>Cricket Team | Est. <?php echo date('Y', strtotime($data['created_at'])); ?></p>
-        </header>
-        
-        <div class="tm-nav-container">
-            <div class="tm-nav">
-                <a href="#tm-player-req" class="tm-nav-item">Requests</a>
-                <a href="#tm-schedule" class="tm-nav-item active">Schedule</a>
-                <a href="#tm-team-info" class="tm-nav-item">Team Info</a>
-                <a href="#tm-captains" class="tm-nav-item">Captains</a>
-                <a href="#tm-management" class="tm-nav-item">Management</a>
+            <img src="<?php echo $data['image_path'];?>" alt="Team Logo" class="tm-header-logo">
+            <div class="tm-header-content">
+                <h1><?php echo $data['team_name']; ?></h1>
+                <p><i class="fas fa-calendar-alt"></i> Est. <?php echo date('Y', strtotime($data['created_at'])); ?></p>
+                <div class="tm-social-links">
+                    <a href="#" class="tm-social-link" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="tm-social-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="tm-social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="tm-social-link" title="Website"><i class="fas fa-globe"></i></a>
+                </div>
             </div>
-        </div>
-        
+        </header>
+          <?php if ($this->session->flashdata('message')): ?>
+            <div class="flashdata-message <?php echo $this->session->flashdata('message_type'); ?>">
+                <?php echo $this->session->flashdata('message'); ?>
+            </div>
+        <?php endif; ?>
         <div class="tm-nav-container">
             <div class="tm-nav">
-                <a href="<?php echo base_url();?>TeamController/team_profile/<?php echo $team_id;?>" class="tm-nav-item internal-link">View Page</a>
-                  <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-                <a href="<?php echo base_url();?>TeamController/invite_team/<?php echo $team_id;?>" class="tm-nav-item external-link" title="Invite Team">Invite Team</a>
-                  <?php endif; ?>
-                   <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-                <a href="<?php echo base_url();?>TournamentController/join_tournament/<?php echo $team_id;?>" class="tm-nav-item external-link">Join Tournament</a>
-                  <?php endif; ?>
-                   <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-                <a href="<?php echo base_url();?>TeamController/match_request/<?php echo $team_id;?>" class="tm-nav-item external-link" title="Team Request">Play Match</a>
-                  <?php endif; ?>
-
-                   <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-                <a href="<?php echo base_url();?>TeamController/player_request/<?php echo $team_id;?>" class="tm-nav-item external-link" title="Player Request">Player Request <span class="tm-badge">2</span></a>
-                      <?php endif; ?>
-
-                 <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-                <a href="<?php echo base_url();?>TeamController/team_request/<?php echo $team_id;?>" class="tm-nav-item external-link" title="Match Request">Team Request</a>
-                  <?php endif; ?>
+                <a href="<?php echo base_url();?>Welcome/landing_page" class="tm-nav-item"><i class="fas fa-home"></i> Home</a>
+                <a href="<?php echo base_url();?>TeamController/team_profile/<?php echo $team_id;?>" class="tm-nav-item internal-link"><i class="fas fa-eye"></i> View Page</a>
+                <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                    <a href="<?php echo base_url();?>TeamController/invite_team/<?php echo $team_id;?>" class="tm-nav-item external-link" title="Invite Team">Invite Team</a>
+                <?php endif; ?>
+                <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                    <a href="<?php echo base_url();?>TournamentController/join_tournament/<?php echo $team_id;?>" class="tm-nav-item external-link">Join Tournament</a>
+               <!--  <?php endif; ?>
+                <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                    <a href="<?php echo base_url();?>TeamController/match_request/<?php echo $team_id;?>" class="tm-nav-item external-link" title="Team Request">Play Match</a>
+                <?php endif; ?>
+                <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                    <a href="<?php echo base_url();?>TeamController/player_request/<?php echo $team_id;?>" class="tm-nav-item external-link" title="Player Request">Player Request <span class="tm-badge">2</span></a>
+                <?php endif; ?>
+                <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                    <a href="<?php echo base_url();?>TeamController/team_request/<?php echo $team_id;?>" class="tm-nav-item external-link" title="Match Request">Team Request</a>
+                <?php endif; ?> -->
             </div>
         </div>
 
@@ -775,12 +1371,9 @@
             <?php endif; ?>
         </section>
        
-        <!-- apposition team Section -->
+        <!-- Opposition Team Section -->
         <section class="tm-section" id="tm-schedule">
-            <h3 class="tm-section-title">
-                Apposition Team
-            </h3>
-            
+            <h3 class="tm-section-title">Opposition Team</h3>
             <?php if ($opposition_team['status'] == 'error'): ?>
                 <div class="tm-empty-state">
                     <?php echo $opposition_team['message']; ?>
@@ -826,22 +1419,20 @@
                                     <?php endif; ?>
                                 </div>
                             </div>
-                                <div class="tm-schedule-actions">
-                                      <?php if($isAdmin): ?>
+                            <div class="tm-schedule-actions">
+                                <?php if($isAdmin): ?>
                                     <div class="tm-admin-actions">
                                         <a href="<?php echo base_url();?>Welcome/toss/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>/<?php echo $value->match_id;?>" class="tm-btn tm-btn-primary tm-btn-xs">Score</a>
                                         <a href="<?php echo base_url();?>Welcome/edit_schedule/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>/<?php echo $value->match_id;?>" class="tm-btn tm-btn-warning tm-btn-xs">Edit</a>
                                     </div>
                                 <?php endif; ?>
                                 <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>/<?php echo $value->match_id;?>" class="tm-btn tm-btn-outline tm-btn-xs">View</a>
-                              
                             </div>
                             <div class="tm-schedule-meta">
                                 <?php $date=$value->match_date; $formatted_date = date("M d", strtotime($date)); ?>
                                 <span class="tm-schedule-date"><?php echo $formatted_date;?></span>
                                 <span class="tm-schedule-time"><?php echo date("g:i A", strtotime($value->match_time));?></span>
                             </div>
-
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -859,12 +1450,10 @@
                 <div><strong>Country:</strong> <span id="tm-country"><?php echo $data['country']; ?></span></div>
                 <button class="tm-btn tm-btn-warning tm-btn-sm" onclick="tmEditField('country', 'Country', 'text')">Edit</button>
             </div>
-          
             <div class="tm-info-item">
                 <div><strong>Home Ground:</strong> <span id="tm-ground"><?php echo $data['home_ground']; ?></span></div>
                 <button class="tm-btn tm-btn-warning tm-btn-sm" onclick="tmEditField('ground', 'Home Ground', 'text')">Edit</button>
             </div>
-            
             <div class="tm-info-item">
                 <div><strong>Admin Phone:</strong> <span id="tm-phone"><?php echo $data['phone_number']; ?></span></div>
                 <button class="tm-btn tm-btn-warning tm-btn-sm" onclick="tmEditField('phone', 'Admin Phone', 'tel')">Edit</button>
@@ -926,45 +1515,48 @@
         <!-- Management -->
         <section class="tm-section" id="tm-management">
             <h3 class="tm-section-title">Team Management</h3>
-            
-            <?php 
-            // Define management staff with their default values
-            $management_staff = [
-                'coach' => ['name' => 'Michael Smith', 'image' => 'coach.jpg'],
-                'asst' => ['name' => 'Sarah Johnson', 'image' => 'assistant.jpg'],
-                'manager' => ['name' => 'David Brown', 'image' => 'manager.jpg'],
-                'physio' => ['name' => 'Emily Davis', 'image' => 'physio.jpg']
-            ];
-            
-            // Check if there's saved management data in session or database
-            if(isset($_SESSION['team_management_data'])) {
-                foreach($_SESSION['team_management_data'] as $role => $data) {
-                    if(isset($management_staff[$role])) {
-                        $management_staff[$role] = $data;
+            <div class="insert-section">
+                <button class="tm-btn tm-btn-primary" onclick="openManagementModal('insert', '', '')">Insert New Member</button>
+            </div>
+            <div class="team-container">
+                <?php 
+                // Define management staff with their default values
+                $management_staff = [
+                    'coach' => ['name' => 'Michael Smith', 'designation' => 'Head Coach'],
+                    'manager' => ['name' => 'Sarah Johnson', 'designation' => 'Team Manager'],
+                    'physio' => ['name' => 'David Brown', 'designation' => 'Physiotherapist'],
+                    'analyst' => ['name' => 'Emily Davis', 'designation' => 'Data Analyst'],
+                    'asst' => ['name' => 'James Wilson', 'designation' => 'Assistant Coach']
+                ];
+                
+                // Check if there's saved management data in session or database
+                if(isset($_SESSION['team_management_data'])) {
+                    foreach($_SESSION['team_management_data'] as $role => $data) {
+                        if(isset($management_staff[$role])) {
+                            $management_staff[$role] = $data;
+                        }
                     }
                 }
-            }
-            ?>
-            
-            <?php foreach($management_staff as $role => $staff): ?>
-            <div class="tm-card" id="tm-staff-<?php echo $role; ?>">
-                <img src="<?php echo $staff['image']; ?>" alt="<?php echo ucfirst($role); ?>" class="tm-card-img">
-                <div class="tm-card-content">
-                    <h4><?php echo ucwords(str_replace('_', ' ', $role)); ?></h4>
-                    <p class="tm-staff-name"><?php echo $staff['name']; ?></p>
+                ?>
+                <?php foreach($management_staff as $role => $staff): ?>
+                <div class="team-row" id="staff-<?php echo $role; ?>">
+                    <div class="team-info">
+                        <h3><?php echo $staff['name']; ?></h3>
+                        <p><?php echo $staff['designation']; ?></p>
+                    </div>
+                    <button class="tm-btn tm-btn-warning tm-btn-sm" onclick="openManagementModal('edit', '<?php echo $staff['name']; ?>', '<?php echo $staff['designation']; ?>', '<?php echo $role; ?>')">Edit</button>
                 </div>
-                <button class="tm-btn tm-btn-warning tm-btn-sm" onclick="tmEditStaff('<?php echo $role; ?>')">Edit</button>
+                <?php endforeach; ?>
             </div>
-            <?php endforeach; ?>
         </section>
     </div>
 
-    <!-- Edit Field Modal -->
+    <!-- Edit Field Modal (for Team Information) -->
     <div id="tm-edit-modal" class="tm-modal">
         <div class="tm-modal-content">
             <div class="tm-modal-header">
                 <h3>Edit <span id="tm-edit-title"></span></h3>
-                <span class="tm-modal-close" onclick="tmCloseModal()">&times;</span>
+                <span class="tm-modal-close" onclick="tmCloseModal()">×</span>
             </div>
             <div class="tm-form-group">
                 <input type="text" id="tm-edit-input" class="tm-form-control">
@@ -976,35 +1568,34 @@
         </div>
     </div>
 
-    <!-- Edit Staff Modal -->
-    <div id="tm-edit-staff-modal" class="tm-modal">
-        <div class="tm-modal-content">
-            <div class="tm-modal-header">
-                <h3>Edit Staff Member</h3>
-                <span class="tm-modal-close" onclick="tmCloseEditStaffModal()">&times;</span>
+    <!-- Team Management Modal -->
+    <div id="tm-management-modal" class="tm-management-modal">
+        <div class="tm-management-modal-content">
+            <div class="tm-management-modal-header">
+                <h3 id="tm-management-modal-title">Manage Staff Member</h3>
+                <span class="tm-management-modal-close" onclick="closeManagementModal()">×</span>
             </div>
-            <div class="tm-form-group">
-                <label>Name:</label>
-                <input type="text" id="tm-staff-name-input">
+            <div class="tm-management-form-group">
+                <label for="tm-management-name">Name</label>
+                <input type="text" id="tm-management-name" placeholder="Enter name">
             </div>
-            <div class="tm-form-group">
-                <label>Image URL:</label>
-                <input type="text" id="tm-staff-img-input">
+            <div class="tm-management-form-group">
+                <label for="tm-management-designation">Designation</label>
+                <input type="text" id="tm-management-designation" placeholder="Enter designation">
             </div>
-            <input type="hidden" id="tm-current-staff-role">
-            <div class="tm-form-actions">
-                <button class="tm-btn tm-btn-primary" onclick="tmSaveStaffEdit()">Save</button>
-                <button class="tm-btn tm-btn-danger" onclick="tmCloseEditStaffModal()">Cancel</button>
+            <input type="hidden" id="tm-management-role">
+            <div class="tm-management-form-actions">
+                <button class="tm-btn tm-btn-primary" onclick="saveManagementChanges()">Save</button>
+                <button class="tm-btn tm-btn-danger" onclick="closeManagementModal()">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Team Dashboard Functions
+        // Team Dashboard Functions (Team Information and Navigation)
         let tmCurrentField = null;
-        let tmCurrentStaff = null;
-        
-        // Field Editing
+
+        // Field Editing (for Team Information)
         function tmEditField(field, title, type) {
             tmCurrentField = field;
             document.getElementById('tm-edit-title').textContent = title;
@@ -1019,7 +1610,7 @@
             document.getElementById('tm-edit-modal').style.display = 'block';
             document.getElementById('tm-edit-input').focus();
         }
-        
+
         function tmSaveEdit() {
             const newValue = document.getElementById('tm-edit-input').value;
             document.getElementById('tm-' + tmCurrentField).textContent = newValue;
@@ -1058,92 +1649,75 @@
                 tmCloseModal();
             });
         }
-        
+
         function tmCloseModal() {
             document.getElementById('tm-edit-modal').style.display = 'none';
             tmCurrentField = null;
         }
-        
-        // Staff Member Editing
-        function tmEditStaff(role) {
-            const staffCard = document.getElementById(`tm-staff-${role}`);
-            const name = staffCard.querySelector('.tm-staff-name').textContent;
-            const img = staffCard.querySelector('img').src;
-            
-            document.getElementById('tm-staff-name-input').value = name;
-            document.getElementById('tm-staff-img-input').value = img;
-            document.getElementById('tm-current-staff-role').value = role;
-            document.getElementById('tm-edit-staff-modal').style.display = 'block';
-            document.getElementById('tm-staff-name-input').focus();
+
+        // Team Management Modal Functions
+        function openManagementModal(action, name = '', designation = '', role = '') {
+            const modal = document.getElementById('tm-management-modal');
+            const title = document.getElementById('tm-management-modal-title');
+            const nameInput = document.getElementById('tm-management-name');
+            const designationInput = document.getElementById('tm-management-designation');
+            const roleInput = document.getElementById('tm-management-role');
+
+            if (action === 'insert') {
+                title.textContent = 'Add New Member';
+                nameInput.value = '';
+                designationInput.value = '';
+                roleInput.value = '';
+            } else {
+                title.textContent = 'Edit Member';
+                nameInput.value = name;
+                designationInput.value = designation;
+                roleInput.value = role;
+            }
+
+            modal.style.display = 'block';
+            nameInput.focus();
         }
-        
-        function tmSaveStaffEdit() {
-            const role = document.getElementById('tm-current-staff-role').value;
-            const newName = document.getElementById('tm-staff-name-input').value;
-            const newImg = document.getElementById('tm-staff-img-input').value;
-            
-            // Update the UI immediately
-            const staffCard = document.getElementById(`tm-staff-${role}`);
-            staffCard.querySelector('.tm-staff-name').textContent = newName;
-            staffCard.querySelector('img').src = newImg;
-            
-            // Show loading state
-            const saveBtn = document.querySelector('#tm-edit-staff-modal .tm-btn-primary');
-            const originalText = saveBtn.textContent;
-            saveBtn.innerHTML = '<span class="tm-loading-text">Saving...</span>';
-            saveBtn.disabled = true;
-            
-            // Save to server via AJAX
-            fetch('/update-team-staff', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    role: role,
-                    name: newName,
-                    image: newImg,
-                    team_id: <?php echo $team_id; ?>
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(!data.success) {
-                    alert('Error saving staff changes');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error saving staff changes');
-            })
-            .finally(() => {
-                saveBtn.textContent = originalText;
-                saveBtn.disabled = false;
-                tmCloseEditStaffModal();
-            });
+
+        function closeManagementModal() {
+            document.getElementById('tm-management-modal').style.display = 'none';
         }
-        
-        function tmCloseEditStaffModal() {
-            document.getElementById('tm-edit-staff-modal').style.display = 'none';
-            tmCurrentStaff = null;
+
+        function saveManagementChanges() {
+            const name = document.getElementById('tm-management-name').value;
+            const designation = document.getElementById('tm-management-designation').value;
+            const role = document.getElementById('tm-management-role').value;
+
+            if (!name || !designation) {
+                alert('Please fill in both name and designation.');
+                return;
+            }
+
+            // Static alert for demo purposes; user to implement backend saving
+            alert(`Saving: Name: ${name}, Designation: ${designation}${role ? ', Role: ' + role : ''}`);
+
+            // Close modal
+            closeManagementModal();
         }
-        
+
         // Close modals when clicking outside
         window.onclick = function(event) {
             if (event.target.classList.contains('tm-modal')) {
                 tmCloseModal();
-                tmCloseEditStaffModal();
             }
-        }
-        
+            if (event.target.classList.contains('tm-management-modal')) {
+                closeManagementModal();
+            }
+        };
+
         // Close modals with ESC key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 tmCloseModal();
-                tmCloseEditStaffModal();
+                closeManagementModal();
             }
         });
-        
+
         // Smooth scrolling for navigation
         document.querySelectorAll('.tm-nav-item').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -1159,7 +1733,7 @@
                 }
             });
         });
-        
+
         // Highlight active section based on scroll position
         window.addEventListener('scroll', function() {
             const sections = document.querySelectorAll('.tm-section');

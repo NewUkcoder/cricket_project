@@ -63,11 +63,10 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
-        /* Adjust image styling to fit the container properly */
         .player-card img {
-            width: 100%;  /* Make the image take up the full width of the container */
-            height: 180px;  /* Adjust the height of the image */
-            object-fit: cover;  /* Ensure the image covers the area without stretching */
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
             border-bottom: 2px solid #1a73e8;
         }
 
@@ -83,6 +82,15 @@
             color: #666;
         }
 
+        /* New style for row grouping */
+        .player-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .player-card {
@@ -90,7 +98,7 @@
             }
 
             .player-card img {
-                height: 120px; /* Adjust the height on smaller screens */
+                height: 120px;
             }
 
             h1 {
@@ -109,7 +117,12 @@
             }
 
             .player-card img {
-                height: 150px; /* Adjust height for mobile devices */
+                height: 150px;
+            }
+
+            .player-row {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
