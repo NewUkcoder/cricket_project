@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Cricket Club</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,7 +13,7 @@
     <style>
         /* General Styles */
         body {
-            font-family: 'Poppins', sans-serif;
+          
             background-color: #f8f9fa;
         }
 
@@ -475,6 +475,118 @@
             transform: scale(1.1);
         }
 
+        /* Opposition Team Section */
+        .opposition-team-section {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .opposition-team-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .opposition-team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .opposition-team-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .opposition-team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: #e9ecef;
+        }
+
+        .opposition-team-card img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #007bff;
+        }
+
+        .opposition-team-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .opposition-team-card .city-name {
+            color: #ff5722;
+            font-weight: 600;
+        }
+
+        /* League Names Section */
+        .league-section {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .league-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .league-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .league-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .league-card a {
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: block;
+        }
+
+        .league-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .league-card a:hover {
+            color: #007bff;
+        }
+
         /* Match Schedule Section */
         .tm-section {
             background: #fff;
@@ -586,33 +698,68 @@
         }
 
         @media (max-width: 576px) {
+            .container {
+                padding: 15px;
+            }
+
             .club-title {
-                font-size: 1.4rem;
+                font-size: 1.6rem;
             }
 
             .stats-item {
-                min-width: 90px;
-                padding: 10px;
+                min-width: 110px;
+                padding: 12px;
             }
 
             .stats-title {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
             }
 
             .stats-value {
-                font-size: 1.2rem;
+                font-size: 1.3rem;
             }
 
             .player-card, .captain-card {
-                min-width: 100px;
+                min-width: 120px;
             }
 
             .player-image, .captain-image {
-                max-width: 60px;
+                max-width: 70px;
             }
 
             .team-info-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+
+            .opposition-team-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .opposition-team-card {
+                padding: 10px;
+            }
+
+            .opposition-team-card img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .opposition-team-card p {
+                font-size: 0.85rem;
+            }
+
+            .league-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .league-card {
+                padding: 12px;
+            }
+
+            .league-card a {
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -707,6 +854,54 @@
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
+            </div>
+        </section>
+
+        <!-- Opposition Team Section -->
+        <section class="opposition-team-section">
+            <h2>Opposition Teams</h2>
+            <div class="opposition-team-grid">
+                <!-- Sample opposition team data -->
+                <a href="<?php echo base_url(); ?>TeamController/team_profile/rival_strikers" class="opposition-team-card">
+                    <img src="rival_team1.png" alt="Rival Team 1 Logo">
+                    <div>
+                        <p><strong>Rival Strikers</strong></p>
+                        <p class="city-name">New York</p>
+                    </div>
+                </a>
+                <a href="<?php echo base_url(); ?>TeamController/team_profile/thunder_bolts" class="opposition-team-card">
+                    <img src="rival_team2.png" alt="Rival Team 2 Logo">
+                    <div>
+                        <p><strong>Thunder Bolts</strong></p>
+                        <p class="city-name">London</p>
+                    </div>
+                </a>
+                <a href="<?php echo base_url(); ?>TeamController/team_profile/city_warriors" class="opposition-team-card">
+                    <img src="rival_team3.png" alt="Rival Team 3 Logo">
+                    <div>
+                        <p><strong>City Warriors</strong></p>
+                        <p class="city-name">Sydney</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- League Names Section -->
+        <section class="league-section">
+            <h2>Leagues Participated</h2>
+            <div class="league-grid">
+                <div class="league-card">
+                    <a href="<?php echo base_url(); ?>LeagueController/league/national_cricket_league">National Cricket League</a>
+                </div>
+                <div class="league-card">
+                    <a href="<?php echo base_url(); ?>LeagueController/league/city_premier_league">City Premier League</a>
+                </div>
+                <div class="league-card">
+                    <a href="<?php echo base_url(); ?>LeagueController/league/regional_t20_championship">Regional T20 Championship</a>
+                </div>
+                <div class="league-card">
+                    <a href="<?php echo base_url(); ?>LeagueController/league/elite_cricket_series">Elite Cricket Series</a>
+                </div>
             </div>
         </section>
 

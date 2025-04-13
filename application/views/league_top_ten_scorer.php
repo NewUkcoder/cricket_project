@@ -33,8 +33,8 @@
 
         /* Leaderboard Container */
         .stats-table {
-            max-width: 100%;
-            margin: 0.5rem;
+            max-width: 500px; /* Reduced width for laptops */
+            margin: 0.5rem auto; /* Centered with auto margins */
             background: white;
             border-radius: 1rem;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
@@ -71,6 +71,10 @@
             display: flex;
             align-items: center;
             gap: 0.25rem;
+        }
+
+        . VerenArrow {
+            font-size: 1rem;
         }
 
         .back-arrow {
@@ -178,9 +182,10 @@
             }
 
             .stats-table {
-                margin: 0;
-                border-radius: 0;
-                box-shadow: none;
+                max-width: 100%; /* Full width on mobile */
+                margin: 0; /* No margins */
+                border-radius: 0; /* No rounded corners for full-screen look */
+                box-shadow: none; /* Remove shadow for cleaner mobile view */
             }
 
             .table-header h1 {
