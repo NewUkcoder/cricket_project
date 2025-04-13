@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Cricket Leaderboard - Modern Design</title>
+    <title>Cricket Leaderboard - Mobile Optimized</title>
     <style>
         /* Modern Color Scheme */
         :root {
-            --primary: #2563eb;
-            --secondary: #4f46e5;
+            --primary: #1d4ed8;
+            --secondary: #3b82f6;
             --accent: #f59e0b;
-            --background: #f8fafc;
-            --text: #1e293b;
-            --text-light: #64748b;
+            --background: #f3f4f6;
+            --text: #111827;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
         }
 
         /* Base Styles */
@@ -23,35 +24,79 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: var(--background);
             line-height: 1.5;
-            padding: 1rem;
+            padding: 0.5rem;
             min-height: 100vh;
         }
 
         /* Leaderboard Container */
         .stats-table {
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0.5rem;
             background: white;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
         /* Header Section */
         .table-header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 1.5rem;
+            padding: 1rem;
             text-align: center;
+            position: relative;
         }
 
         .table-header h1 {
             color: white;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .table-header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.875rem;
+        }
+
+        .back-link {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            color: white;
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .back-arrow {
+            font-size: 1rem;
+        }
+
+        /* Table Header Row */
+        .table-header-row {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            padding: 0.75rem 1rem;
+            background: #f9fafb;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .header-cell {
+            padding: 0.25rem;
+        }
+
+        .header-cell:last-child {
+            text-align: right;
         }
 
         /* Player Rows */
@@ -59,9 +104,9 @@
             display: grid;
             grid-template-columns: 50px 1fr auto;
             align-items: center;
-            padding: 1rem 1.5rem;
-            gap: 1rem;
-            border-bottom: 1px solid #f1f5f9;
+            padding: 0.75rem 1rem;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--border);
             transition: background 0.2s ease;
         }
 
@@ -71,14 +116,15 @@
 
         /* Rank Badge */
         .rank {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: #e2e8f0;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            font-size: 0.875rem;
             color: var(--text-light);
         }
 
@@ -91,15 +137,15 @@
         .player-info {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .player-photo {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             object-fit: cover;
-            border: 2px solid #e2e8f0;
+            border: 1px solid var(--border);
         }
 
         .player-details {
@@ -107,102 +153,119 @@
         }
 
         .player-name {
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text);
-            font-size: 1rem;
-            margin-bottom: 0.125rem;
+            font-size: 0.9375rem;
         }
 
         .player-team {
             color: var(--text-light);
-            font-size: 0.875rem;
-            display: block;
+            font-size: 0.75rem;
         }
 
         /* Score Display */
         .total-score {
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary);
-            font-size: 1.125rem;
-            min-width: 60px;
+            font-size: 0.9375rem;
             text-align: right;
         }
 
-        /* Responsive Design */
+        /* Mobile Optimization */
         @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+
             .stats-table {
-                border-radius: 1rem;
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .table-header h1 {
+                font-size: 1.125rem;
+            }
+
+            .table-header-row {
+                grid-template-columns: 40px 1fr auto;
+                padding: 0.5rem;
+                font-size: 0.6875rem;
             }
 
             .table-row {
-                padding: 1rem;
                 grid-template-columns: 40px 1fr auto;
-                gap: 0.75rem;
+                padding: 0.5rem;
+                gap: 0.5rem;
             }
 
             .player-photo {
-                width: 36px;
-                height: 36px;
+                width: 32px;
+                height: 32px;
             }
 
             .player-name {
-                font-size: 0.9375rem;
+                font-size: 0.875rem;
             }
 
             .player-team {
-                font-size: 0.8125rem;
+                font-size: 0.6875rem;
             }
 
             .total-score {
-                font-size: 1rem;
+                font-size: 0.875rem;
             }
 
             .rank {
-                width: 32px;
-                height: 32px;
-                font-size: 0.875rem;
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
             }
         }
 
         /* Interaction States */
         @media (hover: hover) {
             .table-row:hover {
-                background: #f8fafc;
+                background: #f9fafb;
             }
         }
 
         .table-row:active {
-            background: #f1f5f9;
+            background: #f3f4f6;
         }
 
-        /* Top Player Highlight */
+        /* Top Player Highlights */
         .table-row:first-child .rank {
             background: linear-gradient(135deg, #f59e0b, #f97316);
             color: white;
         }
 
         .table-row:nth-child(2) .rank {
-            background: #cbd5e1;
+            background: #d1d5db;
             color: var(--text);
         }
 
         .table-row:nth-child(3) .rank {
-            background: #e2e8f0;
-            color: var(--text-light);
+            background: #e5e7eb;
+            color: var(--text);
         }
     </style>
 </head>
 <body>
     <div class="stats-table">
         <div class="table-header">
-              <a href="javascript:history.back()" class="back-link">
+            <a href="javascript:history.back()" class="back-link">
                 <span class="back-arrow">←</span>
                 Back
             </a>
             <h1><?php echo $league['league_name']; ?></h1>
-            <p> League Highest Scorer</p>
+            <p>League Highest Scorer</p>
         </div>
-
+        <div class="table-header-row">
+            <div class="header-cell">Rank</div>
+            <div class="header-cell">Player</div>
+            <div class="header-cell">Runs</div>
+        </div>
         <?php 
         $rank = 1;
         foreach($top_ten_scorer as $scorer) { ?>
