@@ -161,18 +161,16 @@ public function update_rules($rule_id,$data)
 
 public function league_top_scorer($league_id)
 {
-    $this->db->select('ap.playerName, ap.player_id, ap.image_path AS player_image, 
-                           at.team_name, at.team_id, at.image_path AS team_image, 
-                           SUM(bf.runs) AS total_runs');
-        $this->db->from('add_schedule asch');
-        $this->db->join('batting_first bf', 'asch.match_id = bf.match_id');
-        $this->db->join('add_player ap', 'bf.player_id = ap.player_id');
-        $this->db->join('add_team at', 'bf.batting_team = at.team_id'); // Join with add_team
-        $this->db->where('asch.league_id', $league_id);
-        $this->db->group_by('ap.player_id'); // Group by player to calculate total runs
-        $this->db->order_by('total_runs', 'DESC'); // Order by total runs in descending order
-        $this->db->limit(1); // Limit to the top scorer
-        $query = $this->db->get();
+    $this->db->select('ap.playerName, ap.player_id, ap.image_path as player_image, at.team_name, at.team_id, at.image_path as team_image, SUM(bf.runs) as total_runs');
+$this->db->from('add_schedule asch');
+$this->db->join('batting_first bf', 'asch.match_id = bf.match_id');
+$this->db->join('add_player ap', 'bf.player_id = ap.player_id');
+$this->db->join('add_team at', 'bf.batting_team = at.team_id');
+$this->db->where('asch.league_id', 3);
+$this->db->group_by('ap.player_id, ap.playerName, ap.image_path, at.team_name, at.team_id, at.image_path');
+$this->db->order_by('total_runs', 'DESC');
+$this->db->limit(1);
+$query = $this->db->get();
 
 if ($query->num_rows() > 0) {
     return $query->row(); // Return the top scorer's details as an object

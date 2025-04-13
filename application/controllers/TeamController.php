@@ -302,5 +302,31 @@ public function team_schedule($team_id)
     $this->load->view('team_schedule' ,$team_data);
    //var_dump($team_data);
 }
+
+public function update_team_info() {
+    $team_id = $this->input->post('team_id');
+    $scroll_position = $this->input->post('scroll_position');
+    
+    $data = [
+        'city' => $this->input->post('city'),
+        'country' => $this->input->post('country'),
+        'home_ground' => $this->input->post('home_ground'),
+        'phone_number' => $this->input->post('phone_number')
+    ];
+    
+    // Validate your data here if needed
+    
+    $result = $this->Team_model->update_team_info($team_id, $data);
+    
+    if ($result) {
+        $this->session->set_flashdata('success', 'Team information updated successfully');
+    } else {
+        $this->session->set_flashdata('error', 'Failed to update team information');
+    }
+    
+    // Redirect back with scroll position and anchor
+    redirect($_SERVER['HTTP_REFERER'] . '?scroll=' . $scroll_position . '#edit-anchor');
 }
+}
+
     

@@ -514,6 +514,12 @@ public function team_captain($team_id)
     {
         $this->db->insert('team_captain', $data);
     }
+
+ public function update_team_info($team_id, $data) {
+    $this->db->where('team_id', $team_id);
+    return $this->db->update('add_team', $data);
+}
+
     }
 
 

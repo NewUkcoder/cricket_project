@@ -274,7 +274,7 @@ class ScorecardController extends CI_Controller {
                 $team2=$data['team_two_id'];
                 $win_team=$data['toss_winner'];
                 $batting_second=$data['bowl_first'];
-              
+               $data['match_result'] = $this->Scorecard_model->calculate_match_result($match_id);
                   $data['toss_id']=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
             $data['team_one']=$this->Team_model->team_information(array('team_id'=>$team1),'add_team');
