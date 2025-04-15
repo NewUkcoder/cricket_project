@@ -3,15 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In </title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  >
+  <title>Sign In</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #f8f9fa; /* Light background for a clean look */
-    }
+    body { background-color: #f8f9fa; }
     .form-container {
       max-width: 400px;
       margin: 50px auto;
@@ -30,9 +25,7 @@
       background-color: #007bff;
       border: none;
     }
-    .btn-primary:hover {
-      background-color: #0056b3;
-    }
+    .btn-primary:hover { background-color: #0056b3; }
     .form-footer {
       text-align: center;
       margin-top: 15px;
@@ -41,19 +34,24 @@
       color: #007bff;
       text-decoration: none;
     }
-    .form-footer a:hover {
-      text-decoration: underline;
-    }
+    .form-footer a:hover { text-decoration: underline; }
+    .alert { margin-bottom: 15px; }
   </style>
 </head>
 <body>
-  <!-- Sign-In Form -->
   <div class="form-container">
     <h2>Sign In</h2>
-    <form action="<?php echo site_url('Auth/sign_in_submit'); ?>" method="POST">
+    <?php if ($this->session->flashdata('error')): ?>
+      <div class="alert alert-danger"><?php echo htmlspecialchars($this->session->flashdata('error')); ?></div>
+    <?php endif; ?>
+    <?php if ($this->session->flashdata('success')): ?>
+      <div class="alert alert-success"><?php echo htmlspecialchars($this->session->flashdata('success')); ?></div>
+    <?php endif; ?>
+    <?php echo validation_errors('<div class="alert alert-danger">', '</div>'); ?>
+    <?php echo form_open('Auth/sign_in_submit'); ?>
       <div class="mb-3">
-        <label for="email"  class="form-label">Email address</label>
-        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" required>
+        <label for="email" class="form-label">Email address</label>
+        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" value="<?php echo set_value('email'); ?>" required>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
@@ -61,13 +59,10 @@
       </div>
       <button type="submit" class="btn btn-primary w-100">Sign In</button>
       <div class="form-footer">
-        <p>Don't have an account? <a href="<?php echo site_url('Welcome/sign_up');?>">Sign Up</a></p>
+        <p>Don't have an account? <a href="<?php echo site_url('Auth/sign_up'); ?>">Sign Up</a></p>
       </div>
-    </form>
+    <?php echo form_close(); ?>
   </div>
-
- 
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

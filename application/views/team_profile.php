@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.2">
     <title>Cricket Club</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,7 +13,7 @@
     <style>
         /* General Styles */
         body {
-          
+            font-family: 'Poppins', sans-serif;
             background-color: #f8f9fa;
         }
 
@@ -505,7 +505,7 @@
             padding: 15px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-decoration: none;
@@ -699,54 +699,64 @@
 
         @media (max-width: 576px) {
             .container {
-                padding: 15px;
+                padding: 10px; /* Reduced padding for wider content */
+                margin: 0;
+                width: 100%;
             }
 
             .club-title {
-                font-size: 1.6rem;
+                font-size: 1.5rem;
             }
 
             .stats-item {
-                min-width: 110px;
-                padding: 12px;
+                min-width: 100px;
+                padding: 10px;
             }
 
             .stats-title {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
             }
 
             .stats-value {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
 
             .player-card, .captain-card {
-                min-width: 120px;
+                min-width: 110px;
             }
 
             .player-image, .captain-image {
-                max-width: 70px;
+                max-width: 60px;
             }
 
             .team-info-grid {
-                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 10px;
             }
 
             .opposition-team-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
+                gap: 8px;
             }
 
             .opposition-team-card {
-                padding: 10px;
+                padding: 8px;
+                flex-direction: row;
+                align-items: center;
             }
 
             .opposition-team-card img {
-                width: 40px;
-                height: 40px;
+                width: 35px;
+                height: 35px;
             }
 
             .opposition-team-card p {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
+                line-height: 1.2;
+            }
+
+            .opposition-team-card .city-name {
+                font-size: 0.75rem;
             }
 
             .league-grid {
@@ -755,11 +765,19 @@
             }
 
             .league-card {
-                padding: 12px;
+                padding: 10px;
             }
 
             .league-card a {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            .tm-section, .recent-matches-section, .team-info-section, .current-captain-section, .opposition-team-section, .league-section {
+                padding: 15px;
             }
         }
     </style>
