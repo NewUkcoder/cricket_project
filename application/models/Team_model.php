@@ -520,6 +520,62 @@ public function team_captain($team_id)
     return $this->db->update('add_team', $data);
 }
 
+public function league_participation($team_id)
+
+{
+    $this->db->select('add_league.league_name, add_league.league_id, add_league.city')
+         ->from('league_teams')
+         ->join('add_team', 'league_teams.team_id = add_team.team_id')
+         ->join('add_league', 'league_teams.league_id = add_league.league_id')
+         ->where('add_team.team_id', $team_id)
+         ->where('league_teams.status', 1);
+        
+$query = $this->db->get();
+return $query->result();
+}
+
+
+ public function insert_team_management($data) {
+        return $this->db->insert('team_management', $data);
+    }
+
+    // Update team management member
+    public function update_team_management($data, $where) {
+        $this->db->where($where);
+        return $this->db->update('team_management', $data);
+    }
+
+    // Get team management members
+    public function get_team_management($team_id) {
+        $this->db->where('team_id', $team_id);
+        $query = $this->db->get('team_management');
+        return $query->result();
+    }
+
+    // Get specific team management member
+    public function get_team_management_member($team_id, $role) {
+        $this->db->where('team_id', $team_id);
+        $this->db->where('role', $role);
+        $query = $this->db->get('team_management');
+        return $query->row();
+    }
+     public function get_team_matches($team_id)
+    {
+       $this->db->select('m.match_id, m.result_statement, 
+                          s.match_date, s.match_time, s.location,
+                          w.team_name as win_team_name, w.team_id as win_team_id,
+                          l.team_name as lost_team_name, l.team_id as lost_team_id');
+        $this->db->from('match_result m');
+        $this->db->join('add_schedule s', 's.match_id = m.match_id', 'left');
+        $this->db->join('add_team w', 'w.team_id = m.win_team');
+        $this->db->join('add_team l', 'l.team_id = m.lost_team');
+        $this->db->where('m.win_team', $team_id);
+        $this->db->or_where('m.lost_team', $team_id);
+        $this->db->order_by('s.match_date', 'DESC');
+        $this->db->order_by('s.match_time', 'DESC');
+        return $this->db->get()->result();
+    }
+
     }
 
 

@@ -437,7 +437,6 @@
             font-size: 14px;
         }
 
-        /* Enhanced Schedule Section */
         .tm-schedule-card {
             background: var(--card-bg);
             border-radius: var(--radius-md);
@@ -640,7 +639,7 @@
             margin-bottom: 15px;
         }
 
-        .insert-section button {
+        .insert-section .tm-btn, .team-row .tm-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -653,34 +652,51 @@
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
+            text-decoration: none;
         }
 
-        .insert-section button:hover {
+        .insert-section .tm-btn:hover, .team-row .tm-btn:hover {
             background: var(--primary-hover);
             box-shadow: var(--shadow-sm);
         }
 
-        .team-row button {
-            display: flex;
-            align-items: center;
-            gap: 4px;
+        .team-row .tm-btn-warning {
             background: var(--warning-color);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
             padding: 5px 10px;
             font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
         }
 
-        .team-row button:hover {
+        .team-row .tm-btn-warning:hover {
             background: var(--warning-hover);
-            box-shadow: var(--shadow-sm);
         }
 
-        .tm-management-modal {
+        .tm-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 14px;
+            z-index: 1000;
+            animation: tmToastFadeIn 0.3s ease;
+        }
+
+        .tm-toast.success {
+            background: var(--success-color);
+        }
+
+        .tm-toast.error {
+            background: var(--danger-color);
+        }
+
+        @keyframes tmToastFadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Modal Styles */
+        .tm-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -689,131 +705,80 @@
             height: 100%;
             background: rgba(0,0,0,0.5);
             z-index: 1000;
-            overflow-y: auto;
-            padding: 20px 0;
-            backdrop-filter: blur(3px);
-        }
-
-        .tm-management-modal-content {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: var(--radius-md);
-            width: 90%;
-            max-width: 400px;
-            margin: 20px auto;
-            box-shadow: var(--shadow-md);
-            animation: tmModalFadeIn 0.3s ease;
-        }
-
-        .tm-management-modal-header {
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
         }
 
-        .tm-management-modal-header h3 {
-            margin: 0;
-            font-size: 1.2em;
-            font-weight: 600;
-            color: var(--text-color);
+        .tm-modal-content {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-md);
+            position: relative;
         }
 
-        .tm-management-modal-close {
-            font-size: 1.5em;
-            cursor: pointer;
+        .tm-modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
             color: var(--light-text);
+            cursor: pointer;
             transition: var(--transition);
-            padding: 5px;
         }
 
-        .tm-management-modal-close:hover {
+        .tm-modal-close:hover {
             color: var(--danger-color);
         }
 
-        .tm-management-form-group {
+        .tm-modal-title {
+            font-size: 1.3em;
+            margin: 0 0 15px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .tm-form-group {
             margin-bottom: 15px;
         }
 
-        .tm-management-form-group label {
+        .tm-form-group label {
             display: block;
-            margin-bottom: 8px;
             font-size: 14px;
-            color: var(--text-color);
             font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-color);
         }
 
-        .tm-management-form-group input {
+        .tm-form-group input {
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px;
+            font-size: 14px;
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            font-size: 14px;
             transition: var(--transition);
+            background: #fff;
         }
 
-        .tm-management-form-group input:focus {
-            border-color: var(--primary-color);
+        .tm-form-group input:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
         }
 
-        .tm-management-form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .tm-confirm-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            overflow-y: auto;
-            padding: 20px 0;
-            backdrop-filter: blur(3px);
-        }
-
-        .tm-confirm-modal-content {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: var(--radius-md);
-            width: 90%;
-            max-width: 400px;
-            margin: 20px auto;
-            box-shadow: var(--shadow-md);
-            animation: tmModalFadeIn 0.3s ease;
-            text-align: center;
-        }
-
-        .tm-confirm-icon {
-            font-size: 3em;
+        .tm-error {
             color: var(--danger-color);
-            margin-bottom: 15px;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
         }
 
-        .tm-confirm-text {
-            margin-bottom: 20px;
-            font-size: 15px;
-            line-height: 1.4;
-        }
-
-        .tm-confirm-actions {
+        .tm-modal-actions {
             display: flex;
-            justify-content: center;
             gap: 10px;
-        }
-
-        @keyframes tmModalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            justify-content: flex-end;
         }
 
         @media (min-width: 768px) {
@@ -866,6 +831,10 @@
                 padding: 8px 16px;
                 font-size: 13px;
                 min-width: 90px;
+            }
+
+            .tm-modal-content {
+                padding: 25px;
             }
         }
 
@@ -926,20 +895,40 @@
                 font-size: 12px;
             }
 
-            .team-row button {
+            .team-row .tm-btn {
                 font-size: 11px;
                 padding: 4px 8px;
             }
 
-            .insert-section button {
+            .insert-section .tm-btn {
                 font-size: 12px;
                 padding: 7px 14px;
             }
 
-            .tm-management-modal-content,
-            .tm-confirm-modal-content {
-                width: 95%;
+            .tm-toast {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 13px;
+            }
+
+            .tm-modal-content {
                 padding: 15px;
+                width: 95%;
+            }
+
+            .tm-modal-title {
+                font-size: 1.2em;
+            }
+
+            .tm-form-group input {
+                font-size: 13px;
+                padding: 8px;
+            }
+
+            .tm-modal-actions {
+                flex-direction: column;
+                gap: 8px;
             }
         }
     </style>
@@ -949,7 +938,7 @@
         <header class="tm-header">
             <img src="<?php echo $data['image_path']; ?>" alt="Team Logo" class="tm-header-logo">
             <div class="tm-header-content">
-                <h1><?php echo $data['team_name']; ?></h1>
+                <h1><?php echo htmlspecialchars($data['team_name']); ?></h1>
                 <p><i class="fas fa-calendar-alt"></i> Est. <?php echo date('Y', strtotime($data['created_at'])); ?></p>
                 <div class="tm-social-links">
                     <a href="#" class="tm-social-link" title="Facebook"><i class="fab fa-facebook"></i></a>
@@ -963,6 +952,18 @@
         <?php if ($this->session->flashdata('message')): ?>
             <div class="tm-toast <?php echo $this->session->flashdata('message_type'); ?>">
                 <?php echo $this->session->flashdata('message'); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($this->session->flashdata('success')): ?>
+            <div class="tm-toast success">
+                <?php echo $this->session->flashdata('success'); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($this->session->flashdata('error')): ?>
+            <div class="tm-toast error">
+                <?php echo $this->session->flashdata('error'); ?>
             </div>
         <?php endif; ?>
 
@@ -988,9 +989,9 @@
                         <img src="<?php echo $player_info->image_path; ?>" alt="Player" class="tm-card-img">
                         <div class="tm-card-content">
                             <a href="<?php echo base_url(); ?>PlayerController/profile_player/<?php echo $player_info->player_id; ?>" class="internal-link">
-                                <h4><?php echo $player_info->playerName; ?></h4>
+                                <h4><?php echo htmlspecialchars($player_info->playerName); ?></h4>
                             </a>
-                            <p><?php echo $player_info->player_role; ?></p>
+                            <p><?php echo htmlspecialchars($player_info->player_role); ?></p>
                         </div>
                         <div class="tm-btn-group">
                             <a href="<?php echo base_url(); ?>TeamController/accept_request/<?php echo $player_info->player_id; ?>/<?php echo $player_info->team_id; ?>">
@@ -1015,8 +1016,8 @@
                     <div class="tm-card">
                         <img src="<?php echo $value->image_path; ?>" alt="Team" class="tm-card-img">
                         <div class="tm-card-content">
-                            <h4><?php echo $value->team_name; ?></h4>
-                            <p><?php echo $value->city; ?></p>
+                            <h4><?php echo htmlspecialchars($value->team_name); ?></h4>
+                            <p><?php echo htmlspecialchars($value->city); ?></p>
                         </div>
                         <div class="tm-btn-group">
                             <a href="<?php echo base_url(); ?>TeamController/accept_match_request/<?php echo $team_id; ?>/<?php echo $value->team_id; ?>">
@@ -1041,11 +1042,11 @@
                     <?php echo $opposition_team['message']; ?>
                 </div>
             <?php else: ?>
-                <?php foreach ($opposition_team['data'] as $team): ?>
+                <?php  foreach ($opposition_team['data'] as $team): ?>
                     <div class="tm-card">
                         <img src="<?php echo $team->team_one_image; ?>" alt="Team Logo" class="tm-card-img">
                         <div class="tm-card-content">
-                            <h4><a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $team->team_one_id; ?>"><?php echo $team->team_one_name; ?></a></h4>
+                            <h4><a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $team->team_one_id; ?>"><?php echo htmlspecialchars($team->team_one_name); ?></a></h4>
                             <p>Opponent Team</p>
                         </div>
                         <a href="<?php echo base_url(); ?>Welcome/enter_schedule/<?php echo $team->team_two_id; ?>/<?php echo $team->team_one_id; ?>" class="tm-btn tm-btn-primary tm-btn-sm">Add Schedule</a>
@@ -1123,21 +1124,10 @@
         </section>
 
         <!-- Team Information -->
-        <?php if ($this->session->flashdata('success')): ?>
-            <div class="tm-toast success">
-                <?php echo $this->session->flashdata('success'); ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($this->session->flashdata('error')): ?>
-            <div class="tm-toast error">
-                <?php echo $this->session->flashdata('error'); ?>
-            </div>
-        <?php endif; ?>
-
         <section class="tm-section" id="tm-team-info">
             <a id="edit-anchor"></a>
             <form id="team-info-form" method="post" action="<?php echo site_url('TeamController/update_team_info'); ?>">
+                <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                 <input type="hidden" name="scroll_position" id="scroll-position">
                 <input type="hidden" name="team_id" value="<?php echo $team_id; ?>">
                 <div class="tm-info-item">
@@ -1191,7 +1181,7 @@
                         <?php endif; ?>
                     <?php else: ?>
                         <img src="<?php echo $captain['leather_ball']['image_path']; ?>" alt="Captain" class="tm-captain-img">
-                        <p><?php echo $captain['leather_ball']['playerName']; ?></p>
+                        <p><?php echo htmlspecialchars($captain['leather_ball']['playerName']); ?></p>
                         <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
                             <a href="<?php echo base_url(); ?>TeamController/edit_captain_leather/<?php echo $team_id; ?>" class="internal-link">
                                 <button class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
@@ -1211,7 +1201,7 @@
                         <?php endif; ?>
                     <?php else: ?>
                         <img src="<?php echo $captain['tape_ball']['image_path']; ?>" alt="Captain" class="tm-captain-img">
-                        <p><?php echo $captain['tape_ball']['playerName']; ?></p>
+                        <p><?php echo htmlspecialchars($captain['tape_ball']['playerName']); ?></p>
                         <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
                             <a href="<?php echo base_url(); ?>TeamController/edit_captain_tape/<?php echo $team_id; ?>" class="internal-link">
                                 <button class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
@@ -1231,7 +1221,7 @@
                         <?php endif; ?>
                     <?php else: ?>
                         <img src="<?php echo $captain['tennis_ball']['image_path']; ?>" alt="Captain" class="tm-captain-img">
-                        <p><?php echo $captain['tennis_ball']['playerName']; ?></p>
+                        <p><?php echo htmlspecialchars($captain['tennis_ball']['playerName']); ?></p>
                         <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
                             <a href="<?php echo base_url(); ?>TeamController/edit_captain_tennis/<?php echo $team_id; ?>" class="internal-link">
                                 <button class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
@@ -1246,70 +1236,99 @@
         <section class="tm-section" id="tm-management">
             <h3 class="tm-section-title">Team Management</h3>
             <div class="insert-section">
-                <button class="tm-btn tm-btn-primary" onclick="openManagementModal('insert', '', '')">Insert New Member</button>
+                <button type="button" class="tm-btn tm-btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Insert New Member
+                </button>
             </div>
             <div class="team-container">
-                <?php
-                $management_staff = [
-                    'coach' => ['name' => 'Michael Smith', 'designation' => 'Head Coach'],
-                    'manager' => ['name' => 'Sarah Johnson', 'designation' => 'Team Manager'],
-                    'physio' => ['name' => 'David Brown', 'designation' => 'Physiotherapist'],
-                    'analyst' => ['name' => 'Emily Davis', 'designation' => 'Data Analyst'],
-                    'asst' => ['name' => 'James Wilson', 'designation' => 'Assistant Coach']
-                ];
-
-                if (isset($_SESSION['team_management_data'])) {
-                    foreach ($_SESSION['team_management_data'] as $role => $data) {
-                        if (isset($management_staff[$role])) {
-                            $management_staff[$role] = $data;
-                        }
-                    }
-                }
-                ?>
-                <?php foreach ($management_staff as $role => $staff): ?>
-                    <div class="team-row" id="staff-<?php echo $role; ?>">
-                        <div class="team-info">
-                            <h3><?php echo $staff['name']; ?></h3>
-                            <p><?php echo $staff['designation']; ?></p>
+                <?php  if (!empty($management_staff)): ?>
+                    <?php foreach ($management_staff as $staff): ?>
+                        <div class="team-row" id="staff-<?php echo htmlspecialchars($staff->role); ?>">
+                            <div class="team-info">
+                                <h3><?php echo htmlspecialchars($staff->name); ?></h3>
+                                <p><?php echo htmlspecialchars($staff->role); ?></p>
+                            </div>
+                            <button type="button" class="tm-btn tm-btn-warning tm-btn-sm" onclick="openEditModal('<?php echo htmlspecialchars($staff->name, ENT_QUOTES); ?>', '<?php echo htmlspecialchars($staff->role, ENT_QUOTES); ?>')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
                         </div>
-                        <button class="tm-btn tm-btn-warning tm-btn-sm" onclick="openManagementModal('edit', '<?php echo $staff['name']; ?>', '<?php echo $staff['designation']; ?>', '<?php echo $role; ?>')">Edit</button>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="tm-empty-state">No team management members found.</p>
+                <?php endif; ?>
             </div>
         </section>
-    </div>
 
-    <!-- Team Management Modal -->
-    <div id="tm-management-modal" class="tm-management-modal">
-        <div class="tm-management-modal-content">
-            <div class="tm-management-modal-header">
-                <h3 id="tm-management-modal-title">Manage Staff Member</h3>
-                <span class="tm-management-modal-close" onclick="closeManagementModal()">×</span>
-            </div>
-            <div class="tm-management-form-group">
-                <label for="tm-management-name">Name</label>
-                <input type="text" id="tm-management-name" placeholder="Enter name">
-            </div>
-            <div class="tm-management-form-group">
-                <label for="tm-management-designation">Designation</label>
-                <input type="text" id="tm-management-designation" placeholder="Enter designation">
-            </div>
-            <input type="hidden" id="tm-management-role">
-            <div class="tm-management-form-actions">
-                <button class="tm-btn tm-btn-primary" onclick="saveManagementChanges()">Save</button>
-                <button class="tm-btn tm-btn-danger" onclick="closeManagementModal()">Cancel</button>
+        <!-- Add Team Management Modal -->
+        <div id="tm-add-modal" class="tm-modal">
+            <div class="tm-modal-content">
+                <span class="tm-modal-close" onclick="closeAddModal()">&times;</span>
+                <h3 class="tm-modal-title">Add New Team Management Member</h3>
+                <form method="post" action="<?php echo base_url(); ?>TeamController/insert_team_management">
+                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                    <input type="hidden" name="team_id" value="<?php echo $team_id; ?>">
+                    <div class="tm-form-group">
+                        <label for="tm-add-name">Name</label>
+                        <input type="text" id="tm-add-name" name="name" value="<?php echo set_value('name'); ?>" placeholder="Enter name" required>
+                        <?php if (form_error('name')): ?>
+                            <span class="tm-error"><?php echo form_error('name'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-add-designation">Designation</label>
+                        <input type="text" id="tm-add-designation" name="designation" value="<?php echo set_value('designation'); ?>" placeholder="Enter designation" required>
+                        <?php if (form_error('designation')): ?>
+                            <span class="tm-error"><?php echo form_error('designation'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-modal-actions">
+                        <button type="submit" class="tm-btn tm-btn-primary"><i class="fas fa-save"></i> Save</button>
+                        <button type="button" class="tm-btn tm-btn-danger" onclick="closeAddModal()"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
 
-    <!-- Confirmation Modal for Delete -->
-    <div id="tm-confirm-modal" class="tm-confirm-modal">
-        <div class="tm-confirm-modal-content">
-            <i class="fas fa-exclamation-triangle tm-confirm-icon"></i>
-            <div class="tm-confirm-text">Are you sure you want to delete this match?</div>
-            <div class="tm-confirm-actions">
-                <button class="tm-btn tm-btn-danger" id="tm-confirm-delete">Delete</button>
-                <button class="tm-btn tm-btn-outline" onclick="closeConfirmModal()">Cancel</button>
+        <!-- Edit Team Management Modal -->
+        <div id="tm-edit-modal" class="tm-modal">
+            <div class="tm-modal-content">
+                <span class="tm-modal-close" onclick="closeEditModal()">&times;</span>
+                <h3 class="tm-modal-title">Edit Team Management Member</h3>
+                <form method="post" action="<?php echo base_url(); ?>TeamController/update_team_management">
+                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                    <input type="hidden" name="team_id" value="<?php echo $team_id; ?>">
+                    <input type="hidden" name="current_role" id="tm-edit-current-role">
+                    <div class="tm-form-group">
+                        <label for="tm-edit-name">Name</label>
+                        <input type="text" id="tm-edit-name" name="name" placeholder="Enter name" required>
+                        <?php if (form_error('name')): ?>
+                            <span class="tm-error"><?php echo form_error('name'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-edit-designation">Designation</label>
+                        <input type="text" id="tm-edit-designation" name="designation" placeholder="Enter designation" required>
+                        <?php if (form_error('designation')): ?>
+                            <span class="tm-error"><?php echo form_error('designation'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-modal-actions">
+                        <button type="submit" class="tm-btn tm-btn-primary"><i class="fas fa-save"></i> Save</button>
+                        <button type="button" class="tm-btn tm-btn-danger" onclick="closeEditModal()"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal for Delete -->
+        <div id="tm-confirm-modal" class="tm-modal">
+            <div class="tm-modal-content">
+                <i class="fas fa-exclamation-triangle tm-confirm-icon"></i>
+                <div class="tm-confirm-text">Are you sure you want to delete this match?</div>
+                <div class="tm-modal-actions">
+                    <button class="tm-btn tm-btn-danger" id="tm-confirm-delete">Delete</button>
+                    <button class="tm-btn tm-btn-outline" onclick="closeConfirmModal()">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1346,63 +1365,54 @@
             document.getElementById('edit-controls').style.display = 'none';
         }
 
-        function openManagementModal(action, name = '', designation = '', role = '') {
-            const modal = document.getElementById('tm-management-modal');
-            const title = document.getElementById('tm-management-modal-title');
-            const nameInput = document.getElementById('tm-management-name');
-            const designationInput = document.getElementById('tm-management-designation');
-            const roleInput = document.getElementById('tm-management-role');
-
-            title.textContent = action === 'insert' ? 'Add New Member' : 'Edit Member';
-            nameInput.value = name;
-            designationInput.value = designation;
-            roleInput.value = role;
-            modal.style.display = 'block';
-            nameInput.focus();
-        }
-
-        function closeManagementModal() {
-            document.getElementById('tm-management-modal').style.display = 'none';
-        }
-
-        function saveManagementChanges() {
-            const name = document.getElementById('tm-management-name').value;
-            const designation = document.getElementById('tm-management-designation').value;
-
-            if (!name || !designation) {
-                alert('Please fill in both name and designation.');
-                return;
-            }
-
-            alert(`Saving: Name: ${name}, Designation: ${designation}`);
-            closeManagementModal();
-        }
-
         function openConfirmModal(matchId) {
             const modal = document.getElementById('tm-confirm-modal');
             const deleteBtn = document.getElementById('tm-confirm-delete');
             deleteBtn.onclick = () => {
                 window.location.href = `<?php echo base_url(); ?>Welcome/delete_schedule/${matchId}`;
             };
-            modal.style.display = 'block';
+            modal.style.display = 'flex';
         }
 
         function closeConfirmModal() {
             document.getElementById('tm-confirm-modal').style.display = 'none';
         }
 
+        function openAddModal() {
+            document.getElementById('tm-add-modal').style.display = 'flex';
+            document.getElementById('tm-add-name').focus();
+        }
+
+        function closeAddModal() {
+            document.getElementById('tm-add-modal').style.display = 'none';
+            document.getElementById('tm-add-name').value = '';
+            document.getElementById('tm-add-designation').value = '';
+        }
+
+        function openEditModal(name, role) {
+            document.getElementById('tm-edit-modal').style.display = 'flex';
+            document.getElementById('tm-edit-name').value = name;
+            document.getElementById('tm-edit-designation').value = role;
+            document.getElementById('tm-edit-current-role').value = role;
+            document.getElementById('tm-edit-name').focus();
+        }
+
+        function closeEditModal() {
+            document.getElementById('tm-edit-modal').style.display = 'none';
+        }
+
         window.onclick = (event) => {
-            if (event.target.classList.contains('tm-management-modal')) {
-                closeManagementModal();
-            }
-            if (event.target.classList.contains('tm-confirm-modal')) {
+            if (event.target.classList.contains('tm-modal')) {
+                closeAddModal();
+                closeEditModal();
                 closeConfirmModal();
             }
         };
 
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
-                closeManagementModal();
+                closeAddModal();
+                closeEditModal();
                 closeConfirmModal();
             }
         });

@@ -87,8 +87,14 @@ class TeamController extends CI_Controller {
               $team_data['data']=$this->Team_model->get_team($team_id);
               $team_data['captain']=$this->Team_model->team_captain($team_id);
                $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team_id);
+                $team_data['opposition_team'] = $this->Team_model->get_match_teams($team_id);
+                 $team_data['league_playing'] = $this->Team_model->league_participation($team_id);
+                  $team_data['team_management'] = $this->Team_model->get_team_management($team_id);
+                   $team_data['matches'] = $this->Team_model->get_team_matches($team_id);
+               //   var_dump($data['team_management'] );
+  
 
-           // var_dump($team_data);
+          // var_dump($team_data);
                 $this->load->view('header');
                 $this->load->view('team_profile',$team_data);
                 
@@ -327,6 +333,100 @@ public function update_team_info() {
     // Redirect back with scroll position and anchor
     redirect($_SERVER['HTTP_REFERER'] . '?scroll=' . $scroll_position . '#edit-anchor');
 }
+
+   public function add_management($team_id) 
+   {
+        $data['team_id'] = $team_id;
+        
+            $this->load->view('add_management' ,$data);
+    }
+
+    // Load edit team management form
+    public function edit_team_management($team_id, $role) {
+        $data['team_id'] = $team_id;
+        $data['staff'] = $this->Team_model->get_team_management_member($team_id, urldecode($role));
+        if (!$data['staff']) {
+            $this->session->set_flashdata('error', 'Team management member not found.');
+            redirect('TeamController/team_profile/' . $team_id);
+        }
+        $this->load->view('edit_team_management', $data);
+    }
+
+    // Insert new team management member
+    public function insert_team_management() {
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('name', 'Name', 'required|trim');
+            $this->form_validation->set_rules('designation', 'Designation', 'required|trim');
+
+            $team_id = $this->input->post('team_id');
+
+            if ($this->form_validation->run() === FALSE) {
+                $data['team_id'] = $team_id;
+                $this->load->view('add_team_management', $data);
+            } else {
+                $data = array(
+                    'team_id' => $team_id,
+                    'user_id' => $this->session->userdata('user_id'),
+                    'role' => $this->input->post('designation'),
+                    'name' => $this->input->post('name'),
+                    'created_at' => date('Y-m-d H:i:s')
+                );
+                var_dump($data);
+                $result = $this->Team_model->insert_team_management($data);
+
+                if ($result) {
+                    $this->session->set_flashdata('success', 'Team management member added successfully.');
+                } else {
+                    $this->session->set_flashdata('error', 'Failed to add team management member.');
+                }
+
+                redirect('Welcome/team_admin/' . $team_id);
+            }
+        } else {
+            redirect('Welcome/team_admin/' . $this->input->post('team_id'));
+        }
+    }
+
+    // Update existing team management member
+    public function update_team_management() {
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('name', 'Name', 'required|trim');
+            $this->form_validation->set_rules('designation', 'Designation', 'required|trim');
+
+            $team_id = $this->input->post('team_id');
+            $current_role = $this->input->post('current_role');
+
+            if ($this->form_validation->run() === FALSE) {
+                $data['team_id'] = $team_id;
+                $data['staff'] = $this->Team_model->get_team_management_member($team_id, $current_role);
+                $this->load->view('edit_team_management', $data);
+            } else {
+                $data = array(
+                    'role' => $this->input->post('designation'),
+                    'name' => $this->input->post('name')
+                );
+
+                $where = array(
+                    'team_id' => $team_id,
+                    'user_id' => $this->session->userdata('user_id'),
+                    'role' => $current_role
+                );
+
+                $result = $this->Team_model->update_team_management($data, $where);
+
+                if ($result) {
+                    $this->session->set_flashdata('success', 'Team management member updated successfully.');
+                } else {
+                    $this->session->set_flashdata('error', 'Failed to update team management member.');
+                }
+
+                redirect('TeamController/team_profile/' . $team_id);
+            }
+        } else {
+            redirect('TeamController/team_profile/' . $this->input->post('team_id'));
+        }
+    }
+   
 }
 
     

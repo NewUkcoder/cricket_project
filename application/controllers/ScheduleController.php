@@ -52,13 +52,13 @@ class ScheduleController extends CI_Controller {
                 'umpire1'=>ucwords($this->input->post('umpire1')),
                 'umpire2'=>ucwords($this->input->post('umpire2'))
                 );
-        
-        $this->Schedule_model->save_schedule($record,$team1,$team2,$match_date,$match_time);
+        $team_data['team_id']=$team1;
+       /* $this->Schedule_model->save_schedule($record,$team1,$team2,$match_date,$match_time);
         $this->session->set_flashdata('success', 'Match is added into Sechedule List.<p> Add another Match</p>');
            $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team1);
-        $this->load->view('header');
+        $this->load->view('header');*/
        
-          $this->load->view('team_schedule', $team_data);
+           redirect('Welcome/team_admin/' . $team1);
                 }
 
     }    

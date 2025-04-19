@@ -21,13 +21,14 @@ class Welcome extends CI_Controller {
 
 	 public function __construct() {
         parent::__construct();
+         $this->load->library('session');
         $this->load->model('Team_model');
         $this->load->model('Scorecard_model');
           $this->load->model('Tournament_model');
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
         $this->load->library('upload');
-        $this->load->library('session');
+       
 
           $this->load->library('user_agent');
 
@@ -397,12 +398,14 @@ public function scorecard_links($team1,$team2,$match_id)
   $team_data['data']=$this->Team_model->get_team($team_id);
    $team_data['opposition_team'] = $this->Team_model->get_match_teams($team_id);
     $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team_id);
+     $team_data['management_staff'] = $this->Team_model->get_team_management($team_id);
+   // var_dump( $team_data['management_staff']);
                 
               $this->load->view('header');
                $this->load->view('team_admin',$team_data);
 	}
 
-	public function choose_squad()
+	public function choose_squad($team1,$team2,$match_id)
 	{
 
               $this->load->view('header');

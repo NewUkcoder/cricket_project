@@ -23,7 +23,7 @@ class TournamentController extends CI_Controller {
         }
 
         // Regenerate session ID to prevent session fixation
-        $this->session->regenerate_id();
+       $this->session->sess_regenerate(true); // true destroys old session
     }
 
     public function add_league() {

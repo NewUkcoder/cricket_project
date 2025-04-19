@@ -28,6 +28,18 @@ class Tournament_model extends CI_Model {
         
         return 0;
     }
+    public function league_exists($league_id)
+{
+    if (!is_numeric($league_id)) {
+        return false;
+    }
+
+    $this->db->where('league_id', $league_id);
+  
+    $query = $this->db->get('add_league');
+    
+    return ($query->num_rows() > 0);
+}
 
     /**
      * Get leagues by user ID

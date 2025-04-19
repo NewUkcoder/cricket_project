@@ -242,75 +242,89 @@
         /* Team Management Section */
         .management-section {
             background: #fff;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
         }
 
         .management-section h3 {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 600;
             color: #007bff;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .management-list {
             list-style: none;
             padding: 0;
+            display: grid;
+            gap: 12px;
         }
 
         .management-member {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #dee2e6;
         }
 
         .management-member:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
         .management-member i {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: #ff5722;
+            flex-shrink: 0;
         }
 
         .management-member p {
             margin: 0;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 500;
             color: #333;
+            line-height: 1.4;
+        }
+
+        .management-member strong {
+            color: #007bff;
         }
 
         /* Top Performers Section */
         .top-performers-section {
             background: #fff;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
         }
 
         .top-performers-section h3 {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 600;
             color: #ff5722;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .performer-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 15px;
             justify-content: center;
-            flex-wrap: wrap;
         }
 
         .player-card {
@@ -319,11 +333,9 @@
             padding: 15px;
             text-align: center;
             font-size: 0.9rem;
-            flex: 1;
-            min-width: 140px;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
+            border: 1px solid #dee2e6;
         }
 
         .player-card.bowler {
@@ -342,9 +354,10 @@
         }
 
         .player-card h4 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
         }
 
         .player-image {
@@ -352,7 +365,8 @@
             border-radius: 50%;
             border: 3px solid #007bff;
             transition: transform 0.3s ease;
-            margin-bottom: 10px;
+            margin: 0 auto 12px;
+            display: block;
         }
 
         .player-image:hover {
@@ -362,7 +376,7 @@
         .player-stats {
             font-size: 1rem;
             font-weight: 600;
-            margin: 5px 0;
+            margin: 8px 0;
         }
 
         /* Recent Match Results Section */
@@ -699,7 +713,7 @@
 
         @media (max-width: 576px) {
             .container {
-                padding: 10px; /* Reduced padding for wider content */
+                padding: 10px;
                 margin: 0;
                 width: 100%;
             }
@@ -778,6 +792,14 @@
 
             .tm-section, .recent-matches-section, .team-info-section, .current-captain-section, .opposition-team-section, .league-section {
                 padding: 15px;
+            }
+
+            .management-section, .top-performers-section {
+                padding: 15px;
+            }
+
+            .performer-row {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -876,51 +898,43 @@
         </section>
 
         <!-- Opposition Team Section -->
-        <section class="opposition-team-section">
-            <h2>Opposition Teams</h2>
-            <div class="opposition-team-grid">
-                <!-- Sample opposition team data -->
-                <a href="<?php echo base_url(); ?>TeamController/team_profile/rival_strikers" class="opposition-team-card">
-                    <img src="rival_team1.png" alt="Rival Team 1 Logo">
-                    <div>
-                        <p><strong>Rival Strikers</strong></p>
-                        <p class="city-name">New York</p>
-                    </div>
-                </a>
-                <a href="<?php echo base_url(); ?>TeamController/team_profile/thunder_bolts" class="opposition-team-card">
-                    <img src="rival_team2.png" alt="Rival Team 2 Logo">
-                    <div>
-                        <p><strong>Thunder Bolts</strong></p>
-                        <p class="city-name">London</p>
-                    </div>
-                </a>
-                <a href="<?php echo base_url(); ?>TeamController/team_profile/city_warriors" class="opposition-team-card">
-                    <img src="rival_team3.png" alt="Rival Team 3 Logo">
-                    <div>
-                        <p><strong>City Warriors</strong></p>
-                        <p class="city-name">Sydney</p>
-                    </div>
-                </a>
-            </div>
+        <section class="opposition-team-section" id="tm-opposition">
+            <h2>Opposition Team</h2>
+            <?php if ($opposition_team['status'] == 'error'): ?>
+                <div class="tm-empty-state">
+                    <?php echo htmlspecialchars($opposition_team['message']); ?>
+                </div>
+            <?php else: ?>
+                <div class="opposition-team-grid">
+                    <?php foreach ($opposition_team['data'] as $team): ?>
+                        <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo htmlspecialchars($team->team_one_id); ?>" class="opposition-team-card">
+                            <img src="<?php echo htmlspecialchars($team->team_one_image ?? 'default_team.png'); ?>" alt="<?php echo htmlspecialchars($team->team_one_name); ?> Logo">
+                            <div>
+                                <p><?php echo htmlspecialchars($team->team_one_name); ?></p>
+                                <p class="city-name">Opposition Team</p>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         </section>
 
         <!-- League Names Section -->
         <section class="league-section">
             <h2>Leagues Participated</h2>
-            <div class="league-grid">
-                <div class="league-card">
-                    <a href="<?php echo base_url(); ?>LeagueController/league/national_cricket_league">National Cricket League</a>
+            <?php if (!empty($league_playing)): ?>
+                <div class="league-grid">
+                    <?php foreach ($league_playing as $league): ?>
+                        <div class="league-card">
+                            <a href="<?php echo base_url('LeagueController/league/'.($league->slug ?? $league->league_id)); ?>">
+                                <?php echo htmlspecialchars($league->league_name); ?>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                <div class="league-card">
-                    <a href="<?php echo base_url(); ?>LeagueController/league/city_premier_league">City Premier League</a>
-                </div>
-                <div class="league-card">
-                    <a href="<?php echo base_url(); ?>LeagueController/league/regional_t20_championship">Regional T20 Championship</a>
-                </div>
-                <div class="league-card">
-                    <a href="<?php echo base_url(); ?>LeagueController/league/elite_cricket_series">Elite Cricket Series</a>
-                </div>
-            </div>
+            <?php else: ?>
+                <p>This team is not currently participating in any leagues.</p>
+            <?php endif; ?>
         </section>
 
         <!-- Team Management and Top Performers Section -->
@@ -928,23 +942,22 @@
             <div class="col-md-6">
                 <div class="management-section">
                     <h3>Team Management</h3>
-                    <ul class="management-list">
-                        <li class="management-member">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                            <p><strong>Coach:</strong> Michael Smith</p>
-                        </li>
-                        <li class="management-member">
-                            <i class="fas fa-user-tie"></i>
-                            <p><strong>Assistant Coach:</strong> Sarah Johnson</p>
-                        </li>
-                        <li class="management-member">
-                            <i class="fas fa-briefcase"></i>
-                            <p><strong>Manager:</strong> David Brown</p>
-                        </li>
-                        <li class="management-member">
-                            <i class="fas fa-user-nurse"></i>
-                            <p><strong>Assistant:</strong> Emily Davis</p>
-                        </li>
+                    <ul class="management-list list-unstyled">
+                        <?php if (!empty($team_management)): ?>
+                            <?php foreach ($team_management as $staff): ?>
+                                <li class="management-member d-flex align-items-center">
+                                    <i class="fas fa-user-tie"></i>
+                                    <p class="mb-0">
+                                        <strong><?php echo htmlspecialchars($staff->role); ?>:</strong>
+                                        <?php echo htmlspecialchars($staff->name); ?>
+                                    </p>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <li class="management-member">
+                                <p class="text-muted">No team management members found.</p>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -1006,23 +1019,46 @@
         </section>
 
         <!-- Recent Match Results Section -->
-        <section class="recent-matches-section">
-            <h2>Recent Matches</h2>
-            <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Match 1: Cricket Club vs Rivals - Won by 20 runs
-                    <span class="badge bg-success">W</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Match 2: Cricket Club vs Challengers - Lost by 5 wickets
-                    <span class="badge bg-danger">L</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Match 3: Cricket Club vs Warriors - Won by 8 wickets
-                    <span class="badge bg-success">W</span>
-                </li>
-            </ul>
-        </section>
+   <section class="team-matches-section">
+    <h2>Match Results</h2>
+    
+    <?php if(empty($matches)): ?>
+        <div class="alert alert-info">No match results available for this team.</div>
+    <?php else: ?>
+        <ul class="list-group">
+            <?php foreach($matches as $match): 
+                $is_home_team = ($data['team_id'] == $match->win_team_id || $data['team_id'] == $match->lost_team_id);
+                $is_winner = ($data['team_id'] == $match->win_team_id);
+                $opponent = ($data['team_id'] == $match->win_team_id) ? $match->lost_team_name : $match->win_team_name;
+            ?>
+                <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo htmlspecialchars($match->match_id); ?>/<?php echo htmlspecialchars($match->win_team_id); ?>/<?php echo htmlspecialchars($match->lost_team_id); ?> " class="text-decoration-none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center hover-highlight">
+                        <div>
+                            <?php echo date('d M Y', strtotime($match->match_date)); ?>: 
+                            vs <?php echo $opponent; ?> - 
+                            <?php echo $match->result_statement; ?>
+                        </div>
+                        <span class="badge bg-<?php echo $is_winner ? 'success' : 'danger'; ?>">
+                            <?php echo $is_winner ? 'W' : 'L'; ?>
+                        </span>
+                    </li>
+                </a>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+</section>
+
+<style>
+    .hover-highlight:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    
+    .list-group-item {
+        transition: all 0.2s ease;
+    }
+</style>
     </div>
 
     <!-- Bootstrap JS -->
