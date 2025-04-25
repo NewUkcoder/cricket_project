@@ -2,38 +2,22 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class TournamentController extends CI_Controller {
-
     public function __construct() {
         parent::__construct();
-
-        // Load necessary libraries and helpers
-        $this->load->model('Team_model');
-        $this->load->model('Scorecard_model');
-        $this->load->model('Tournament_model');
-        $this->load->helper(array('form', 'url', 'security')); // Load security helper
-        $this->load->library(array('form_validation', 'session', 'user_agent'));
-
-        // Load database
+        $this->load->model(['Team_model', 'Scorecard_model', 'Tournament_model', 'Player_model']);
+        $this->load->helper(['form', 'url', 'security']);
+        $this->load->library(['form_validation', 'session', 'user_agent']);
         $this->load->database();
 
-        // Check if user is logged in
         if (!$this->session->userdata('logged') || !$this->session->userdata('user_id')) {
             $this->session->set_flashdata('error', 'Please log in to continue.');
             redirect('Welcome/index');
         }
 
-        // Regenerate session ID to prevent session fixation
-       $this->session->sess_regenerate(true); // true destroys old session
+        $this->session->sess_regenerate(true);
     }
 
     public function add_league() {
-        // Validate user permission (example: only organizers can add leagues)
-        if (!$this->is_organizer()) {
-            $this->session->set_flashdata('error', 'Unauthorized access.');
-            redirect('dashboard');
-        }
-
-        // Set form validation rules
         $this->form_validation->set_rules('league_name', 'League Name', 'required|trim|xss_clean|min_length[3]|max_length[100]');
         $this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean|max_length[100]');
         $this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean|max_length[100]');
@@ -45,14 +29,12 @@ class TournamentController extends CI_Controller {
 
         if ($this->form_validation->run() === FALSE) {
             $this->load->view('header');
-            $this->load->view('add_league_form'); // Load form view
+            $this->load->view('add_league_form');
             return;
         }
 
         $user_id = $this->session->userdata('user_id');
-
-        // Sanitize and prepare data
-        $record = array(
+        $record = [
             'league_name' => ucwords($this->input->post('league_name', TRUE)),
             'city' => ucwords($this->input->post('city', TRUE)),
             'country' => ucwords($this->input->post('country', TRUE)),
@@ -63,86 +45,43 @@ class TournamentController extends CI_Controller {
             'match_type' => ucwords($this->input->post('match_type', TRUE)),
             'user_id' => (int)$user_id,
             'created_at' => date('Y-m-d')
-        );
+        ];
 
-        // Insert league into database
         $league_id = $this->Tournament_model->add_league($record);
-
-        if ($league_id) {
-            $this->session->set_flashdata('success', 'League added successfully.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to add league.');
-        }
-
-        // Fetch team and player data securely
-        $team_data = array(
-            'team' => $this->Team_model->team_information(array('user_id' => $user_id), 'add_team') ?: 0,
-            'data' => $this->Player_model->get_player(array('user_id' => $user_id), 'add_player') ?: 0,
-            'tournament' => $this->Tournament_model->get_league($user_id) ?: 0
-        );
-
-        $this->load->view('header');
-        $this->load->view('landing_page', $team_data);
+        $this->session->set_flashdata($league_id ? 'success' : 'error', $league_id ? 'League added successfully.' : 'Failed to add league.');
+        redirect('dashboard');
     }
 
     public function accept_request($team_id, $league_id) {
-        // Validate inputs
-        $team_id = (int)$team_id;
-        $league_id = (int)$league_id;
-
-        // Check if user has permission to accept requests
-        if (!$this->has_league_permission($league_id)) {
+        $league = $this->Tournament_model->league_information($league_id);
+        if (!$league || $league['user_id'] != $this->session->userdata('user_id')) {
             $this->session->set_flashdata('error', 'Unauthorized action.');
             redirect($this->agent->referrer());
         }
 
-        // Perform action securely
-        $result = $this->Tournament_model->accept_request($team_id, $league_id);
-
-        if ($result) {
-            $this->session->set_flashdata('success', 'Team request accepted.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to accept team request.');
-        }
-
+        $result = $this->Tournament_model->accept_request((int)$team_id, (int)$league_id);
+        $this->session->set_flashdata($result ? 'success' : 'error', $result ? 'Team request accepted.' : 'Failed to accept team request.');
         redirect($this->agent->referrer());
     }
 
     public function reject_team_request($team_id, $league_id) {
-        // Validate inputs
-        $team_id = (int)$team_id;
-        $league_id = (int)$league_id;
-
-        // Check permission
-        if (!$this->has_league_permission($league_id)) {
+        $league = $this->Tournament_model->league_information($league_id);
+        if (!$league || $league['user_id'] != $this->session->userdata('user_id')) {
             $this->session->set_flashdata('error', 'Unauthorized action.');
             redirect($this->agent->referrer());
         }
 
-        // Perform action
-        $result = $this->Tournament_model->reject_team_request(array(
-            'team_id' => $team_id,
-            'league_id' => $league_id,
+        $result = $this->Tournament_model->reject_team_request([
+            'team_id' => (int)$team_id,
+            'league_id' => (int)$league_id,
             'status' => 0
-        ));
+        ]);
 
-        if ($result) {
-            $this->session->set_flashdata('success', 'Team request rejected.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to reject team request.');
-        }
-
+        $this->session->set_flashdata($result ? 'success' : 'error', $result ? 'Team request rejected.' : 'Failed to reject team request.');
         redirect($this->agent->referrer());
     }
 
     public function add_rules() {
-        // Validate permission
-        if (!$this->is_organizer()) {
-            $this->session->set_flashdata('error', 'Unauthorized access.');
-            redirect($this->agent->referrer());
-        }
-
-        // Set form validation rules
         $this->form_validation->set_rules('league_rule', 'League Rule', 'required|trim|xss_clean|min_length[5]');
         $this->form_validation->set_rules('league_id', 'League ID', 'required|numeric|trim');
 
@@ -151,35 +90,25 @@ class TournamentController extends CI_Controller {
             redirect($this->agent->referrer());
         }
 
-        $user_id = $this->session->userdata('user_id');
-
-        // Prepare data
-        $record = array(
-            'league_rule' => ucwords($this->input->post('league_rule', TRUE)),
-            'league_id' => (int)$this->input->post('league_id', TRUE),
-            'user_id' => (int)$user_id
-        );
-
-        // Add rules
-        $result = $this->Tournament_model->league_rules($record);
-
-        if ($result) {
-            $this->session->set_flashdata('success', 'Rule added successfully.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to add rule.');
+        $league_id = (int)$this->input->post('league_id', TRUE);
+        $league = $this->Tournament_model->league_information($league_id);
+        if (!$league || $league['user_id'] != $this->session->userdata('user_id')) {
+            $this->session->set_flashdata('error', 'Unauthorized action.');
+            redirect($this->agent->referrer());
         }
 
+        $record = [
+            'league_rule' => ucwords($this->input->post('league_rule', TRUE)),
+            'league_id' => $league_id,
+            'user_id' => (int)$this->session->userdata('user_id')
+        ];
+
+        $result = $this->Tournament_model->league_rules($record);
+        $this->session->set_flashdata($result ? 'success' : 'error', $result ? 'Rule added successfully.' : 'Failed to add rule.');
         redirect($this->agent->referrer());
     }
 
     public function update_rules() {
-        // Validate permission
-        if (!$this->is_organizer()) {
-            $this->session->set_flashdata('error', 'Unauthorized access.');
-            redirect($this->agent->referrer());
-        }
-
-        // Set form validation rules
         $this->form_validation->set_rules('rule_id', 'Rule ID', 'required|numeric|trim');
         $this->form_validation->set_rules('league_rule', 'League Rule', 'required|trim|xss_clean|min_length[5]');
         $this->form_validation->set_rules('league_id', 'League ID', 'required|numeric|trim');
@@ -189,168 +118,157 @@ class TournamentController extends CI_Controller {
             redirect($this->agent->referrer());
         }
 
-        // Prepare data
         $rule_id = (int)$this->input->post('rule_id', TRUE);
-        $record = array(
-            'league_rule' => ucwords($this->input->post('league_rule', TRUE)),
-            'league_id' => (int)$this->input->post('league_id', TRUE)
-        );
-
-        // Update rules
-        $result = $this->Tournament_model->update_rules($rule_id, $record);
-
-        if ($result) {
-            $this->session->set_flashdata('success', 'Rule updated successfully.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to update rule.');
+        $league_id = (int)$this->input->post('league_id', TRUE);
+        $league = $this->Tournament_model->league_information($league_id);
+        if (!$league || $league['user_id'] != $this->session->userdata('user_id')) {
+            $this->session->set_flashdata('error', 'Unauthorized action.');
+            redirect('Welcome/tournament_landing/' . $league_id);
         }
 
-        redirect($this->agent->referrer());
+        $record = [
+            'league_rule' => ucwords($this->input->post('league_rule', TRUE)),
+            'league_id' => $league_id
+        ];
+
+        $result = $this->Tournament_model->update_rules($rule_id, $record);
+        $this->session->set_flashdata($result ? 'success' : 'error', $result ? 'Rule updated successfully.' : 'Failed to update rule. Rule may not exist.');
+        redirect('Welcome/tournament_landing/' . $league_id);
+    }
+
+    public function delete_rule($rule_id, $league_id) {
+        $rule_id = (int)$rule_id;
+        $league_id = (int)$league_id;
+        $league = $this->Tournament_model->league_information($league_id);
+        if (!$league || $league['user_id'] != $this->session->userdata('user_id')) {
+            $this->session->set_flashdata('error', 'Unauthorized action.');
+            redirect('Welcome/tournament_landing/' . $league_id);
+        }
+
+        $result = $this->Tournament_model->delete_rule($rule_id, $league_id);
+        $this->session->set_flashdata($result ? 'success' : 'error', $result ? 'Rule deleted successfully.' : 'Failed to delete rule. Rule may not exist.');
+        redirect('Welcome/tournament_landing/' . $league_id);
     }
 
     public function league_top_ten_scorer($league_id) {
         $league_id = (int)$league_id;
-
-        // Verify league exists and user has access
         if (!$this->Tournament_model->league_exists($league_id)) {
             $this->session->set_flashdata('error', 'Invalid league.');
             redirect('dashboard');
         }
 
-        $team_data = array(
+        $data = [
             'league' => $this->Tournament_model->league_information($league_id),
             'top_ten_scorer' => $this->Tournament_model->get_top_10_batsmen($league_id)
-        );
+        ];
 
         $this->load->view('header');
-        $this->load->view('league_top_ten_scorer', $team_data);
+        $this->load->view('league_top_ten_scorer', $data);
     }
 
     public function league_top_ten_bowler($league_id) {
         $league_id = (int)$league_id;
-
-        // Verify league exists and user has access
         if (!$this->Tournament_model->league_exists($league_id)) {
             $this->session->set_flashdata('error', 'Invalid league.');
             redirect('dashboard');
         }
 
-        $team_data = array(
+        $data = [
             'league' => $this->Tournament_model->league_information($league_id),
             'top_ten_player' => $this->Tournament_model->league_top_ten_bowler($league_id)
-        );
+        ];
 
         $this->load->view('header');
-        $this->load->view('league_top_ten_bowler', $team_data);
+        $this->load->view('league_top_ten_bowler', $data);
     }
 
     public function league_ten_individual_scorer($league_id) {
         $league_id = (int)$league_id;
-
-        // Verify league exists and user has access
         if (!$this->Tournament_model->league_exists($league_id)) {
             $this->session->set_flashdata('error', 'Invalid league.');
             redirect('dashboard');
         }
 
-        $team_data = array(
+        $data = [
             'league' => $this->Tournament_model->league_information($league_id),
             'top_ten_player' => $this->Tournament_model->league_ten_individual_scorer($league_id)
-        );
+        ];
 
         $this->load->view('header');
-        $this->load->view('league_ten_individual_scorer', $team_data);
+        $this->load->view('league_ten_individual_scorer', $data);
     }
 
     public function league_top_ten_bowler_of_match($league_id) {
         $league_id = (int)$league_id;
-
-        // Verify league exists and user has access
         if (!$this->Tournament_model->league_exists($league_id)) {
             $this->session->set_flashdata('error', 'Invalid league.');
             redirect('dashboard');
         }
 
-        $team_data = array(
+        $data = [
             'league' => $this->Tournament_model->league_information($league_id),
             'top_ten_player' => $this->Tournament_model->league_top_ten_bowler_of_match($league_id)
-        );
+        ];
 
         $this->load->view('header');
-        $this->load->view('league_top_ten_bowler_of_match', $team_data);
+        $this->load->view('league_top_ten_bowler_of_match', $data);
     }
 
     public function get_highest_team_score($league_id) {
         $league_id = (int)$league_id;
-
-        // Verify league exists and user has access
         if (!$this->Tournament_model->league_exists($league_id)) {
             $this->session->set_flashdata('error', 'Invalid league.');
             redirect('dashboard');
         }
 
-        $team_data = array(
+        $data = [
             'league' => $this->Tournament_model->league_information($league_id),
             'top_ten_player' => $this->Tournament_model->get_highest_team_score($league_id)
-        );
+        ];
 
         $this->load->view('header');
-        $this->load->view('get_highest_team_score', $team_data);
+        $this->load->view('get_highest_team_score', $data);
     }
 
     public function league_top_five_team_score($league_id) {
         $league_id = (int)$league_id;
-
-        // Verify league exists and user has access
         if (!$this->Tournament_model->league_exists($league_id)) {
             $this->session->set_flashdata('error', 'Invalid league.');
             redirect('dashboard');
         }
 
-        $team_data = array(
+        $data = [
             'league' => $this->Tournament_model->league_information($league_id),
             'top_five_teams' => $this->Tournament_model->league_top_five_team_score($league_id)
-        );
+        ];
 
         $this->load->view('header');
-        $this->load->view('league_top_five_team_score', $team_data);
+        $this->load->view('league_top_five_team_score', $data);
     }
 
     public function league_lowest_five_score($league_id) {
         $league_id = (int)$league_id;
-
-        // Verify league exists and user has access
         if (!$this->Tournament_model->league_exists($league_id)) {
             $this->session->set_flashdata('error', 'Invalid league.');
             redirect('dashboard');
         }
 
-        $team_data = array(
+        $data = [
             'league' => $this->Tournament_model->league_information($league_id),
             'top_five_teams' => $this->Tournament_model->league_lowest_five_score($league_id)
-        );
+        ];
 
         $this->load->view('header');
-        $this->load->view('league_lowest_five_score', $team_data);
+        $this->load->view('league_lowest_five_score', $data);
     }
 
     public function join_tournament($team_id) {
         $team_id = (int)$team_id;
-
-        // Verify team exists and user has permission
-        if (!$this->Team_model->team_exists($team_id) || !$this->has_team_permission($team_id)) {
-            $this->session->set_flashdata('error', 'Invalid team or unauthorized access.');
-            redirect('dashboard');
-        }
-
-        $team_data = array('team_id' => $team_id);
-
         $this->load->view('header');
-        $this->load->view('join_tournament', $team_data);
+        $this->load->view('join_tournament', ['team_id' => $team_id]);
     }
 
     public function find_tournament() {
-        // Set form validation rules
         $this->form_validation->set_rules('email', 'Email', 'trim|xss_clean|valid_email');
         $this->form_validation->set_rules('team_id', 'Team ID', 'required|numeric|trim');
 
@@ -359,19 +277,18 @@ class TournamentController extends CI_Controller {
             redirect($this->agent->referrer());
         }
 
-        $search_query = $this->input->post('email', TRUE);
         $team_id = (int)$this->input->post('team_id', TRUE);
-
-        // Verify team access
-        if (!$this->has_team_permission($team_id)) {
+        $team = $this->Tournament_model->get_team($team_id);
+        if (!$team || $team['user_id'] != $this->session->userdata('user_id')) {
             $this->session->set_flashdata('error', 'Unauthorized access.');
             redirect('dashboard');
         }
 
-        $data = array(
+        $search_query = $this->input->post('email', TRUE);
+        $data = [
             'team_id' => $team_id,
             'tournament' => $this->Tournament_model->invite_tournament($search_query)
-        );
+        ];
 
         $this->load->view('header');
         $this->load->view('join_tournament', $data);
@@ -381,45 +298,28 @@ class TournamentController extends CI_Controller {
         $league_id = (int)$league_id;
         $team_id = (int)$team_id;
 
-        // Verify permissions
-        if (!$this->Tournament_model->league_exists($league_id) || !$this->has_team_permission($team_id)) {
-            $this->session->set_flashdata('error', 'Invalid league or team.');
-            redirect('dashboard');
+        if (!$this->Tournament_model->league_exists($league_id)) {
+            $this->session->set_flashdata('error', 'Invalid league.');
+             redirect('Welcome/team_admin/' . $team_id);
+        }
+
+        $team = $this->Tournament_model->get_team($team_id);
+        if (!$team || $team['user_id'] != $this->session->userdata('user_id')) {
+            $this->session->set_flashdata('error', 'Unauthorized access.');
+             redirect('Welcome/team_admin/' . $team_id);
         }
 
         $result = $this->Tournament_model->join_tournament($league_id, $team_id);
-
         if ($result) {
-            $team_data = array(
-                'team_stats' => $this->Team_model->get_team_stats($team_id),
-                'data' => $this->Team_model->get_team($team_id)
-            );
-
+            $team_data = [
+                'team_stats' => $this->Tournament_model->get_team_stats($team_id),
+                'data' => $this->Tournament_model->get_team($team_id)
+            ];
             $this->load->view('header');
-            $this->load->view('team_profile', $team_data);
+             redirect('Welcome/team_admin/' . $team_id);
         } else {
-            $this->session->set_flashdata('error', 'Failed to join tournament.');
-            redirect('dashboard');
+            $this->session->set_flashdata('error', 'Failed to join tournament/you already sent request.');
+             redirect('Welcome/team_admin/' . $team_id);
         }
-    }
-
-    // Helper method to check if user is an organizer
-    private function is_organizer() {
-        // Implement logic to check if user has organizer role
-        return $this->session->userdata('role') === 'organizer';
-    }
-
-    // Helper method to check league permission
-    private function has_league_permission($league_id) {
-        // Check if user owns the league or has admin rights
-        $league = $this->Tournament_model->league_information($league_id);
-        return $league && $league['user_id'] == $this->session->userdata('user_id');
-    }
-
-    // Helper method to check team permission
-    private function has_team_permission($team_id) {
-        // Check if user owns the team
-        $team = $this->Team_model->get_team($team_id);
-        return $team && $team['user_id'] == $this->session->userdata('user_id');
     }
 }

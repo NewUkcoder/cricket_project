@@ -227,6 +227,13 @@
             cursor: pointer;
         }
 
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            text-align: center;
+            padding: 15px;
+        }
+
         @media (max-width: 480px) {
             .scorecard-container {
                 max-width: 100%;
@@ -253,123 +260,133 @@
 </head>
 <body>
     <div class="scorecard-container">
-        <div class="match-header">
-            <div class="teams-display">
-                <div class="team">
-                    <img src="<?php echo $two_team[0]['image_path'];?>" alt="Team 1 Logo" class="team-logo">
-                    <div class="team-name"><?php echo $two_team[0]['team_name'];?></div>
-                </div>
-                <div class="vs-text">vs</div>
-                <div class="team">
-                    <img src="<?php echo $two_team[1]['image_path'];?>" alt="Team 2 Logo" class="team-logo">
-                    <div class="team-name"><?php echo $two_team[1]['team_name'];?></div>
-                </div>
-            </div>
-            <div class="match-info">
-                Toss: <?php echo $toss_information['toss_winner_name'];?> won and chose to <?php echo strtolower($toss1['decision']); ?> first
-            </div>
-        </div>
-
-        <div class="scorecard-nav">
-            <div class="nav-card">
-                <div>
-                    <div class="nav-text">Team Squads</div>
-                    <div class="nav-team">Both Teams</div>
-                </div>
-                <a href="" class="nav-btn">Currently in Progress</a>
-                <!-- <a href="<?php echo base_url();?>Welcome/choose_squad/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a> -->
-            </div>
-            <div class="nav-card">
-                <div>
-                    <div class="nav-text">1st Innings Batting</div>
-                    <div class="nav-team"><?php echo $toss_information['bat_first_name'];?></div>
-                </div>
-                <a href="<?php echo base_url();?>ScorecardController/add_first_batting/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a>
-            </div>
-            <div class="nav-card">
-                <div>
-                    <div class="nav-text">1st Innings Bowling</div>
-                    <div class="nav-team"><?php echo $toss_information['bowl_first_name'];?></div>
-                </div>
-                <a href="<?php echo base_url();?>ScorecardController/show_bowling_first/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a>
-            </div>
-            <div class="nav-card">
-                <div>
-                    <div class="nav-text">2nd Innings Batting</div>
-                    <div class="nav-team"><?php echo $toss_information['bowl_first_name'];?></div>
-                </div>
-                <a href="<?php echo base_url();?>ScorecardController/add_second_batting/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a>
-            </div>
-            <div class="nav-card">
-                <div>
-                    <div class="nav-text">2nd Innings Bowling</div>
-                    <div class="nav-team"><?php echo $toss_information['bat_first_name'];?></div>
-                </div>
-                <a href="<?php echo base_url();?>ScorecardController/show_bowling_second/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">Add</a>
-            </div>
-            <div class="motm-section">
-                <div class="motm-title">Player of the Match</div>
-                <?php if (empty($player_of_match['player_id'])) { ?>
-                    <button class="nav-btn" id="motm-select-btn" style="width: 100%;">Select Player of the Match</button>
-                <?php } else { ?>
-                    <div class="motm-display">
-                        <img src="<?php echo $player_of_match['image_path']; ?>" alt="Player" class="motm-player-img">
-                        <div class="motm-player-name"><?php echo $player_of_match['playerName']; ?></div>
-                        <button class="motm-edit-btn" id="motm-edit-btn">Change</button>
+        <?php if (!empty($toss_information) && is_array($toss_information) && !empty($toss1)): ?>
+            <div class="match-header">
+                <div class="teams-display">
+                    <div class="team">
+                        <img src="<?php echo isset($two_team[0]['image_path']) ? $two_team[0]['image_path'] : '#'; ?>" alt="Team 1 Logo" class="team-logo">
+                        <div class="team-name"><?php echo isset($two_team[0]['team_name']) ? $two_team[0]['team_name'] : 'Unknown'; ?></div>
                     </div>
-                <?php } ?>
-            </div>
-            <div class="nav-card">
-                <div>
-                    <div class="nav-text">Full Scorecard</div>
-                    <div class="nav-team">Match Summary</div>
+                    <div class="vs-text">vs</div>
+                    <div class="team">
+                        <img src="<?php echo isset($two_team[1]['image_path']) ? $two_team[1]['image_path'] : '#'; ?>" alt="Team 2 Logo" class="team-logo">
+                        <div class="team-name"><?php echo isset($two_team[1]['team_name']) ? $two_team[1]['team_name'] : 'Unknown'; ?></div>
+                    </div>
                 </div>
-                <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $toss_information['bat_first'];?>/<?php echo $toss_information['bowl_first'];?>/<?php echo $toss_information['match_id'];?>" class="nav-btn">View</a>
+                <div class="match-info">
+                    Toss: <?php echo isset($toss_information['toss_winner_name']) ? $toss_information['toss_winner_name'] : 'N/A'; ?> 
+                    won and chose to <?php echo isset($toss1['decision']) ? strtolower($toss1['decision']) : 'N/A'; ?> first
+                </div>
             </div>
-        </div>
+
+            <div class="scorecard-nav">
+                <div class="nav-card">
+                    <div>
+                        <div class="nav-text">Team Squads</div>
+                        <div class="nav-team">Both Teams</div>
+                    </div>
+                    <a href="<?php echo base_url(); ?>Welcome/choose_squad/<?php echo $toss_information['bat_first']; ?>/<?php echo $toss_information['bowl_first']; ?>/<?php echo $toss_information['match_id']; ?>" class="nav-btn">Add</a>
+                </div>
+                <div class="nav-card">
+                    <div>
+                        <div class="nav-text">1st Innings Batting</div>
+                        <div class="nav-team"><?php echo isset($toss_information['bat_first_name']) ? $toss_information['bat_first_name'] : 'N/A'; ?></div>
+                    </div>
+                    <a href="<?php echo base_url(); ?>ScorecardController/add_first_batting/<?php echo $toss_information['bat_first']; ?>/<?php echo $toss_information['bowl_first']; ?>/<?php echo $toss_information['match_id']; ?>" class="nav-btn">Add</a>
+                </div>
+                <div class="nav-card">
+                    <div>
+                        <div class="nav-text">1st Innings Bowling</div>
+                        <div class="nav-team"><?php echo isset($toss_information['bowl_first_name']) ? $toss_information['bowl_first_name'] : 'N/A'; ?></div>
+                    </div>
+                    <a href="<?php echo base_url(); ?>ScorecardController/show_bowling_first/<?php echo $toss_information['bat_first']; ?>/<?php echo $toss_information['bowl_first']; ?>/<?php echo $toss_information['match_id']; ?>" class="nav-btn">Add</a>
+                </div>
+                <div class="nav-card">
+                    <div>
+                        <div class="nav-text">2nd Innings Batting</div>
+                        <div class="nav-team"><?php echo isset($toss_information['bowl_first_name']) ? $toss_information['bowl_first_name'] : 'N/A'; ?></div>
+                    </div>
+                    <a href="<?php echo base_url(); ?>ScorecardController/add_second_batting/<?php echo $toss_information['bat_first']; ?>/<?php echo $toss_information['bowl_first']; ?>/<?php echo $toss_information['match_id']; ?>" class="nav-btn">Add</a>
+                </div>
+                <div class="nav-card">
+                    <div>
+                        <div class="nav-text">2nd Innings Bowling</div>
+                        <div class="nav-team"><?php echo isset($toss_information['bat_first_name']) ? $toss_information['bat_first_name'] : 'N/A'; ?></div>
+                    </div>
+                    <a href="<?php echo base_url(); ?>ScorecardController/show_bowling_second/<?php echo $toss_information['bat_first']; ?>/<?php echo $toss_information['bowl_first']; ?>/<?php echo $toss_information['match_id']; ?>" class="nav-btn">Add</a>
+                </div>
+                <div class="motm-section">
+                    <div class="motm-title">Player of the Match</div>
+                    <?php if (empty($player_of_match['player_id'])): ?>
+                        <button class="nav-btn" id="motm-select-btn" style="width: 100%;">Select Player of the Match</button>
+                    <?php else: ?>
+                        <div class="motm-display">
+                            <img src="<?php echo isset($player_of_match['image_path']) ? $player_of_match['image_path'] : '#'; ?>" alt="Player" class="motm-player-img">
+                            <div class="motm-player-name"><?php echo isset($player_of_match['playerName']) ? $player_of_match['playerName'] : 'N/A'; ?></div>
+                            <button class="motm-edit-btn" id="motm-edit-btn">Change</button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class="nav-card">
+                    <div>
+                        <div class="nav-text">Full Scorecard</div>
+                        <div class="nav-team">Match Summary</div>
+                    </div>
+                    <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo $toss_information['bat_first']; ?>/<?php echo $toss_information['bowl_first']; ?>/<?php echo $toss_information['match_id']; ?>" class="nav-btn">View</a>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="error-message">
+                Toss information not available. Please set up the toss for this match.
+            </div>
+        <?php endif; ?>
     </div>
 
-    <div class="popup-overlay" id="motm-popup-overlay">
-        <div class="popup-content">
-            <div class="popup-title">Select Player of the Match</div>
-            <form action="<?php echo base_url();?>PlayerController/add_match_player" method="POST">
-                <select name="match_player" class="popup-select" id="motm-player-select">
-                    <option value="">Select Player</option>
-                    <?php foreach($two_team_player as $players) { ?>
-                        <option value="<?php echo $players['player_id'];?>"><?php echo $players['playerName'];?></option>
-                    <?php } ?>
-                </select>
-                <input type="hidden" name="match_id" value="<?php echo $toss_information['match_id'];?>">
-                <button type="submit" class="popup-submit">Submit</button>
-            </form>
+    <?php if (!empty($toss_information) && is_array($toss_information)): ?>
+        <div class="popup-overlay" id="motm-popup-overlay">
+            <div class="popup-content">
+                <div class="popup-title">Select Player of the Match</div>
+                <form action="<?php echo base_url(); ?>PlayerController/add_match_player" method="POST">
+                    <select name="match_player" class="popup-select" id="motm-player-select">
+                        <option value="">Select Player</option>
+                        <?php foreach ($two_team_player as $players): ?>
+                            <option value="<?php echo $players['player_id']; ?>"><?php echo $players['playerName']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="hidden" name="match_id" value="<?php echo $toss_information['match_id']; ?>">
+                    <button type="submit" class="popup-submit">Submit</button>
+                </form>
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
 
     <script>
         const motmSelectBtn = document.getElementById('motm-select-btn');
         const motmEditBtn = document.getElementById('motm-edit-btn');
         const motmPopupOverlay = document.getElementById('motm-popup-overlay');
-        
+
         if (motmSelectBtn) {
-            motmSelectBtn.addEventListener('click', function() {
+            motmSelectBtn.addEventListener('click', () => {
                 motmPopupOverlay.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             });
         }
-        
+
         if (motmEditBtn) {
-            motmEditBtn.addEventListener('click', function() {
+            motmEditBtn.addEventListener('click', () => {
                 motmPopupOverlay.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             });
         }
-        
-        motmPopupOverlay.addEventListener('click', function(e) {
-            if (e.target === motmPopupOverlay) {
-                motmPopupOverlay.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
+
+        if (motmPopupOverlay) {
+            motmPopupOverlay.addEventListener('click', (e) => {
+                if (e.target === motmPopupOverlay) {
+                    motmPopupOverlay.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
     </script>
 </body>
 </html>

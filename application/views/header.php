@@ -102,7 +102,8 @@
         </div>
         <nav class="custom-nav">
             <ul>
-                <li><a href="<?php echo base_url();?>Welcome/welcome_message">Home</a></li>
+               <!--  <li><a href="<?php echo base_url();?>Welcome/welcome_message">Home</a></li> -->
+               <li><a href="<?php echo base_url(); ?>Welcome/landing_page" class="tm-nav-item"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="<?php echo site_url('Auth/logout'); ?>">Logout</a></li>
             </ul>
         </nav>

@@ -393,7 +393,7 @@
             font-weight: 600;
             color: #007bff;
             margin-bottom: 15px;
-            text-align: center;
+ >text-align: center;
         }
 
         .list-group-item {
@@ -846,32 +846,120 @@
             <a href="<?php echo base_url(); ?>TeamController/team_squad/<?php echo htmlspecialchars($data['team_id']); ?>">Squad</a>
         </div>
 
+        <!-- Match Results Section -->
+        <section class="recent-matches-section">
+            <h3 class="tm-section-title">Match Results</h3>
+            <?php if (empty($matches)): ?>
+                <div class="alert alert-info">No match results available for this team.</div>
+            <?php else: ?>
+                <ul class="list-group">
+                    <?php foreach ($matches as $match):
+                        $is_home_team = ($data['team_id'] == $match->win_team_id || $data['team_id'] == $match->lost_team_id);
+                        $is_winner = ($data['team_id'] == $match->win_team_id);
+                        $opponent = ($data['team_id'] == $match->win_team_id) ? htmlspecialchars($match->lost_team_name) : htmlspecialchars($match->win_team_name);
+                    ?>
+                        <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo htmlspecialchars($match->win_team_id); ?>/<?php echo htmlspecialchars($match->lost_team_id); ?>/<?php echo htmlspecialchars($match->match_id); ?>" class="text-decoration-none">
+                            <li class="list-group-item d-flex justify-content-between align-items-center hover-highlight">
+                                <div>
+                                    <?php echo date('d M Y', strtotime($match->match_date)); ?>: 
+                                    vs <?php echo $opponent; ?> - 
+                                    <?php echo htmlspecialchars($match->result_statement); ?>
+                                </div>
+                                <span class="badge bg-<?php echo $is_winner ? 'success' : 'danger'; ?>" aria-label="<?php echo $is_winner ? 'Win' : 'Loss'; ?>">
+                                    <?php echo $is_winner ? 'W' : 'L'; ?>
+                                </span>
+                            </li>
+                        </a>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </section>
+
+        <!-- Match Schedule Section -->
+        <section class="tm-section">
+            <h3 class="tm-section-title">Match Schedule</h3>
+            <?php if (empty($team_schedule)): ?>
+                <p class="tm-empty-state">No match is added yet</p>
+            <?php else: ?>
+                <div class="tm-schedule-container">
+                    <?php foreach ($team_schedule as $value): ?>
+                        <div class="tm-schedule-card">
+                            <div class="tm-match-header">
+                                <div class="tm-team">
+                                    <img src="<?php echo htmlspecialchars($value->team_one_image ?? 'default_team.png'); ?>" alt="<?php echo htmlspecialchars($value->team_one_name ?? 'Team 1'); ?> Logo">
+                                    <p><?php echo htmlspecialchars($value->team_one_name ?? 'Team 1'); ?></p>
+                                </div>
+                                <span class="tm-vs">VS</span>
+                                <div class="tm-team">
+                                    <img src="<?php echo htmlspecialchars($value->team_two_image ?? 'default_team.png'); ?>" alt="<?php echo htmlspecialchars($value->team_two_name ?? 'Team 2'); ?> Logo">
+                                    <p><?php echo htmlspecialchars($value->team_two_name ?? 'Team 2'); ?></p>
+                                </div>
+                            </div>
+                            <div class="tm-match-details">
+                                <?php
+                                $date = $value->match_date;
+                                $formatted_date = date("M d, Y", strtotime($date));
+                                ?>
+                                <span><?php echo htmlspecialchars($formatted_date); ?></span> |
+                                <span><?php echo htmlspecialchars(date("g:i A", strtotime($value->match_time ?? '00:00'))); ?></span> |
+                                <span><?php echo htmlspecialchars($value->location ?? 'TBD'); ?></span> |
+                                <span><?php echo htmlspecialchars($value->series ?? 'N/A'); ?></span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </section>
+
+        <!-- Top Performers Section -->
+        <section class="top-performers-section">
+            <h3>Player of the Team</h3>
+            <?php if ($top_performers['top_bowler']['playerName'] === 'N/A' && $top_performers['top_batsman']['playerName'] === 'N/A'): ?>
+                <p class="text-muted text-center">No performance data available yet.</p>
+            <?php else: ?>
+                <div class="performer-row">
+                    <div class="player-card bowler">
+                        <h4>Leading Wicket-Taker</h4>
+                        <img src="<?php echo htmlspecialchars($top_performers['top_bowler']['image_path']); ?>" alt="Top Bowler <?php echo htmlspecialchars($top_performers['top_bowler']['playerName']); ?>" class="player-image" loading="lazy">
+                        <p><?php echo htmlspecialchars($top_performers['top_bowler']['playerName']); ?></p>
+                        <p class="player-stats"><?php echo htmlspecialchars($top_performers['top_bowler']['total_wickets']); ?> wickets</p>
+                    </div>
+                    <div class="player-card batsman">
+                        <h4>Leading Batsman</h4>
+                        <img src="<?php echo htmlspecialchars($top_performers['top_batsman']['image_path']); ?>" alt="Top Batsman <?php echo htmlspecialchars($top_performers['top_batsman']['playerName']); ?>" class="player-image" loading="lazy">
+                        <p><?php echo htmlspecialchars($top_performers['top_batsman']['playerName']); ?></p>
+                        <p class="player-stats"><?php echo htmlspecialchars($top_performers['top_batsman']['total_runs']); ?> runs</p>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </section>
+
         <!-- Team Information Section -->
         <section class="team-info-section">
             <h2>Team Information</h2>
             <div class="team-info-grid">
                 <div class="info-card">
-                    <i class="fas fa-city"></i>
+                    <i class="fas fa-city" aria-label="City Icon"></i>
                     <p><strong>City:</strong> <?php echo htmlspecialchars($data['city'] ?? 'N/A'); ?></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-globe"></i>
+                    <i class="fas fa-globe" aria-label="Country Icon"></i>
                     <p><strong>Country:</strong> <?php echo htmlspecialchars($data['country'] ?? 'N/A'); ?></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-calendar-alt"></i>
+                    <i class="fas fa-calendar-alt" aria-label="Joining Date Icon"></i>
                     <p><strong>Joining Date:</strong> <?php echo htmlspecialchars($data['created_at'] ?? 'N/A'); ?></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-stadium"></i>
+                    <i class="fas fa-stadium" aria-label="Home Ground Icon"></i>
                     <p><strong>Home Ground:</strong> <?php echo htmlspecialchars($data['home_ground'] ?? 'N/A'); ?></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-envelope team-admin-email"></i>
+                    <i class="fas fa-envelope team-admin-email" aria-label="Admin Email Icon"></i>
                     <p><strong>Admin Email:</strong> <span class="team-admin-email"><?php echo htmlspecialchars($data['email'] ?? 'N/A'); ?></span></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-phone team-admin-phone"></i>
+                    <i class="fas fa-phone team-admin-phone" aria-label="Admin Phone Icon"></i>
                     <p><strong>Admin Phone:</strong> <span class="team-admin-phone"><?php echo htmlspecialchars($data['phone_number'] ?? 'N/A'); ?></span></p>
                 </div>
             </div>
@@ -926,7 +1014,7 @@
                 <div class="league-grid">
                     <?php foreach ($league_playing as $league): ?>
                         <div class="league-card">
-                            <a href="<?php echo base_url('LeagueController/league/'.($league->slug ?? $league->league_id)); ?>">
+                            <a href="<?php echo base_url('LeagueController/league/' . ($league->slug ?? $league->league_id)); ?>">
                                 <?php echo htmlspecialchars($league->league_name); ?>
                             </a>
                         </div>
@@ -937,7 +1025,7 @@
             <?php endif; ?>
         </section>
 
-        <!-- Team Management and Top Performers Section -->
+        <!-- Team Management Section -->
         <div class="row my-3">
             <div class="col-md-6">
                 <div class="management-section">
@@ -946,7 +1034,7 @@
                         <?php if (!empty($team_management)): ?>
                             <?php foreach ($team_management as $staff): ?>
                                 <li class="management-member d-flex align-items-center">
-                                    <i class="fas fa-user-tie"></i>
+                                    <i class="fas fa-user-tie" aria-label="Management Member Icon"></i>
                                     <p class="mb-0">
                                         <strong><?php echo htmlspecialchars($staff->role); ?>:</strong>
                                         <?php echo htmlspecialchars($staff->name); ?>
@@ -961,104 +1049,19 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="top-performers-section">
-                    <h3>Player of the Team</h3>
-                    <div class="performer-row">
-                        <div class="player-card bowler">
-                            <h4>Leading Wicket-Taker</h4>
-                            <img src="best_bowler.jpg" alt="Best Bowler" class="player-image">
-                            <p>John Doe</p>
-                            <p class="player-stats">120 wickets</p>
-                        </div>
-                        <div class="player-card batsman">
-                            <h4>Leading Batsman</h4>
-                            <img src="best_batsman.jpg" alt="Best Batsman" class="player-image">
-                            <p>Jane Smith</p>
-                            <p class="player-stats">3,200 runs</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <!-- Match Schedule Section -->
-        <section class="tm-section">
-            <h3 class="tm-section-title">Match Schedule</h3>
-            <?php if (empty($team_schedule)): ?>
-                <p class="tm-empty-state">No match is added yet</p>
-            <?php else: ?>
-                <div class="tm-schedule-container">
-                    <?php foreach ($team_schedule as $value): ?>
-                        <div class="tm-schedule-card">
-                            <div class="tm-match-header">
-                                <div class="tm-team">
-                                    <img src="<?php echo htmlspecialchars($value->team_one_image ?? 'default_team.png'); ?>" alt="Team One Logo">
-                                    <p><?php echo htmlspecialchars($value->team_one_name ?? 'Team 1'); ?></p>
-                                </div>
-                                <span class="tm-vs">VS</span>
-                                <div class="tm-team">
-                                    <img src="<?php echo htmlspecialchars($value->team_two_image ?? 'default_team.png'); ?>" alt="Team Two Logo">
-                                    <p><?php echo htmlspecialchars($value->team_two_name ?? 'Team 2'); ?></p>
-                                </div>
-                            </div>
-                            <div class="tm-match-details">
-                                <?php
-                                $date = $value->match_date;
-                                $formatted_date = date("M d, Y", strtotime($date));
-                                ?>
-                                <span><?php echo htmlspecialchars($formatted_date); ?></span> |
-                                <span><?php echo htmlspecialchars(date("g:i A", strtotime($value->match_time ?? '00:00'))); ?></span> |
-                                <span><?php echo htmlspecialchars($value->location ?? 'TBD'); ?></span> |
-                                <span><?php echo htmlspecialchars($value->series ?? 'N/A'); ?></span>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </section>
-
-        <!-- Recent Match Results Section -->
-   <section class="team-matches-section">
-    <h2>Match Results</h2>
-    
-    <?php if(empty($matches)): ?>
-        <div class="alert alert-info">No match results available for this team.</div>
-    <?php else: ?>
-        <ul class="list-group">
-            <?php foreach($matches as $match): 
-                $is_home_team = ($data['team_id'] == $match->win_team_id || $data['team_id'] == $match->lost_team_id);
-                $is_winner = ($data['team_id'] == $match->win_team_id);
-                $opponent = ($data['team_id'] == $match->win_team_id) ? $match->lost_team_name : $match->win_team_name;
-            ?>
-                <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo htmlspecialchars($match->match_id); ?>/<?php echo htmlspecialchars($match->win_team_id); ?>/<?php echo htmlspecialchars($match->lost_team_id); ?> " class="text-decoration-none">
-                    <li class="list-group-item d-flex justify-content-between align-items-center hover-highlight">
-                        <div>
-                            <?php echo date('d M Y', strtotime($match->match_date)); ?>: 
-                            vs <?php echo $opponent; ?> - 
-                            <?php echo $match->result_statement; ?>
-                        </div>
-                        <span class="badge bg-<?php echo $is_winner ? 'success' : 'danger'; ?>">
-                            <?php echo $is_winner ? 'W' : 'L'; ?>
-                        </span>
-                    </li>
-                </a>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-</section>
-
-<style>
-    .hover-highlight:hover {
-        background-color: #f8f9fa;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
-    
-    .list-group-item {
-        transition: all 0.2s ease;
-    }
-</style>
+        <style>
+            .hover-highlight:hover {
+                background-color: #f8f9fa;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+            }
+            
+            .list-group-item {
+                transition: all 0.2s ease;
+            }
+        </style>
     </div>
 
     <!-- Bootstrap JS -->

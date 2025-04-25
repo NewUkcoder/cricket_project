@@ -51,6 +51,7 @@
             line-height: 1.5;
             background-color: #f5f5f5;
             -webkit-font-smoothing: antialiased;
+            padding-bottom: 80px; /* Increased space for fixed footer */
         }
 
         .tm-container {
@@ -69,6 +70,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            position: relative; /* Changed from sticky/fixed to relative */
         }
 
         .tm-header-logo {
@@ -695,7 +697,6 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* Modal Styles */
         .tm-modal {
             display: none;
             position: fixed;
@@ -707,6 +708,7 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            overflow-y: auto;
         }
 
         .tm-modal-content {
@@ -717,16 +719,23 @@
             width: 90%;
             box-shadow: var(--shadow-md);
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .tm-modal-close {
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 18px;
+            font-size: 20px;
             color: var(--light-text);
             cursor: pointer;
             transition: var(--transition);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .tm-modal-close:hover {
@@ -752,7 +761,7 @@
             color: var(--text-color);
         }
 
-        .tm-form-group input {
+        .tm-form-group input, .tm-form-group select {
             width: 100%;
             padding: 10px;
             font-size: 14px;
@@ -760,9 +769,17 @@
             border-radius: var(--radius-sm);
             transition: var(--transition);
             background: #fff;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
 
-        .tm-form-group input:focus {
+        .tm-form-group select {
+            padding-right: 30px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%23666" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+        }
+
+        .tm-form-group input:focus, .tm-form-group select:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
@@ -779,6 +796,64 @@
             display: flex;
             gap: 10px;
             justify-content: flex-end;
+        }
+
+        .tm-modal-actions button {
+            min-width: 100px;
+            min-height: 44px;
+            font-size: 14px;
+        }
+
+        .tm-confirm-icon {
+            font-size: 40px;
+            color: var(--danger-color);
+            text-align: center;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .tm-confirm-text {
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .tm-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--card-bg);
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            z-index: 100;
+        }
+
+        .tm-footer-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            width: 100%;
+        }
+
+        .tm-footer-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .tm-footer-nav a:hover {
+            color: var(--primary-color);
+        }
+
+        .tm-footer-nav a i {
+            font-size: 20px;
+            margin-bottom: 5px;
         }
 
         @media (min-width: 768px) {
@@ -836,9 +911,85 @@
             .tm-modal-content {
                 padding: 25px;
             }
+
+            .tm-footer-nav a {
+                font-size: 14px;
+            }
+
+            .tm-footer-nav a i {
+                font-size: 22px;
+            }
         }
 
         @media (max-width: 480px) {
+            .tm-container {
+                padding: 8px;
+            }
+
+            .tm-header {
+                padding: 12px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tm-header-logo {
+                width: 50px;
+                height: 50px;
+            }
+
+            .tm-header h1 {
+                font-size: 1.3em;
+            }
+
+            .tm-header p {
+                font-size: 0.85em;
+            }
+
+            .tm-nav-container {
+                display: none;
+            }
+
+            .tm-footer {
+                display: flex;
+            }
+
+            .tm-section {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .tm-section-title {
+                font-size: 1.1em;
+            }
+
+            .tm-card {
+                padding: 8px;
+                grid-template-columns: 40px 1fr auto;
+            }
+
+            .tm-card-img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .tm-card-content h4 {
+                font-size: 13px;
+            }
+
+            .tm-card-content p {
+                font-size: 12px;
+            }
+
+            .tm-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .tm-btn-sm {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+
             .tm-schedule-card {
                 padding: 12px;
             }
@@ -868,12 +1019,14 @@
 
             .tm-schedule-actions {
                 gap: 8px;
+                flex-wrap: wrap;
             }
 
             .tm-btn-vibrant {
-                padding: 5px 10px;
+                padding: 6px 10px;
                 font-size: 11px;
                 min-width: 70px;
+                min-height: 44px;
             }
 
             .tm-team-you {
@@ -903,6 +1056,7 @@
             .insert-section .tm-btn {
                 font-size: 12px;
                 padding: 7px 14px;
+                min-height: 44px;
             }
 
             .tm-toast {
@@ -910,25 +1064,82 @@
                 right: 10px;
                 padding: 8px 15px;
                 font-size: 13px;
+                max-width: 90%;
+            }
+
+            .tm-modal {
+                align-items: flex-start;
+                padding-top: 10px;
             }
 
             .tm-modal-content {
-                padding: 15px;
                 width: 95%;
+                max-width: 95%;
+                padding: 15px;
+                max-height: 85vh;
+                border-radius: var(--radius-sm);
+                margin: 10px auto;
             }
 
             .tm-modal-title {
                 font-size: 1.2em;
+                margin-bottom: 12px;
             }
 
-            .tm-form-group input {
+            .tm-form-group {
+                margin-bottom: 12px;
+            }
+
+            .tm-form-group label {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+
+            .tm-form-group input, .tm-form-group select {
                 font-size: 13px;
                 padding: 8px;
+                height: 44px;
+                border-radius: 4px;
+            }
+
+            .tm-form-group select {
+                padding-right: 28px;
+                background-size: 10px;
+                background-position: right 8px center;
+            }
+
+            .tm-error {
+                font-size: 12px;
+                margin-top: 4px;
             }
 
             .tm-modal-actions {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 8px;
+                justify-content: space-between;
+            }
+
+            .tm-modal-actions button {
+                flex: 1;
+                padding: 10px;
+                font-size: 13px;
+                min-height: 48px;
+                border-radius: 4px;
+            }
+
+            .tm-modal-close {
+                font-size: 18px;
+                top: 8px;
+                right: 8px;
+            }
+
+            .tm-confirm-icon {
+                font-size: 32px;
+            }
+
+            .tm-confirm-text {
+                font-size: 14px;
+                margin-bottom: 15px;
             }
         }
     </style>
@@ -936,16 +1147,24 @@
 <body>
     <div class="tm-container">
         <header class="tm-header">
-            <img src="<?php echo $data['image_path']; ?>" alt="Team Logo" class="tm-header-logo">
+            <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $team_id; ?>">
+                <img src="<?php echo $data['image_path']; ?>" alt="Team Logo" class="tm-header-logo">
+            </a>
             <div class="tm-header-content">
-                <h1><?php echo htmlspecialchars($data['team_name']); ?></h1>
+                <form id="team-name-form" method="post" action="<?php echo site_url('TeamController/update_team_info'); ?>">
+                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                    <input type="hidden" name="team_id" value="<?php echo $team_id; ?>">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h1 id="tm-team-name-display"><?php echo htmlspecialchars($data['team_name']); ?></h1>
+                        <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
+                            <input type="text" id="tm-team-name-edit" name="team_name" value="<?php echo htmlspecialchars($data['team_name']); ?>" style="display: none; font-size: 1.3em; padding: 5px; border-radius: 4px; border: 1px solid var(--border-color);">
+                            <button type="button" class="tm-btn tm-btn-warning tm-btn-xs" onclick="toggleTeamNameEdit()">Edit</button>
+                            <button type="submit" class="tm-btn tm-btn-primary tm-btn-xs" id="tm-team-name-save" style="display: none;">Save</button>
+                            <button type="button" class="tm-btn tm-btn-outline tm-btn-xs" id="tm-team-name-cancel" style="display: none;" onclick="cancelTeamNameEdit()">Cancel</button>
+                        <?php endif; ?>
+                    </div>
+                </form>
                 <p><i class="fas fa-calendar-alt"></i> Est. <?php echo date('Y', strtotime($data['created_at'])); ?></p>
-                <div class="tm-social-links">
-                    <a href="#" class="tm-social-link" title="Facebook"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="tm-social-link" title="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="tm-social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="tm-social-link" title="Website"><i class="fas fa-globe"></i></a>
-                </div>
             </div>
         </header>
 
@@ -969,21 +1188,16 @@
 
         <div class="tm-nav-container">
             <div class="tm-nav">
-                <a href="<?php echo base_url(); ?>Welcome/landing_page" class="tm-nav-item"><i class="fas fa-home"></i> Home</a>
-                <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $team_id; ?>" class="tm-nav-item internal-link"><i class="fas fa-eye"></i> View Page</a>
                 <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
                     <a href="<?php echo base_url(); ?>TeamController/invite_team/<?php echo $team_id; ?>" class="tm-nav-item external-link" title="Invite Team">Invite Team</a>
                     <a href="<?php echo base_url(); ?>TournamentController/join_tournament/<?php echo $team_id; ?>" class="tm-nav-item external-link">Join Tournament</a>
-                    <a href="<?php echo base_url(); ?>TeamController/player_request/<?php echo $team_id; ?>" class="tm-nav-item external-link" title="Player Request">Player Request <span class="tm-badge">2</span></a>
-                    <a href="<?php echo base_url(); ?>TeamController/team_request/<?php echo $team_id; ?>" class="tm-nav-item external-link" title="Match Request">Team Request</a>
                 <?php endif; ?>
             </div>
         </div>
 
-        <!-- Player Requests -->
-        <section class="tm-section" id="tm-player-req">
-            <h3 class="tm-section-title">Player Requests (<?php echo count($requests); ?>)</h3>
-            <?php if (count($requests) > 0): ?>
+        <?php if (count($requests) > 0): ?>
+            <section class="tm-section" id="tm-player-req">
+                <h3 class="tm-section-title">Player Requests (<?php echo count($requests); ?>)</h3>
                 <?php foreach ($requests as $player_info): ?>
                     <div class="tm-card">
                         <img src="<?php echo $player_info->image_path; ?>" alt="Player" class="tm-card-img">
@@ -1003,15 +1217,12 @@
                         </div>
                     </div>
                 <?php endforeach; ?>
-            <?php else: ?>
-                <p class="tm-empty-state">No player requests</p>
-            <?php endif; ?>
-        </section>
+            </section>
+        <?php endif; ?>
 
-        <!-- Team Requests -->
-        <section class="tm-section" id="tm-team-req">
-            <h3 class="tm-section-title">Team Requests (<?php echo count($team_names['received_request'] ?? []); ?>)</h3>
-            <?php if (isset($team_names['received_request']) && !empty($team_names['received_request'])): ?>
+        <?php if (isset($team_names['received_request']) && !empty($team_names['received_request'])): ?>
+            <section class="tm-section" id="tm-team-req">
+                <h3 class="tm-section-title">Team Requests (<?php echo count($team_names['received_request']); ?>)</h3>
                 <?php foreach ($team_names['received_request'] as $value): ?>
                     <div class="tm-card">
                         <img src="<?php echo $value->image_path; ?>" alt="Team" class="tm-card-img">
@@ -1029,12 +1240,9 @@
                         </div>
                     </div>
                 <?php endforeach; ?>
-            <?php else: ?>
-                <p class="tm-empty-state">No team requests</p>
-            <?php endif; ?>
-        </section>
+            </section>
+        <?php endif; ?>
 
-        <!-- Opposition Team Section -->
         <section class="tm-section" id="tm-opposition">
             <h3 class="tm-section-title">Opposition Team</h3>
             <?php if ($opposition_team['status'] == 'error'): ?>
@@ -1042,7 +1250,7 @@
                     <?php echo $opposition_team['message']; ?>
                 </div>
             <?php else: ?>
-                <?php  foreach ($opposition_team['data'] as $team): ?>
+                <?php foreach ($opposition_team['data'] as $team): ?>
                     <div class="tm-card">
                         <img src="<?php echo $team->team_one_image; ?>" alt="Team Logo" class="tm-card-img">
                         <div class="tm-card-content">
@@ -1055,7 +1263,6 @@
             <?php endif; ?>
         </section>
 
-        <!-- Schedule Section -->
         <section class="tm-section" id="tm-schedule">
             <h3 class="tm-section-title">Match Schedule</h3>
             <?php if ($team_schedule == 0): ?>
@@ -1068,21 +1275,38 @@
                     foreach ($team_schedule as $value):
                         if ($user_id == $value->user_id):
                             $has_matches = true;
+                            $match_date = date('Y-m-d', strtotime($value->match_date));
+                            $match_time = date('H:i', strtotime($value->match_time));
+                            $schedule_data = [
+                                'match_id' => $value->match_id,
+                                'team_id' => $team_id,
+                                'team_one_id' => $value->team_one_id,
+                                'team_one_name' => htmlspecialchars($value->team_one_name ?? ''),
+                                'team_two_id' => $value->team_two_id,
+                                'team_two_name' => htmlspecialchars($value->team_two_name ?? ''),
+                                'match_date' => $match_date,
+                                'match_time' => $match_time,
+                                'overs' => isset($value->overs) ? (int)$value->overs : 20,
+                                'venue' => isset($value->location) ? htmlspecialchars($value->location) : '',
+                                'series' => isset($value->series) ? htmlspecialchars($value->series) : '',
+                                'first_umpire' => isset($value->umpire1) ? htmlspecialchars($value->umpire1) : '',
+                                'second_umpire' => isset($value->umpire2) ? htmlspecialchars($value->umpire2) : ''
+                            ];
                     ?>
-                            <div class="tm-schedule-card">
+                            <div class="tm-schedule-card" data-schedule='<?php echo json_encode($schedule_data, JSON_HEX_QUOT | JSON_HEX_APOS); ?>'>
                                 <div class="tm-schedule-header">
                                     <div class="tm-schedule-teams">
                                         <div class="tm-schedule-team <?php echo $value->team_one_id == $team_id ? 'your-team' : ''; ?>">
-                                            <img src="<?php echo $value->team_one_image; ?>" alt="Team Logo">
-                                            <span><?php echo strtoupper(substr($value->team_one_name, 0, 3)); ?></span>
+                                            <img src="<?php echo htmlspecialchars($value->team_one_image ?? ''); ?>" alt="Team Logo">
+                                            <span><?php echo strtoupper(substr(htmlspecialchars($value->team_one_name ?? ''), 0, 3)); ?></span>
                                             <?php if ($value->team_one_id == $team_id): ?>
                                                 <span class="tm-team-you">(You)</span>
                                             <?php endif; ?>
                                         </div>
                                         <span class="tm-schedule-vs">vs</span>
                                         <div class="tm-schedule-team <?php echo $value->team_two_id == $team_id ? 'your-team' : ''; ?>">
-                                            <img src="<?php echo $value->team_two_image; ?>" alt="Team Logo">
-                                            <span><?php echo strtoupper(substr($value->team_two_name, 0, 3)); ?></span>
+                                            <img src="<?php echo htmlspecialchars($value->team_two_image ?? ''); ?>" alt="Team Logo">
+                                            <span><?php echo strtoupper(substr(htmlspecialchars($value->team_two_name ?? ''), 0, 3)); ?></span>
                                             <?php if ($value->team_two_id == $team_id): ?>
                                                 <span class="tm-team-you">(You)</span>
                                             <?php endif; ?>
@@ -1090,10 +1314,9 @@
                                     </div>
                                     <div class="tm-schedule-meta">
                                         <?php
-                                        $date = $value->match_date;
-                                        $formatted_date = date("M d, Y", strtotime($date));
+                                        $formatted_date = date("M d, Y", strtotime($value->match_date));
                                         ?>
-                                        <span class="tm-schedule-date"><?php echo $formatted_date; ?></span>
+                                        <span class="tm-schedule-date"><?php echo htmlspecialchars($formatted_date); ?></span>
                                         <span class="tm-schedule-time"><?php echo date("g:i A", strtotime($value->match_time)); ?></span>
                                     </div>
                                 </div>
@@ -1101,10 +1324,10 @@
                                     <a href="<?php echo base_url(); ?>Welcome/toss/<?php echo $value->team_one_id; ?>/<?php echo $value->team_two_id; ?>/<?php echo $value->match_id; ?>" class="tm-btn tm-btn-vibrant tm-btn-score">
                                         <i class="fas fa-tachometer-alt"></i> Score
                                     </a>
-                                    <a href="<?php echo base_url(); ?>Welcome/edit_schedule/<?php echo $value->team_one_id; ?>/<?php echo $value->team_two_id; ?>/<?php echo $value->match_id; ?>" class="tm-btn tm-btn-vibrant tm-btn-edit">
+                                    <button onclick="openScheduleEditModal(this.closest('.tm-schedule-card').dataset.schedule)" class="tm-btn tm-btn-vibrant tm-btn-edit">
                                         <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <button onclick="openConfirmModal('<?php echo $value->match_id; ?>')" class="tm-btn tm-btn-vibrant tm-btn-delete">
+                                    </button>
+                                    <button onclick="openConfirmModal('<?php echo $value->match_id; ?>', '<?php echo $team_id; ?>')" class="tm-btn tm-btn-vibrant tm-btn-delete">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                     <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo $value->team_one_id; ?>/<?php echo $value->team_two_id; ?>/<?php echo $value->match_id; ?>" class="tm-btn tm-btn-vibrant tm-btn-view">
@@ -1123,7 +1346,6 @@
             <?php endif; ?>
         </section>
 
-        <!-- Team Information -->
         <section class="tm-section" id="tm-team-info">
             <a id="edit-anchor"></a>
             <form id="team-info-form" method="post" action="<?php echo site_url('TeamController/update_team_info'); ?>">
@@ -1165,7 +1387,6 @@
             </form>
         </section>
 
-        <!-- Captains -->
         <section class="tm-section" id="tm-captains">
             <h3 class="tm-section-title">Current Captains</h3>
             <div class="tm-captain-grid">
@@ -1183,9 +1404,7 @@
                         <img src="<?php echo $captain['leather_ball']['image_path']; ?>" alt="Captain" class="tm-captain-img">
                         <p><?php echo htmlspecialchars($captain['leather_ball']['playerName']); ?></p>
                         <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
-                            <a href="<?php echo base_url(); ?>TeamController/edit_captain_leather/<?php echo $team_id; ?>" class="internal-link">
-                                <button class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
-                            </a>
+                            <button onclick="openCaptainEditModal('leather_ball', '<?php echo $team_id; ?>', '<?php echo $captain['leather_ball']['player_id']; ?>', '<?php echo htmlspecialchars($captain['leather_ball']['playerName']); ?>')" class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
@@ -1203,9 +1422,7 @@
                         <img src="<?php echo $captain['tape_ball']['image_path']; ?>" alt="Captain" class="tm-captain-img">
                         <p><?php echo htmlspecialchars($captain['tape_ball']['playerName']); ?></p>
                         <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
-                            <a href="<?php echo base_url(); ?>TeamController/edit_captain_tape/<?php echo $team_id; ?>" class="internal-link">
-                                <button class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
-                            </a>
+                            <button onclick="openCaptainEditModal('tape_ball', '<?php echo $team_id; ?>', '<?php echo $captain['tape_ball']['player_id']; ?>', '<?php echo htmlspecialchars($captain['tape_ball']['playerName']); ?>')" class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
@@ -1223,17 +1440,15 @@
                         <img src="<?php echo $captain['tennis_ball']['image_path']; ?>" alt="Captain" class="tm-captain-img">
                         <p><?php echo htmlspecialchars($captain['tennis_ball']['playerName']); ?></p>
                         <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
-                            <a href="<?php echo base_url(); ?>TeamController/edit_captain_tennis/<?php echo $team_id; ?>" class="internal-link">
-                                <button class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
-                            </a>
+                            <button onclick="openCaptainEditModal('tennis_ball', '<?php echo $team_id; ?>', '<?php echo $captain['tennis_ball']['player_id']; ?>', '<?php echo htmlspecialchars($captain['tennis_ball']['playerName']); ?>')" class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
         </section>
 
-        <!-- Management -->
         <section class="tm-section" id="tm-management">
+            <a id="management-anchor"></a>
             <h3 class="tm-section-title">Team Management</h3>
             <div class="insert-section">
                 <button type="button" class="tm-btn tm-btn-primary" onclick="openAddModal()">
@@ -1241,7 +1456,7 @@
                 </button>
             </div>
             <div class="team-container">
-                <?php  if (!empty($management_staff)): ?>
+                <?php if (!empty($management_staff)): ?>
                     <?php foreach ($management_staff as $staff): ?>
                         <div class="team-row" id="staff-<?php echo htmlspecialchars($staff->role); ?>">
                             <div class="team-info">
@@ -1262,7 +1477,7 @@
         <!-- Add Team Management Modal -->
         <div id="tm-add-modal" class="tm-modal">
             <div class="tm-modal-content">
-                <span class="tm-modal-close" onclick="closeAddModal()">&times;</span>
+                <span class="tm-modal-close" onclick="closeAddModal()">×</span>
                 <h3 class="tm-modal-title">Add New Team Management Member</h3>
                 <form method="post" action="<?php echo base_url(); ?>TeamController/insert_team_management">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
@@ -1292,7 +1507,7 @@
         <!-- Edit Team Management Modal -->
         <div id="tm-edit-modal" class="tm-modal">
             <div class="tm-modal-content">
-                <span class="tm-modal-close" onclick="closeEditModal()">&times;</span>
+                <span class="tm-modal-close" onclick="closeEditModal()">×</span>
                 <h3 class="tm-modal-title">Edit Team Management Member</h3>
                 <form method="post" action="<?php echo base_url(); ?>TeamController/update_team_management">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
@@ -1320,7 +1535,116 @@
             </div>
         </div>
 
-        <!-- Confirmation Modal for Delete -->
+        <!-- Edit Captain Modal -->
+        <div id="tm-captain-edit-modal" class="tm-modal">
+            <div class="tm-modal-content">
+                <span class="tm-modal-close" onclick="closeCaptainEditModal()">×</span>
+                <h3 class="tm-modal-title">Edit Captain</h3>
+                <form id="tm-captain-edit-form" method="post" action="<?php echo base_url(); ?>TeamController/update_captain">
+                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" id="tm-captain-csrf">
+                    <input type="hidden" name="team_id" id="tm-captain-team-id" value="<?php echo $team_id; ?>">
+                    <input type="hidden" name="ball_type" id="tm-captain-ball-type">
+                    <div class="tm-form-group">
+                        <label for="tm-captain-player">Select Player</label>
+                        <select id="tm-captain-player" name="player_id" required>
+                            <option value="">Select a player</option>
+                            <!-- Options populated dynamically via AJAX -->
+                        </select>
+                        <span id="tm-captain-error" class="tm-error" style="display:none;"></span>
+                    </div>
+                    <div class="tm-modal-actions">
+                        <button type="submit" class="tm-btn tm-btn-primary" id="tm-captain-submit"><i class="fas fa-save"></i> Save</button>
+                        <button type="button" class="tm-btn tm-btn-danger" onclick="closeCaptainEditModal()"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Schedule Edit Modal -->
+        <div id="tm-schedule-edit-modal" class="tm-modal">
+            <div class="tm-modal-content">
+                <span class="tm-modal-close" onclick="closeScheduleEditModal()">×</span>
+                <h3 class="tm-modal-title">Edit Match Schedule</h3>
+                <form id="tm-schedule-edit-form" method="post" action="<?php echo base_url(); ?>Welcome/update_schedule">
+                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                    <input type="hidden" name="match_id" id="tm-schedule-match-id">
+                    <input type="hidden" name="team_id" id="tm-schedule-team-id">
+                    <div class="tm-form-group">
+                        <label for="tm-schedule-team-one">Team One</label>
+                        <select id="tm-schedule-team-one" name="team_one_id" required>
+                            <!-- Options populated dynamically -->
+                        </select>
+                        <?php if (form_error('team_one_id')): ?>
+                            <span class="tm-error"><?php echo form_error('team_one_id'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-schedule-team-two">Team Two</label>
+                        <select id="tm-schedule-team-two" name="team_two_id" required>
+                            <!-- Options populated dynamically -->
+                        </select>
+                        <?php if (form_error('team_two_id')): ?>
+                            <span class="tm-error"><?php echo form_error('team_two_id'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-schedule-date">Match Date</label>
+                        <input type="date" id="tm-schedule-date" name="match_date" required>
+                        <?php if (form_error('match_date')): ?>
+                            <span class="tm-error"><?php echo form_error('match_date'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-schedule-time">Match Time</label>
+                        <input type="time" id="tm-schedule-time" name="match_time" required>
+                        <?php if (form_error('match_time')): ?>
+                            <span class="tm-error"><?php echo form_error('match_time'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-schedule-overs">Overs</label>
+                        <input type="number" id="tm-schedule-overs" name="overs" min="1" placeholder="Enter overs" required>
+                        <?php if (form_error('overs')): ?>
+                            <span class="tm-error"><?php echo form_error('overs'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-schedule-venue">Venue</label>
+                        <input type="text" id="tm-schedule-venue" name="venue" placeholder="Enter venue" required>
+                        <?php if (form_error('venue')): ?>
+                            <span class="tm-error"><?php echo form_error('venue'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-schedule-series">Series</label>
+                        <input type="text" id="tm-schedule-series" name="series" placeholder="Enter series name (optional)">
+                        <?php if (form_error('series')): ?>
+                            <span class="tm-error"><?php echo form_error('series'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-schedule-first-umpire">First Umpire</label>
+                        <input type="text" id="tm-schedule-first-umpire" name="first_umpire" placeholder="Enter first umpire (optional)">
+                        <?php if (form_error('first_umpire')): ?>
+                            <span class="tm-error"><?php echo form_error('first_umpire'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-form-group">
+                        <label for="tm-schedule-second-umpire">Second Umpire</label>
+                        <input type="text" id="tm-schedule-second-umpire" name="second_umpire" placeholder="Enter second umpire (optional)">
+                        <?php if (form_error('second_umpire')): ?>
+                            <span class="tm-error"><?php echo form_error('second_umpire'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="tm-modal-actions">
+                        <button type="submit" class="tm-btn tm-btn-primary"><i class="fas fa-save"></i> Save</button>
+                        <button type="button" class="tm-btn tm-btn-danger" onclick="closeScheduleEditModal()"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Confirm Delete Modal -->
         <div id="tm-confirm-modal" class="tm-modal">
             <div class="tm-modal-content">
                 <i class="fas fa-exclamation-triangle tm-confirm-icon"></i>
@@ -1333,11 +1657,102 @@
         </div>
     </div>
 
+    <!-- Mobile Footer -->
+    <footer class="tm-footer">
+        <div class="tm-footer-nav">
+            <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $team_id; ?>">
+                <i class="fas fa-home"></i>
+                <span id="tm-footer-team-name"><?php echo htmlspecialchars($data['team_name']); ?></span>
+            </a>
+            <a href="<?php echo base_url(); ?>TeamController/invite_team/<?php echo $team_id; ?>">
+                <i class="fas fa-user-plus"></i>
+                <span>Invite Team</span>
+            </a>
+            <a href="<?php echo base_url(); ?>TournamentController/join_tournament/<?php echo $team_id; ?>">
+                <i class="fas fa-trophy"></i>
+                <span>Join Tournament</span>
+            </a>
+        </div>
+    </footer>
+
     <script>
+        // Show Toast and Auto-Hide
+        document.addEventListener('DOMContentLoaded', () => {
+            const toasts = document.querySelectorAll('.tm-toast');
+            toasts.forEach(toast => {
+                setTimeout(() => {
+                    toast.style.animation = 'tmToastFadeOut 0.3s ease forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            });
+        });
+
+        // Define the animation for fading out
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes tmToastFadeOut {
+                from { opacity: 1; transform: translateX(0); }
+                to { opacity: 0; transform: translateX(20px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Team Name Edit Functions
+        function toggleTeamNameEdit() {
+            document.getElementById('tm-team-name-display').style.display = 'none';
+            document.getElementById('tm-team-name-edit').style.display = 'inline-block';
+            document.getElementById('tm-team-name-save').style.display = 'inline-flex';
+            document.getElementById('tm-team-name-cancel').style.display = 'inline-flex';
+            document.getElementById('tm-team-name-edit').focus();
+        }
+
+        function cancelTeamNameEdit() {
+            document.getElementById('tm-team-name-display').style.display = 'block';
+            document.getElementById('tm-team-name-edit').style.display = 'none';
+            document.getElementById('tm-team-name-save').style.display = 'none';
+            document.getElementById('tm-team-name-cancel').style.display = 'none';
+            document.getElementById('tm-team-name-edit').value = document.getElementById('tm-team-name-display').textContent;
+        }
+
+        // Handle team name form submission via AJAX
+        document.getElementById('team-name-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const formData = new FormData(form);
+            const teamNameInput = document.getElementById('tm-team-name-edit').value.trim();
+
+            if (!teamNameInput) {
+                showToast('Team name cannot be empty', 'error');
+                return;
+            }
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('tm-team-name-display').textContent = teamNameInput;
+                    document.getElementById('tm-footer-team-name').textContent = teamNameInput;
+                    cancelTeamNameEdit();
+                    showToast(data.message || 'Team name updated successfully', 'success');
+                } else {
+                    showToast(data.message || 'Failed to update team name', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating team name:', error);
+                showToast('An error occurred while updating the team name', 'error');
+            });
+        });
+
+        // Team Info Form Submission
         document.getElementById('team-info-form').addEventListener('submit', () => {
             document.getElementById('scroll-position').value = window.pageYOffset;
         });
 
+        // Window Onload for Scroll Restoration
         window.onload = () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('scroll')) {
@@ -1350,6 +1765,7 @@
             <?php endif; ?>
         };
 
+        // Toggle Edit for Team Info Fields
         function toggleEdit(field) {
             document.querySelectorAll('.tm-edit-input').forEach(input => input.style.display = 'none');
             document.querySelectorAll('[id$="-display"]').forEach(span => span.style.display = 'inline');
@@ -1359,17 +1775,45 @@
             document.getElementById(`tm-${field}-edit`).focus();
         }
 
+        // Cancel Edit for Team Info
         function cancelEdit() {
             document.querySelectorAll('.tm-edit-input').forEach(input => input.style.display = 'none');
             document.querySelectorAll('[id$="-display"]').forEach(span => span.style.display = 'inline');
             document.getElementById('edit-controls').style.display = 'none';
         }
 
-        function openConfirmModal(matchId) {
+        // Show Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `tm-toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'tmToastFadeOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Confirm Delete Modal for Match Schedule
+        function openConfirmModal(matchId, teamId) {
             const modal = document.getElementById('tm-confirm-modal');
             const deleteBtn = document.getElementById('tm-confirm-delete');
             deleteBtn.onclick = () => {
-                window.location.href = `<?php echo base_url(); ?>Welcome/delete_schedule/${matchId}`;
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `<?php echo base_url(); ?>Welcome/delete_schedule/${matchId}`;
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '<?php echo $this->security->get_csrf_token_name(); ?>';
+                csrfInput.value = '<?php echo $this->security->get_csrf_hash(); ?>';
+                form.appendChild(csrfInput);
+                const teamIdInput = document.createElement('input');
+                teamIdInput.type = 'hidden';
+                teamIdInput.name = 'team_id';
+                teamIdInput.value = teamId;
+                form.appendChild(teamIdInput);
+                document.body.appendChild(form);
+                form.submit();
             };
             modal.style.display = 'flex';
         }
@@ -1378,6 +1822,7 @@
             document.getElementById('tm-confirm-modal').style.display = 'none';
         }
 
+        // Add Team Management Modal
         function openAddModal() {
             document.getElementById('tm-add-modal').style.display = 'flex';
             document.getElementById('tm-add-name').focus();
@@ -1389,6 +1834,7 @@
             document.getElementById('tm-add-designation').value = '';
         }
 
+        // Edit Team Management Modal
         function openEditModal(name, role) {
             document.getElementById('tm-edit-modal').style.display = 'flex';
             document.getElementById('tm-edit-name').value = name;
@@ -1401,54 +1847,180 @@
             document.getElementById('tm-edit-modal').style.display = 'none';
         }
 
-        window.onclick = (event) => {
-            if (event.target.classList.contains('tm-modal')) {
-                closeAddModal();
-                closeEditModal();
-                closeConfirmModal();
-            }
-        };
+        // Edit Captain Modal
+        function openCaptainEditModal(ballType, teamId, currentPlayerId, currentPlayerName) {
+            const modal = document.getElementById('tm-captain-edit-modal');
+            const form = document.getElementById('tm-captain-edit-form');
+            const ballTypeInput = document.getElementById('tm-captain-ball-type');
+            const playerSelect = document.getElementById('tm-captain-player');
+            const errorSpan = document.getElementById('tm-captain-error');
+            const submitBtn = document.getElementById('tm-captain-submit');
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                closeAddModal();
-                closeEditModal();
-                closeConfirmModal();
-            }
-        });
+            ballTypeInput.value = ballType;
 
-        document.querySelectorAll('.tm-nav-item').forEach(link => {
-            link.addEventListener('click', (e) => {
-                if (link.getAttribute('href').startsWith('#')) {
-                    e.preventDefault();
-                    const target = document.querySelector(link.getAttribute('href'));
-                    if (target) {
-                        window.scrollTo({
-                            top: target.offsetTop - 70,
-                            behavior: 'smooth'
+            // Fetch players for the team
+            fetch(`<?php echo base_url(); ?>TeamController/get_team_players/${teamId}`, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.players) {
+                    playerSelect.innerHTML = '<option value="">Select a player</option>';
+                    data.players.forEach(player => {
+                        const option = document.createElement('option');
+                        option.value = player.player_id;
+                        option.textContent = player.playerName;
+                        if (player.player_id === currentPlayerId) {
+                            option.selected = true;
+                        }
+                        playerSelect.appendChild(option);
+                    });
+                    errorSpan.style.display = 'none';
+                    submitBtn.disabled = false;
+                } else {
+                    errorSpan.textContent = data.message || 'No players available';
+                    errorSpan.style.display = 'block';
+                    playerSelect.innerHTML = '<option value="">No players available</option>';
+                    submitBtn.disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching players:', error);
+                errorSpan.textContent = 'Failed to load players';
+                errorSpan.style.display = 'block';
+                playerSelect.innerHTML = '<option value="">No players available</option>';
+                submitBtn.disabled = true;
+            });
+
+            modal.style.display = 'flex';
+            playerSelect.focus();
+        }
+
+        function closeCaptainEditModal() {
+            document.getElementById('tm-captain-edit-modal').style.display = 'none';
+            document.getElementById('tm-captain-player').innerHTML = '<option value="">Select a player</option>';
+            document.getElementById('tm-captain-error').style.display = 'none';
+        }
+
+        // Edit Schedule Modal
+        function openScheduleEditModal(scheduleJson) {
+            try {
+                const schedule = JSON.parse(scheduleJson);
+                if (!schedule.match_id || !schedule.team_one_id || !schedule.team_two_id) {
+                    console.error('Invalid schedule data:', schedule);
+                    showToast('Invalid schedule data', 'error');
+                    return;
+                }
+
+                const modal = document.getElementById('tm-schedule-edit-modal');
+                const form = document.getElementById('tm-schedule-edit-form');
+                const matchIdInput = document.getElementById('tm-schedule-match-id');
+                const teamIdInput = document.getElementById('tm-schedule-team-id');
+                const dateInput = document.getElementById('tm-schedule-date');
+                const timeInput = document.getElementById('tm-schedule-time');
+                const oversInput = document.getElementById('tm-schedule-overs');
+                const venueInput = document.getElementById('tm-schedule-venue');
+                const seriesInput = document.getElementById('tm-schedule-series');
+                const firstUmpireInput = document.getElementById('tm-schedule-first-umpire');
+                const secondUmpireInput = document.getElementById('tm-schedule-second-umpire');
+                const teamOneSelect = document.getElementById('tm-schedule-team-one');
+                const teamTwoSelect = document.getElementById('tm-schedule-team-two');
+
+                if (!modal || !form || !matchIdInput || !teamIdInput || !dateInput || !timeInput || 
+                    !oversInput || !venueInput || !seriesInput || !firstUmpireInput || 
+                    !secondUmpireInput || !teamOneSelect || !teamTwoSelect) {
+                    console.error('Required elements not found');
+                    showToast('Form elements not found', 'error');
+                    return;
+                }
+
+                // Populate form fields
+                matchIdInput.value = schedule.match_id || '';
+                teamIdInput.value = schedule.team_id || '';
+                dateInput.value = schedule.match_date || '';
+                timeInput.value = schedule.match_time || '';
+                oversInput.value = schedule.overs || '20';
+                venueInput.value = schedule.venue || '';
+                seriesInput.value = schedule.series || '';
+                firstUmpireInput.value = schedule.first_umpire || '';
+                secondUmpireInput.value = schedule.second_umpire || '';
+
+                // Populate team selects
+                teamOneSelect.innerHTML = `<option value="${schedule.team_one_id}">${schedule.team_one_name}</option>`;
+                teamTwoSelect.innerHTML = `<option value="${schedule.team_two_id}">${schedule.team_two_name}</option>`;
+
+                // Fetch available teams for dropdowns
+                fetch('<?php echo base_url(); ?>Welcome/get_teams', {
+                    method: 'GET',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.teams) {
+                        teamOneSelect.innerHTML = '<option value="">Select Team One</option>';
+                        teamTwoSelect.innerHTML = '<option value="">Select Team Two</option>';
+                        data.teams.forEach(team => {
+                            const option1 = document.createElement('option');
+                            option1.value = team.team_id;
+                            option1.textContent = team.team_name;
+                            if (team.team_id === schedule.team_one_id) option1.selected = true;
+                            teamOneSelect.appendChild(option1);
+
+                            const option2 = document.createElement('option');
+                            option2.value = team.team_id;
+                            option2.textContent = team.team_name;
+                            if (team.team_id === schedule.team_two_id) option2.selected = true;
+                            teamTwoSelect.appendChild(option2);
                         });
+                    } else {
+                        showToast(data.message || 'Failed to load teams', 'error');
                     }
-                }
-            });
-        });
+                })
+                .catch(error => {
+                    console.error('Error fetching teams:', error);
+                    showToast('Failed to load teams', 'error');
+                });
 
-        window.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('.tm-section');
-            const navItems = document.querySelectorAll('.tm-nav-item');
-            let currentSection = '';
+                modal.style.display = 'flex';
+                dateInput.focus();
+            } catch (error) {
+                console.error('Error parsing schedule JSON:', error);
+                showToast('Error loading schedule data', 'error');
+            }
+        }
 
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                if (window.scrollY >= sectionTop) {
-                    currentSection = '#' + section.getAttribute('id');
-                }
-            });
+        function closeScheduleEditModal() {
+            document.getElementById('tm-schedule-edit-modal').style.display = 'none';
+            const form = document.getElementById('tm-schedule-edit-form');
+            form.reset();
+            document.getElementById('tm-schedule-team-one').innerHTML = '<option value="">Select Team One</option>';
+            document.getElementById('tm-schedule-team-two').innerHTML = '<option value="">Select Team Two</option>';
+        }
 
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('href') === currentSection) {
-                    item.classList.add('active');
+        // Handle Schedule Form Submission
+        document.getElementById('tm-schedule-edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast(data.message || 'Schedule updated successfully', 'success');
+                    closeScheduleEditModal();
+                    setTimeout(() => location.reload(), 1000); // Reload to reflect changes
+                } else {
+                    showToast(data.message || 'Failed to update schedule', 'error');
                 }
+            })
+            .catch(error => {
+                console.error('Error updating schedule:', error);
+                showToast('An error occurred while updating the schedule', 'error');
             });
         });
     </script>

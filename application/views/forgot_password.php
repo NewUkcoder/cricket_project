@@ -3,40 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In</title>
+  <title>Forgot Password</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-        background-color: #f8f9fa;
+        background-color: #dee2e6;
     }
     .form-container {
-        max-width: 400px;
-        margin: 60px auto;
+        max-width: 380px;
+        margin: 70px auto;
         background: #fff;
-        padding: 25px 35px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
     }
     .form-container h2 {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         text-align: center;
         font-weight: bold;
-        color: #2c3e50;
+        color: #3c2f2f;
     }
     .btn-primary {
-        background-color: #007bff;
+        background-color: #fd7e14;
         border: none;
         transition: background-color 0.3s ease;
     }
     .btn-primary:hover {
-        background-color: #0056b3;
+        background-color: #e06c00;
     }
     .form-footer {
         text-align: center;
-        margin-top: 20px;
+        margin-top: 15px;
     }
     .form-footer a {
-        color: #007bff;
+        color: #fd7e14;
         text-decoration: none;
         font-size: 0.9rem;
     }
@@ -52,18 +52,18 @@
     }
     @media (max-width: 576px) {
         .form-container {
-            margin: 30px 15px;
-            padding: 20px;
+            margin: 40px 20px;
+            padding: 15px;
         }
         .form-container h2 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
         }
     }
   </style>
 </head>
 <body>
   <div class="form-container">
-    <h2>Sign In</h2>
+    <h2>Forgot Password</h2>
     <?php if ($this->session->flashdata('error')): ?>
       <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($this->session->flashdata('error')); ?></div>
     <?php endif; ?>
@@ -71,37 +71,26 @@
       <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($this->session->flashdata('success')); ?></div>
     <?php endif; ?>
     <?php echo validation_errors('<div class="alert alert-danger" role="alert">', '</div>'); ?>
-    <?php echo form_open('Auth/sign_in_submit', ['id' => 'signin-form']); ?>
+    <?php echo form_open('Auth/forgot_password_submit', ['id' => 'forgot-password-form']); ?>
       <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
         <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" value="<?php echo set_value('email'); ?>" required aria-describedby="emailHelp">
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone.</div>
+        <div id="emailHelp" class="form-text">We'll send a password reset link to this email.</div>
       </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password" required aria-describedby="passwordHelp">
-        <div id="passwordHelp" class="form-text">Minimum 8 characters.</div>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Sign In</button>
+      <button type="submit" class="btn btn-primary w-100">Send Reset Link</button>
       <div class="form-footer">
-        <p><a href="<?php echo base_url('auth/forgot_password'); ?>">Forgot Password?</a></p>
-        <p>Don't have an account? <a href="<?php echo base_url('Auth/sign_up'); ?>">Sign Up</a></p>
+        <p>Remember your password? <a href="<?php echo base_url('Auth/sign_in'); ?>">Sign In</a></p>
       </div>
     <?php echo form_close(); ?>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.getElementById('signin-form').addEventListener('submit', function(e) {
+    document.getElementById('forgot-password-form').addEventListener('submit', function(e) {
       const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         e.preventDefault();
         alert('Please enter a valid email address.');
-      }
-      if (password.length < 8) {
-        e.preventDefault();
-        alert('Password must be at least 8 characters long.');
       }
     });
   </script>

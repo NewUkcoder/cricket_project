@@ -30,7 +30,7 @@
       font-size: 16px;
       line-height: 1.5;
       margin: 0;
-      padding-bottom: 70px;
+      padding-bottom: 80px;
     }
 
     /* Header */
@@ -137,7 +137,7 @@
       align-items: center;
       text-decoration: none;
       color: white;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       padding: 5px;
       transition: var(--league-transition);
     }
@@ -149,7 +149,7 @@
     }
 
     .league-nav-icon {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       margin-bottom: 4px;
     }
 
@@ -203,6 +203,7 @@
       padding: 6px 12px;
       border-radius: var(--league-radius);
       transition: var(--league-transition);
+      cursor: pointer;
     }
 
     .league-btn-primary {
@@ -279,19 +280,23 @@
     /* Schedule Grid */
     .league-schedule-grid {
       display: grid;
-      gap: 10px;
+      gap: 12px;
     }
 
     .league-match-card {
       background: var(--league-light);
       border-radius: var(--league-radius);
       box-shadow: var(--league-shadow);
-      transition: var(--league-transition);
       padding: 10px;
       display: grid;
+      grid-template-areas: 
+        "team1 vs team2 actions"
+        "details details details actions";
       grid-template-columns: 1fr auto 1fr auto;
+      grid-template-rows: auto auto;
       align-items: center;
       gap: 8px;
+      transition: var(--league-transition);
     }
 
     .league-match-card:hover {
@@ -300,8 +305,30 @@
       background: linear-gradient(135deg, #fff, #f9fafb);
     }
 
-    .league-match-team-info {
+    .league-match-team-info:nth-child(1) {
+      grid-area: team1;
       text-align: center;
+    }
+
+    .league-vs-text {
+      grid-area: vs;
+      font-weight: 700;
+      color: var(--league-accent);
+      font-size: 1rem;
+    }
+
+    .league-match-team-info:nth-child(3) {
+      grid-area: team2;
+      text-align: center;
+    }
+
+    .league-match-details {
+      grid-area: details;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.8rem;
     }
 
     .league-team-logo {
@@ -321,25 +348,14 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    .league-vs-text {
-      font-weight: 700;
-      color: var(--league-accent);
-      font-size: 1rem;
-    }
-
-    .league-match-details {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      font-size: 0.8rem;
+      max-width: 120px;
     }
 
     .league-match-info {
       display: flex;
       align-items: center;
       color: var(--league-dark-gray);
+      flex: 0 0 48%;
     }
 
     .league-match-info i {
@@ -349,22 +365,36 @@
     }
 
     .league-match-actions {
+      grid-area: actions;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: 6px;
+      align-items: center;
+      justify-content: flex-end;
     }
 
     .league-match-action {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--league-primary);
       text-decoration: none;
       font-weight: 500;
+      padding: 4px 8px;
+      border-radius: var(--league-radius);
       transition: var(--league-transition);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
     }
 
     .league-match-action:hover {
-      color: var(--league-dark);
-      text-decoration: underline;
+      color: white;
+      background: var(--league-dark);
+      text-decoration: none;
+    }
+
+    .league-match-action.text-danger:hover {
+      background: var(--league-danger);
     }
 
     /* Team Requests Table */
@@ -399,12 +429,28 @@
       padding: 8px 12px;
       border-radius: var(--league-radius);
       border: 1px solid var(--league-gray);
+      width: 100%;
+      transition: border-color 0.3s ease;
+      cursor: text;
+      pointer-events: auto;
+    }
+
+    .league-form-control:focus, .league-form-select:focus {
+      border-color: var(--league-primary);
+      outline: none;
+      box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
+    }
+
+    .league-form-control[readonly] {
+      background: #e9ecef;
+      cursor: not-allowed;
     }
 
     .league-form-label {
       font-weight: 500;
       color: var(--league-text);
       margin-bottom: 5px;
+      font-size: 0.9rem;
     }
 
     /* Rules */
@@ -452,17 +498,89 @@
     /* Modals */
     .league-modal-content {
       border-radius: var(--league-radius);
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      border: none;
+      z-index: 1050;
     }
 
     .league-modal-header {
       background: linear-gradient(135deg, var(--league-primary), var(--league-dark));
       color: white;
-      padding: 15px 20px;
+      padding: 12px 20px;
+      border-radius: var(--league-radius) var(--league-radius) 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .league-modal-body {
       padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+      background: var(--league-light);
+      position: relative;
+      z-index: 1051;
+    }
+
+    .league-modal-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .league-modal-body::-webkit-scrollbar-track {
+      background: var(--league-gray);
+      border-radius: 3px;
+    }
+
+    .league-modal-body::-webkit-scrollbar-thumb {
+      background: var(--league-primary);
+      border-radius: 3px;
+    }
+
+    .league-modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid var(--league-gray);
+      background: var(--league-light);
+      border-radius: 0 0 var(--league-radius) var(--league-radius);
+      z-index: 1051;
+    }
+
+    .modal-backdrop {
+      z-index: 1040;
+    }
+
+    /* Ensure modal is clickable */
+    .modal.fade .modal-dialog {
+      pointer-events: auto;
+    }
+
+    .modal-content, .modal-body, .modal-footer {
+      pointer-events: auto;
+    }
+
+    /* Flash Messages */
+    .alert {
+      border-radius: var(--league-radius);
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .alert-success {
+      background-color: var(--league-success);
+      color: white;
+      border: none;
+    }
+
+    .alert-danger {
+      background-color: var(--league-danger);
+      color: white;
+      border: none;
+    }
+
+    .alert i {
+      font-size: 1rem;
     }
 
     /* Responsive */
@@ -486,7 +604,7 @@
         display: none;
       }
       .league-team-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
       .league-team-img {
         height: 60px;
@@ -498,35 +616,56 @@
         font-size: 0.75rem;
       }
       .league-match-card {
+        grid-template-areas: 
+          "team1 vs team2"
+          "details details details"
+          "actions actions actions";
         grid-template-columns: 1fr auto 1fr;
-        grid-template-rows: auto auto;
+        grid-template-rows: auto auto auto;
         padding: 8px;
       }
-      .league-match-team-info:nth-child(1) {
-        grid-column: 1;
-        grid-row: 1;
-      }
-      .league-vs-text {
-        grid-column: 2;
-        grid-row: 1;
-      }
-      .league-match-team-info:nth-child(3) {
-        grid-column: 3;
-        grid-row: 1;
+      .league-match-team-name {
+        font-size: 0.8rem;
+        max-width: 100px;
       }
       .league-match-details {
-        grid-column: 1 / 4;
-        grid-row: 2;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .league-match-info {
+        flex: 0 0 100%;
       }
       .league-match-actions {
-        grid-column: 4;
-        grid-row: 1 / 3;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding-top: 8px;
+      }
+      .league-match-action {
+        padding: 3px 6px;
+        font-size: 0.7rem;
       }
       .league-table th, .league-table td {
         padding: 6px;
+        font-size: 0.8rem;
+      }
+      .league-modal-dialog {
+        margin: 10px;
+        max-width: 95%;
+      }
+      .league-modal-body {
+        padding: 15px;
+        max-height: 70vh;
+      }
+      .league-form-control, .league-form-select {
+        font-size: 0.85rem;
+        padding: 6px 10px;
+      }
+      .league-form-label {
+        font-size: 0.85rem;
+      }
+      .league-btn {
+        font-size: 0.8rem;
+        padding: 5px 10px;
       }
     }
   </style>
@@ -571,6 +710,20 @@
 
   <!-- Main Content -->
   <main class="league-container">
+    <!-- Flash Messages -->
+    <?php if ($this->session->flashdata('success')): ?>
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <?php echo $this->session->flashdata('success'); ?>
+      </div>
+    <?php endif; ?>
+    <?php if ($this->session->flashdata('error')): ?>
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-circle"></i>
+        <?php echo $this->session->flashdata('error'); ?>
+      </div>
+    <?php endif; ?>
+
     <!-- Team Requests -->
     <?php if (!empty($team_request)) { ?>
     <section id="league-requests" class="league-section">
@@ -777,7 +930,7 @@
 
   <!-- Mobile Navigation -->
   <nav class="league-bottom-nav">
-    <a href="<?php echo base_url(); ?>Welcome/tournament_landing/<?php echo $league['league_id']; ?>" class="league-nav-item">
+    <a href="<?php echo base_url(); ?>Welcome/tournament_landing/<?php echo $league['league_id']; ?>" class="league-nav-item active">
       <span class="league-nav-icon"><i class="fas fa-chart-bar"></i></span>
       <span>View</span>
     </a>
@@ -809,7 +962,7 @@
       <div class="league-modal-content">
         <div class="league-modal-header">
           <h5 class="modal-title" id="addScheduleLabel">Create New Match</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="league-modal-body">
           <form action="<?php echo base_url(); ?>ScheduleController/add_schedule" method="POST">
@@ -860,25 +1013,26 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="overs" class="league-form-label">Overs</label>
-                <input type="number" class="league-form-control" id="overs" value="<?php echo $league['overs']; ?>" name="overs" required>
+                <input type="number" class="league-form-control" id="overs" value="<?php echo $league['overs']; ?>" name="overs" min="1" required>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="location" class="league-form-label">Venue</label>
-                <input type="text" class="league-form-control" id="location" name="location" required>
+                <input type="text" class="league-form-control" id="location" name="location" placeholder="Enter venue" required>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="umpire1" class="league-form-label">First Umpire</label>
-                <input type="text" class="league-form-control" id="umpire1" name="umpire1" placeholder="Enter Umpire Name">
+                <input type="text" class="league-form-control" id="umpire1" name="umpire1" placeholder="Enter umpire name">
               </div>
               <div class="col-md-6 mb-3">
                 <label for="umpire2" class="league-form-label">Second Umpire</label>
-                <input type="text" class="league-form-control" id="umpire2" name="umpire2" placeholder="Enter Umpire Name">
+                <input type="text" class="league-form-control" id="umpire2" name="umpire2" placeholder="Enter umpire name">
               </div>
             </div>
             <input type="hidden" value="<?php echo $league['league_id']; ?>" name="league_id">
-            <div class="d-grid">
+            <div class="d-flex gap-2 justify-content-end">
+              <button type="button" class="league-btn league-btn-danger" data-bs-dismiss="modal">Cancel</button>
               <button type="submit" class="league-btn league-btn-primary">
                 <i class="fas fa-save"></i> Save Match
               </button>
@@ -894,7 +1048,7 @@
       <div class="league-modal-content">
         <div class="league-modal-header">
           <h5 class="modal-title" id="editScheduleLabel">Edit Match Schedule</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="league-modal-body">
           <form id="editScheduleForm" action="<?php echo base_url(); ?>ScheduleController/edit_schedule" method="POST">
@@ -905,13 +1059,14 @@
               </div>
               <div class="col-md-6 mb-3">
                 <label for="editMatchType" class="league-form-label">Match Type</label>
-                <input type="text" class="league-form-control" name="match_type" value="<?php echo $league['match_type']; ?>" readonly>
+                <input type="text" class="league-form-control" id="editMatchType" name="match_type" value="<?php echo $league['match_type']; ?>" readonly>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="editTeam1" class="league-form-label">First Team</label>
                 <select id="editTeam1" name="team1" class="league-form-select" required>
+                  <option value="" disabled>Select First Team</option>
                   <?php if (!empty($league_teams)) { 
                     foreach ($league_teams as $l_teams) { ?>
                       <option value="<?php echo $l_teams['team_id']; ?>"><?php echo $l_teams['team_name']; ?></option>
@@ -922,6 +1077,7 @@
               <div class="col-md-6 mb-3">
                 <label for="editTeam2" class="league-form-label">Second Team</label>
                 <select id="editTeam2" name="team2" class="league-form-select" required>
+                  <option value="" disabled>Select Second Team</option>
                   <?php if (!empty($league_teams)) { 
                     foreach ($league_teams as $l_teams) { ?>
                       <option value="<?php echo $l_teams['team_id']; ?>"><?php echo $l_teams['team_name']; ?></option>
@@ -943,27 +1099,28 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="editOvers" class="league-form-label">Overs</label>
-                <input type="number" class="league-form-control" id="editOvers" name="overs" required>
+                <input type="number" class="league-form-control" id="editOvers" name="overs" min="1" required>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="editLocation" class="league-form-label">Venue</label>
-                <input type="text" class="league-form-control" id="editLocation" name="location" required>
+                <input type="text" class="league-form-control" id="editLocation" name="location" placeholder="Enter venue" required>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="editUmpire1" class="league-form-label">First Umpire</label>
-                <input type="text" class="league-form-control" id="editUmpire1" name="umpire1">
+                <input type="text" class="league-form-control" id="editUmpire1" name="umpire1" placeholder="Enter umpire name">
               </div>
               <div class="col-md-6 mb-3">
                 <label for="editUmpire2" class="league-form-label">Second Umpire</label>
-                <input type="text" class="league-form-control" id="editUmpire2" name="umpire2">
+                <input type="text" class="league-form-control" id="editUmpire2" name="umpire2" placeholder="Enter umpire name">
               </div>
             </div>
             <input type="hidden" id="editScheduleId" name="schedule_id">
             <input type="hidden" value="<?php echo $league['league_id']; ?>" name="league_id">
-            <div class="d-grid">
-              <button type="submit" class="league-btn league-btn-primary">
+            <div class="d-flex gap-2 justify-content-end">
+              <button type="button" class="league-btn league-btn-danger" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="league-btn league-btn-primary" id="updateMatchButton">
                 <i class="fas fa-save"></i> Update Match
               </button>
             </div>
@@ -978,13 +1135,13 @@
       <div class="league-modal-content">
         <div class="league-modal-header">
           <h5 class="modal-title" id="editRuleLabel">Edit League Rule</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="league-modal-body">
           <form id="editRuleForm" action="<?php echo base_url(); ?>TournamentController/update_rules" method="POST">
             <div class="mb-3">
               <label for="editRuleDescription" class="league-form-label">Rule Description</label>
-              <textarea class="league-form-control" id="editRuleDescription" name="league_rule" rows="5" required></textarea>
+              <textarea class="league-form-control" id="editRuleDescription" name="league_rule" rows="5" required placeholder="Enter rule description..."></textarea>
             </div>
             <input type="hidden" id="editRuleId" name="rule_id">
             <input type="hidden" value="<?php echo $league['league_id']; ?>" name="league_id">
@@ -1003,28 +1160,64 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Bootstrap modals
+      const editScheduleModal = new bootstrap.Modal(document.getElementById('leagueEditScheduleModal'), {
+        keyboard: true,
+        backdrop: 'static'
+      });
+
       // Edit Schedule Modal
       document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('edit-schedule') {
-          const button = e.target.closest('.edit-schedule');
-          document.getElementById('editScheduleId').value = button.getAttribute('data-schedule-id');
-          document.getElementById('editTeam1').value = button.getAttribute('data-team1');
-          document.getElementById('editTeam2').value = button.getAttribute('data-team2');
-          document.getElementById('editMatchDate').value = button.getAttribute('data-match-date');
-          document.getElementById('editMatchTime').value = button.getAttribute('data-match-time');
-          document.getElementById('editLocation').value = button.getAttribute('data-location');
-          document.getElementById('editOvers').value = button.getAttribute('data-overs');
-          document.getElementById('editUmpire1').value = button.getAttribute('data-umpire1') || '';
-          document.getElementById('editUmpire2').value = button.getAttribute('data-umpire2') || '';
+        if (e.target.closest('.edit-schedule')) {
+          try {
+            const button = e.target.closest('.edit-schedule');
+            const modal = document.getElementById('leagueEditScheduleModal');
+            const form = modal.querySelector('#editScheduleForm');
+
+            // Populate form fields
+            document.getElementById('editScheduleId').value = button.getAttribute('data-schedule-id') || '';
+            document.getElementById('editTeam1').value = button.getAttribute('data-team1') || '';
+            document.getElementById('editTeam2').value = button.getAttribute('data-team2') || '';
+            document.getElementById('editMatchDate').value = button.getAttribute('data-match-date') || '';
+            document.getElementById('editMatchTime').value = button.getAttribute('data-match-time') || '';
+            document.getElementById('editLocation').value = button.getAttribute('data-location') || '';
+            document.getElementById('editOvers').value = button.getAttribute('data-overs') || '';
+            document.getElementById('editUmpire1').value = button.getAttribute('data-umpire1') || '';
+            document.getElementById('editUmpire2').value = button.getAttribute('data-umpire2') || '';
+
+            // Ensure form is interactive
+            form.querySelectorAll('input, select').forEach(field => {
+              if (field.id !== 'editSeries' && field.id !== 'editMatchType') {
+                field.removeAttribute('disabled');
+                field.removeAttribute('readonly');
+              }
+            });
+
+            // Show modal
+            editScheduleModal.show();
+
+            console.log('Edit schedule modal opened with data:', {
+              scheduleId: button.getAttribute('data-schedule-id'),
+              team1: button.getAttribute('data-team1'),
+              team2: button.getAttribute('data-team2')
+            });
+          } catch (error) {
+            console.error('Error populating edit schedule modal:', error);
+            alert('Failed to load schedule data. Please try again.');
+          }
         }
       });
 
       // Edit Rule Modal
       document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('edit-rule')) {
-          const button = e.target.closest('.edit-rule');
-          document.getElementById('editRuleId').value = button.getAttribute('data-rule-id');
-          document.getElementById('editRuleDescription').value = button.getAttribute('data-rule-description');
+        if (e.target.closest('.edit-rule')) {
+          try {
+            const button = e.target.closest('.edit-rule');
+            document.getElementById('editRuleId').value = button.getAttribute('data-rule-id') || '';
+            document.getElementById('editRuleDescription').value = button.getAttribute('data-rule-description') || '';
+          } catch (error) {
+            console.error('Error populating edit rule modal:', error);
+          }
         }
       });
 
@@ -1036,7 +1229,7 @@
           if (targetId === '#') return;
           const target = document.querySelector(targetId);
           if (target) {
-            const offset = document.querySelector('.league-nav').offsetHeight + 20;
+            const offset = document.querySelector('.league-nav')?.offsetHeight || 0 + 20;
             window.scrollTo({
               top: target.offsetTop - offset,
               behavior: 'smooth'
@@ -1070,6 +1263,34 @@
           }
         });
         updateActiveNav(current);
+      });
+
+      // Prevent same team selection
+      const team1Select = document.getElementById('team1');
+      const team2Select = document.getElementById('team2');
+      const editTeam1Select = document.getElementById('editTeam1');
+      const editTeam2Select = document.getElementById('editTeam2');
+
+      function updateTeamOptions(select1, select2) {
+        const selectedValue = select1.value;
+        Array.from(select2.options).forEach(option => {
+          option.disabled = option.value === selectedValue && option.value !== '';
+        });
+      }
+
+      if (team1Select && team2Select) {
+        team1Select.addEventListener('change', () => updateTeamOptions(team1Select, team2Select));
+        team2Select.addEventListener('change', () => updateTeamOptions(team2Select, team1Select));
+      }
+
+      if (editTeam1Select && editTeam2Select) {
+        editTeam1Select.addEventListener('change', () => updateTeamOptions(editTeam1Select, editTeam2Select));
+        editTeam2Select.addEventListener('change', () => updateTeamOptions(editTeam2Select, editTeam1Select));
+      }
+
+      // Debug form submission
+      document.getElementById('editScheduleForm').addEventListener('submit', function(e) {
+        console.log('Edit schedule form submitted with data:', new FormData(this));
       });
     });
   </script>
