@@ -75,7 +75,7 @@
       <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
         <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" value="<?php echo set_value('email'); ?>" required aria-describedby="emailHelp">
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone.</div>
+        <div id="emailHelp" class="form-text">This will be used to search your profile, teams and leagues</div>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
@@ -84,7 +84,7 @@
       </div>
       <button type="submit" class="btn btn-primary w-100">Sign In</button>
       <div class="form-footer">
-        <p><a href="<?php echo base_url('auth/forgot_password'); ?>">Forgot Password?</a></p>
+        <p><a href="<?php echo base_url('Auth/forgot_password'); ?>">Forgot Password?</a></p>
         <p>Don't have an account? <a href="<?php echo base_url('Auth/sign_up'); ?>">Sign Up</a></p>
       </div>
     <?php echo form_close(); ?>

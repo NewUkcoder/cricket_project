@@ -65,19 +65,23 @@ class Auth extends CI_Controller {
      * Handle sign-up form submission
      */
     public function sign_up_submit() {
-        $this->form_validation->set_rules('name', 'Full Name', 'required|min_length[3]');
+        // Custom error message for unique email
+        $this->form_validation->set_message('is_unique', 'This email is already registered. Please use a different email or sign in.');
+        
+        $this->form_validation->set_rules('name', 'Full Name', 'required|min_length[2]|max_length[50]|regex_match[/^[a-zA-Z\s]+$/]');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[users.email]');
-        $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|regex_match[/[0-9]/]|regex_match[/[!@#$%^&*]/]');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/]');
         $this->form_validation->set_rules('password_confirm', 'Confirm Password', 'required|matches[password]');
+        $this->form_validation->V2('xss_clean');
         $this->form_validation->set_rules('agreement', 'Agreement', 'required');
 
         if ($this->form_validation->run() === FALSE) {
             $this->load->view('sign_up');
         } else {
             $data = [
-                'name' => $this->input->post('name'),
-                'email' => $this->input->post('email'),
-                'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+                'name' => $this->input->post('name', TRUE),
+                'email' => $this->input->post('email', TRUE),
+                'password' => password_hash($this->input->post('password', TRUE), PASSWORD_DEFAULT),
                 'is_verified' => 0,
                 'verification_token' => bin2hex(random_bytes(16)),
                 'token_expires_at' => date('Y-m-d H:i:s', strtotime('+1 hour'))
@@ -103,10 +107,23 @@ class Auth extends CI_Controller {
     }
 
     /**
+     * Check email uniqueness via AJAX
+     */
+    public function check_email() {
+        $email = $this->input->post('email', TRUE);
+        $user = $this->auth_model->get_user($email);
+        
+        $response = ['exists' => !empty($user)];
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
+    }
+
+    /**
      * Verify email using token
      */
     public function verify() {
-        $token = $this->input->get('token');
+        $token = $this->input->get('token', TRUE);
         if (!$token) {
             $this->session->set_flashdata('error', 'Invalid verification token.');
             redirect('auth/sign_in');
@@ -138,7 +155,7 @@ class Auth extends CI_Controller {
         if ($this->form_validation->run() === FALSE) {
             $this->load->view('forgot_password');
         } else {
-            $email = $this->input->post('email');
+            $email = $this->input->post('email', TRUE);
             $user = $this->auth_model->get_user($email);
 
             if ($user) {
@@ -170,7 +187,7 @@ class Auth extends CI_Controller {
      * Display reset password page
      */
     public function reset_password() {
-        $token = $this->input->get('token');
+        $token = $this->input->get('token', TRUE);
         $user = $this->auth_model->get_user_by_reset_token($token);
 
         if ($user && strtotime($user['reset_token_expires_at']) > time()) {
@@ -187,14 +204,14 @@ class Auth extends CI_Controller {
      */
     public function reset_password_submit() {
         $this->form_validation->set_rules('token', 'Token', 'required');
-        $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|regex_match[/[0-9]/]|regex_match[/[!@#$%^&*]/]');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/]');
         $this->form_validation->set_rules('password_confirm', 'Confirm Password', 'required|matches[password]');
 
         if ($this->form_validation->run() === FALSE) {
             $this->load->view('reset_password');
         } else {
-            $token = $this->input->post('token');
-            $password = $this->input->post('password');
+            $token = $this->input->post('token', TRUE);
+            $password = $this->input->post('password', TRUE);
             $user = $this->auth_model->get_user_by_reset_token($token);
 
             if ($user && strtotime($user['reset_token_expires_at']) > time()) {
