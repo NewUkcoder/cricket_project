@@ -49,7 +49,7 @@ class TournamentController extends CI_Controller {
 
         $league_id = $this->Tournament_model->add_league($record);
         $this->session->set_flashdata($league_id ? 'success' : 'error', $league_id ? 'League added successfully.' : 'Failed to add league.');
-        redirect('dashboard');
+        redirect('Welcome/landing_page');
     }
 
     public function accept_request($team_id, $league_id) {
