@@ -1660,6 +1660,10 @@
     <!-- Mobile Footer -->
     <footer class="tm-footer">
         <div class="tm-footer-nav">
+             <a href="<?php echo base_url(); ?>Welcome/landing_page" class="<?php echo current_url() == base_url('Welcome/landing_page') ? 'active' : ''; ?>">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
             <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $team_id; ?>">
                 <i class="fas fa-home"></i>
                 <span id="tm-footer-team-name"><?php echo htmlspecialchars($data['team_name']); ?></span>

@@ -53,7 +53,7 @@
                     <li><a href="<?php echo base_url();?>Welcome/enter_player">Add Player</a></li>
                     <li><a href="<?php echo base_url();?>Welcome/enter_team">Add Team</a></li>
                     <li><a href="<?php echo base_url();?>Welcome/enter_schedule">Add Match Schedule</a></li>
-                    <li><a href="<?php echo base_url();?>Welcome/enter_scorecard">Add Scorecard</a></li>
+                    <li><a href="<?php echo base_url();?>ScorecardController/live_score">Add Scorecard</a></li>
                 </ul>
             </div>
         </div>
@@ -61,7 +61,7 @@
             <div class="dashboard-section">
                 <h2>View Records</h2>
                 <ul>
-                	<li><a href="<?php echo base_url();?>Welcome/landing_page">View Landing Page</a></li>
+                	<li><a href="<?php echo base_url();?>Welcome/landing_page">Home</a></li>
                     <li><a href="<?php echo base_url();?>PlayerController/profile_player"> View Player Profil</a></li>
                     <li><a href="<?php echo base_url();?>TeamController/my_teams">View Teams</a></li>
                     <li><a href="<?php echo base_url();?>ScheduleController/schedule">View Match Schedules</a></li>

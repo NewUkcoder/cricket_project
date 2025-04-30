@@ -1,3 +1,4 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,14 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #006D77; /* Deep Teal */
-      --primary-hover: #005A62; /* Darker Teal */
-      --secondary-color: #283618; /* Dark Olive */
-      --accent-color: #FEFAE0; /* Cream */
-      --danger-color: #BC4749; /* Muted Red */
-      --warning-color: #DDA15E; /* Warm Tan */
-      --success-color: #606C38; /* Muted Olive Green */
-      --light-bg: #F8F1E9; /* Warm Off-White */
+      --primary-color: #006D77;
+      --primary-hover: #005A62;
+      --secondary-color: #283618;
+      --accent-color: #FEFAE0;
+      --danger-color: #BC4749;
+      --warning-color: #DDA15E;
+      --success-color: #606C38;
+      --light-bg: #F8F1E9;
       --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
       --card-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       --border-radius: 12px;
@@ -43,7 +44,6 @@
       flex-wrap: wrap;
     }
 
-    /* Player Section (Sidebar) */
     .player-section {
       flex: 0 0 280px;
       background-color: #fff;
@@ -91,12 +91,11 @@
       transition: var(--transition);
     }
 
-    /* Unique View Profile Button Style */
     .btn-view-profile {
-      background: linear-gradient(135deg, var(--primary-color), #008B97); /* Gradient from Deep Teal to Lighter Teal */
+      background: linear-gradient(135deg, var(--primary-color), #008B97);
       color: #fff;
       border: none;
-      border-radius: 20px; /* More rounded */
+      border-radius: 20px;
       padding: 0.6rem 1.2rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -108,11 +107,10 @@
     .btn-view-profile:hover {
       background: linear-gradient(135deg, var(--primary-hover), #007A85);
       color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 109, 119, 0.2); /* Glow effect */
+      box-shadow: 0 4px 8px rgba(0, 109, 119, 0.2);
       transform: translateY(-2px);
     }
 
-    /* Link Bar for Teams and Tournaments */
     .link-bar {
       display: flex;
       justify-content: flex-start;
@@ -155,7 +153,6 @@
       background-color: rgba(0, 109, 119, 0.1);
     }
 
-    /* Teams and Tournaments Section */
     .content-section {
       flex: 1;
       min-width: 300px;
@@ -268,7 +265,7 @@
     }
 
     .btn-warning:hover {
-      background-color: #c98f4c; /* Darker Warm Tan */
+      background-color: #c98f4c;
       border-color: #c98f4c;
     }
 
@@ -279,11 +276,10 @@
     }
 
     .btn-danger:hover {
-      background-color: #a83d3f; /* Darker Muted Red */
+      background-color: #a83d3f;
       border-color: #a83d3f;
     }
 
-    /* Empty state styles */
     .empty-state {
       text-align: center;
       padding: 2rem;
@@ -294,7 +290,6 @@
       margin-bottom: 1.5rem;
     }
 
-    /* Hide sections by default */
     .section {
       display: none;
       animation: fadeIn 0.3s ease;
@@ -309,37 +304,21 @@
       to { opacity: 1; }
     }
 
-    /* Profile image upload styles */
     .profile-image-container {
       position: relative;
       display: inline-block;
+      margin-bottom: 1rem;
     }
-    
+
     .profile-image-upload {
-      position: absolute;
-      bottom: 10px;
-      right: 0;
-      background-color: var(--primary-color);
-      color: white;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition);
+      margin-top: 0.5rem;
+      width: 100%;
     }
-    
-    .profile-image-upload:hover {
-      background-color: var(--primary-hover);
-      transform: scale(1.1);
-    }
-    
+
     .profile-image-upload input {
       display: none;
     }
-    
+
     .default-profile-icon {
       width: 100px;
       height: 100px;
@@ -351,13 +330,29 @@
       margin-bottom: 1rem;
       border: 3px solid var(--primary-color);
     }
-    
+
     .default-profile-icon i {
       font-size: 2.5rem;
       color: #6c757d;
     }
 
-    /* Responsive styles */
+    .preview-container {
+      margin: 0.5rem 0;
+    }
+
+    .preview-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid var(--primary-color);
+      display: none;
+    }
+
+    .alert {
+      margin-bottom: 1rem;
+    }
+
     @media (max-width: 992px) {
       .player-section {
         flex: 0 0 100%;
@@ -434,31 +429,48 @@
             <a href="<?php echo base_url(); ?>Welcome/enter_player">
               <button class="btn btn-primary">Register as a Player</button>
             </a>
-          <?php } else  { ?>
-              <?php if (!empty($data['image_path'])) { ?>
-                <div class="profile-image-container">
-                  <img src="<?php echo $data['image_path']; ?>" alt="User Photo">
-                  <a href="<?php echo base_url(); ?>PlayerController/update_player_picture/<?php echo $data['player_id']; ?>" class="profile-image-upload" title="Update Picture">
-                    <i class="fas fa-camera"></i>
-                  </a>
-                </div>
-              <?php } else { ?>
-                <div class="profile-image-container">
+          <?php } else { ?>
+            <!-- Display success/error messages -->
+            <?php if ($this->session->flashdata('success')): ?>
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?php echo $this->session->flashdata('success'); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            <?php endif; ?>
+            <?php if ($this->session->flashdata('error')): ?>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php echo $this->session->flashdata('error'); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            <?php endif; ?>
+
+            <?php echo form_open_multipart('PlayerController/update_player_picture/' . $data['player_id'], ['id' => 'profilePictureForm']); ?>
+              <div class="profile-image-container">
+                <?php if (!empty($data['image_path'])) { ?>
+                  <img src="<?php echo $data['image_path']; ?>" alt="User Photo" id="currentImage">
+                <?php } else { ?>
                   <div class="default-profile-icon">
                     <i class="fas fa-user"></i>
                   </div>
-                  <a href="<?php echo base_url(); ?>PlayerController/update_player_picture/<?php echo $data['player_id']; ?>" class="profile-image-upload" title="Upload Picture">
-                    <i class="fas fa-camera"></i>
-                  </a>
+                <?php } ?>
+                <div class="preview-container">
+                  <img id="imagePreview" class="preview-image">
                 </div>
-              <?php } ?>
-              <h5><?php echo $data['playerName']; ?></h5>
-              <p>Role: <?php echo $data['player_role']; ?></p>
-              <p>City: <?php echo $data['city']; ?></p>
-              <div class="action-buttons">
-                <a href="<?php echo base_url(); ?>PlayerController/profile_player/<?php echo $data['player_id']; ?>" class="btn-view-profile">View Profile</a>
-                <a href="<?php echo base_url(); ?>PlayerController/update_player/<?php echo $data['player_id']; ?>" class="btn btn-warning btn-sm">Edit Profile</a>
+                <div class="profile-image-upload">
+                  <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(event)">
+                  <label for="profile_image" class="btn btn-primary btn-sm">Choose Picture</label>
+                  <button type="submit" name="submit" class="btn btn-success btn-sm" style="display: none;" id="uploadButton">Upload</button>
+                </div>
               </div>
+            <?php echo form_close(); ?>
+
+            <h5><?php echo $data['playerName']; ?></h5>
+            <p>Role: <?php echo $data['player_role']; ?></p>
+            <p>City: <?php echo $data['city']; ?></p>
+            <div class="action-buttons">
+              <a href="<?php echo base_url(); ?>PlayerController/profile_player/<?php echo $data['player_id']; ?>" class="btn-view-profile">View Profile</a>
+              <a href="<?php echo base_url(); ?>PlayerController/update_player/<?php echo $data['player_id']; ?>" class="btn btn-warning btn-sm">Edit Profile</a>
+            </div>
           <?php } ?>
         </div>
       </div>
@@ -514,15 +526,6 @@
             </div>
           <?php } else { ?>
             <div class="grid-container">
-              <div class="card">
-                <div class="card-body">
-                  <img src="https://via.placeholder.com/400x225" alt="Tournament Logo">
-                  <h5 class="card-title"><a href="<?php echo base_url();?>Welcome/tournament_landing">Tournament 1</a></h5>
-                </div>
-                <div class="action-buttons">
-                  <button class="btn btn-warning btn-sm">Edit</button>
-                </div>
-              </div>
               <?php foreach ($tournament as $league) { ?>
                 <div class="card">
                   <div class="card-body">
@@ -550,6 +553,32 @@
         button.classList.remove('active');
       });
       event.currentTarget.classList.add('active');
+    }
+
+    function previewImage(event) {
+      const preview = document.getElementById('imagePreview');
+      const uploadButton = document.getElementById('uploadButton');
+      const currentImage = document.getElementById('currentImage');
+      const file = event.target.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          uploadButton.style.display = 'inline-block';
+          if (currentImage) {
+            currentImage.style.display = 'none';
+          }
+        }
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+        uploadButton.style.display = 'none';
+        if (currentImage) {
+          currentImage.style.display = 'block';
+        }
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {

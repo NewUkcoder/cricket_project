@@ -977,6 +977,13 @@ public function edit_score() {
     }
 }
 
+public function live_score()
+{
+
+        $this->load->view('header');
+        $this->load->view('live_score');   
+}
+
 }
      
 

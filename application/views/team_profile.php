@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.2">
     <title>Cricket Club</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <style>
-        /* General Styles */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f8f9fa;
+            padding-bottom: 80px;
         }
 
         .container {
@@ -23,7 +20,6 @@
             padding: 20px;
         }
 
-        /* Header Section */
         .header-container {
             display: flex;
             flex-direction: column;
@@ -111,13 +107,12 @@
             margin-top: 5px;
         }
 
-        /* Link Bar */
         .link-bar {
             display: flex;
             overflow-x: auto;
             gap: 10px;
             padding: 10px 0;
-            margin-bottom: 20px;
+            margin Grupo de WhatsApp de la comunidadbottom: 20px;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -179,7 +174,6 @@
             background-color: #e0a800;
         }
 
-        /* Team Information Section */
         .team-info-section {
             background: #fff;
             border-radius: 12px;
@@ -239,7 +233,6 @@
             color: #28a745;
         }
 
-        /* Team Management Section */
         .management-section {
             background: #fff;
             border-radius: 12px;
@@ -300,7 +293,6 @@
             color: #007bff;
         }
 
-        /* Top Performers Section */
         .top-performers-section {
             background: #fff;
             border-radius: 12px;
@@ -379,7 +371,6 @@
             margin: 8px 0;
         }
 
-        /* Recent Match Results Section */
         .recent-matches-section {
             background: #fff;
             border-radius: 8px;
@@ -393,7 +384,7 @@
             font-weight: 600;
             color: #007bff;
             margin-bottom: 15px;
- >text-align: center;
+            text-align: center;
         }
 
         .list-group-item {
@@ -411,7 +402,6 @@
             font-size: 0.9rem;
         }
 
-        /* Flash message container */
         .flashdata-message {
             font-family: Arial, sans-serif;
             font-size: 16px;
@@ -430,7 +420,6 @@
             color: white;
         }
 
-        /* Current Captain Section */
         .current-captain-section {
             background: #fff;
             border-radius: 8px;
@@ -489,7 +478,6 @@
             transform: scale(1.1);
         }
 
-        /* Opposition Team Section */
         .opposition-team-section {
             background: #fff;
             border-radius: 8px;
@@ -551,7 +539,6 @@
             font-weight: 600;
         }
 
-        /* League Names Section */
         .league-section {
             background: #fff;
             border-radius: 8px;
@@ -601,7 +588,6 @@
             color: #007bff;
         }
 
-        /* Match Schedule Section */
         .tm-section {
             background: #fff;
             border-radius: 8px;
@@ -694,24 +680,62 @@
             margin: 0 5px;
         }
 
-        /* Responsive adjustments */
-        @media (min-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .team-header {
-                justify-content: flex-start;
-                margin-bottom: 15px;
-            }
-
-            .stats-container {
-                justify-content: center;
-            }
+        .hover-highlight:hover {
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
         }
 
-        @media (max-width: 576px) {
+        .list-group-item {
+            transition: all 0.2s ease;
+        }
+
+        .tm-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .tm-footer-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tm-footer-nav a {
+            color: #333;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .tm-footer-nav a i {
+            font-size: 20px;
+        }
+
+        .tm-footer-nav a:hover {
+            color: #008c8c;
+        }
+
+        .tm-footer-nav a.active {
+            color: #008c8c;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
             .container {
                 padding: 10px;
                 margin: 0;
@@ -786,27 +810,42 @@
                 font-size: 0.8rem;
             }
 
-            .section {
-                padding: 15px;
-            }
-
-            .tm-section, .recent-matches-section, .team-info-section, .current-captain-section, .opposition-team-section, .league-section {
-                padding: 15px;
-            }
-
-            .management-section, .top-performers-section {
+            .section, .tm-section, .recent-matches-section, .team-info-section, .current-captain-section, .opposition-team-section, .league-section, .management-section, .top-performers-section {
                 padding: 15px;
             }
 
             .performer-row {
                 grid-template-columns: 1fr;
             }
+
+            .tm-footer-nav {
+                padding: 0 10px;
+            }
+
+            .tm-footer-nav a {
+                font-size: 11px;
+                padding: 6px;
+            }
+
+            .tm-footer-nav a i {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tm-footer-nav a {
+                font-size: 10px;
+                padding: 5px;
+            }
+
+            .tm-footer-nav a i {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header Section -->
         <div class="header-container">
             <div class="team-header">
                 <div class="d-flex align-items-center">
@@ -837,7 +876,6 @@
             </div>
         <?php endif; ?>
 
-        <!-- Horizontal Link Bar -->
         <div class="link-bar">
             <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
                 <a href="<?php echo base_url(); ?>Welcome/team_admin/<?php echo htmlspecialchars($data['team_id']); ?>" class="dashboard">Dashboard</a>
@@ -846,7 +884,6 @@
             <a href="<?php echo base_url(); ?>TeamController/team_squad/<?php echo htmlspecialchars($data['team_id']); ?>">Squad</a>
         </div>
 
-        <!-- Match Results Section -->
         <section class="recent-matches-section">
             <h3 class="tm-section-title">Match Results</h3>
             <?php if (empty($matches)): ?>
@@ -875,7 +912,6 @@
             <?php endif; ?>
         </section>
 
-        <!-- Match Schedule Section -->
         <section class="tm-section">
             <h3 class="tm-section-title">Match Schedule</h3>
             <?php if (empty($team_schedule)): ?>
@@ -911,7 +947,6 @@
             <?php endif; ?>
         </section>
 
-        <!-- Top Performers Section -->
         <section class="top-performers-section">
             <h3>Player of the Team</h3>
             <?php if ($top_performers['top_bowler']['playerName'] === 'N/A' && $top_performers['top_batsman']['playerName'] === 'N/A'): ?>
@@ -934,7 +969,6 @@
             <?php endif; ?>
         </section>
 
-        <!-- Team Information Section -->
         <section class="team-info-section">
             <h2>Team Information</h2>
             <div class="team-info-grid">
@@ -965,7 +999,6 @@
             </div>
         </section>
 
-        <!-- Current Captain Section -->
         <section class="current-captain-section">
             <h2>Current Captain</h2>
             <div class="captain-cards">
@@ -985,7 +1018,6 @@
             </div>
         </section>
 
-        <!-- Opposition Team Section -->
         <section class="opposition-team-section" id="tm-opposition">
             <h2>Opposition Team</h2>
             <?php if ($opposition_team['status'] == 'error'): ?>
@@ -1007,14 +1039,13 @@
             <?php endif; ?>
         </section>
 
-        <!-- League Names Section -->
         <section class="league-section">
             <h2>Leagues Participated</h2>
             <?php if (!empty($league_playing)): ?>
                 <div class="league-grid">
                     <?php foreach ($league_playing as $league): ?>
                         <div class="league-card">
-                            <a href="<?php echo base_url('LeagueController/league/' . ($league->slug ?? $league->league_id)); ?>">
+                            <a href="<?php echo base_url('Welcome/tournament_landing/' . ($league->slug ?? $league->league_id)); ?>">
                                 <?php echo htmlspecialchars($league->league_name); ?>
                             </a>
                         </div>
@@ -1025,7 +1056,6 @@
             <?php endif; ?>
         </section>
 
-        <!-- Team Management Section -->
         <div class="row my-3">
             <div class="col-md-6">
                 <div class="management-section">
@@ -1050,21 +1080,25 @@
                 </div>
             </div>
         </div>
-
-        <style>
-            .hover-highlight:hover {
-                background-color: #f8f9fa;
-                cursor: pointer;
-                transition: background-color 0.2s ease;
-            }
-            
-            .list-group-item {
-                transition: all 0.2s ease;
-            }
-        </style>
     </div>
 
-    <!-- Bootstrap JS -->
+    <footer class="tm-footer">
+        <div class="tm-footer-nav">
+            <a href="<?php echo base_url(); ?>Welcome/landing_page" class="<?php echo current_url() == base_url('Welcome/landing_page') ? 'active' : ''; ?>">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+          
+            <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
+                <a href="<?php echo base_url(); ?>Welcome/team_admin/<?php echo htmlspecialchars($data['team_id']); ?>" class="<?php echo strpos(current_url(), 'team_admin') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            <?php endif; ?>
+          
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

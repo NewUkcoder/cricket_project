@@ -99,7 +99,7 @@ class Team_model extends CI_Model {
         }
     }
 
-    public function get_squad($team_id) {
+     public function get_squad($team_id) {
         $this->db->select('
             add_player.player_id,
             add_player.playerName,
@@ -330,19 +330,33 @@ class Team_model extends CI_Model {
         }
     }
 
-    public function get_team_schedule($team_id) {
+   public function get_team_schedule($team_id) {
         $this->db->select('s.*, t1.image_path as team_one_image, t1.team_name as team_one_name, t2.image_path as team_two_image, t2.team_name as team_two_name');
         $this->db->from('add_schedule s');
         $this->db->join('add_team t1', 't1.team_id = s.team_one_id', 'left');
         $this->db->join('add_team t2', 't2.team_id = s.team_two_id', 'left');
         $this->db->where('s.team_one_id', $team_id);
         $this->db->or_where('s.team_two_id', $team_id);
+        $this->db->order_by('s.match_date', 'DESC'); // Sort by date, latest first
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
             return $query->result();
         } else {
             return 0;
+        }
+    }
+
+    public function get_team_name($team_id) {
+        $this->db->select('team_name');
+        $this->db->from('add_team');
+        $this->db->where('team_id', $team_id);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->row()->team_name;
+        } else {
+            return 'Unknown Team';
         }
     }
 

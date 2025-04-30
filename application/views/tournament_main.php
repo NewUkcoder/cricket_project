@@ -26,7 +26,7 @@
     body {
       background-color: var(--league-bg);
       color: var(--league-text);
-      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  
       font-size: 16px;
       line-height: 1.5;
       margin: 0;

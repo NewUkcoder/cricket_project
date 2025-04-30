@@ -27,12 +27,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
             font-size: 15px;
-            padding-bottom: 70px;
+            padding-bottom: 60px;
         }
 
         /* Header Styles */
@@ -127,39 +126,41 @@
             color: white;
         }
 
-        /* Bottom Navigation */
-        .bottom-nav {
+        /* Footer Styles */
+        .footer {
             position: fixed;
             bottom: 0;
             left: 0;
-            right: 0;
+            width: 100%;
             background: var(--card-bg);
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             z-index: 100;
         }
 
-        .nav-item {
+        .footer__link {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-decoration: none;
             color: var(--light-text);
             font-size: 11px;
-            padding: 5px;
+            padding: 8px;
             flex: 1;
-            transition: color 0.2s;
+            transition: color 0.2s ease;
         }
 
-        .nav-item.active {
+        .footer__link.active,
+        .footer__link:hover,
+        .footer__link:focus {
             color: var(--primary-color);
         }
 
-        .nav-icon {
+        .footer__icon {
             font-size: 20px;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
         }
 
         /* Main Content */
@@ -634,18 +635,6 @@
                 font-size: 11px;
             }
 
-            .bottom-nav {
-                padding: 8px 0;
-            }
-
-            .nav-item {
-                font-size: 10px;
-            }
-
-            .nav-icon {
-                font-size: 18px;
-            }
-
             .player-stats {
                 grid-template-columns: 1fr;
             }
@@ -661,7 +650,7 @@
                 padding-bottom: 0;
             }
             
-            .bottom-nav {
+            .footer {
                 display: none;
             }
             
@@ -721,15 +710,6 @@
             <span><i class="fas fa-stadium"></i> <?php echo $league['venue']; ?></span>
         </div>
     </header>
-
-    <nav class="nav-scroll">
-        <a href="#stats" class="nav-link active"><i class="fas fa-chart-line"></i> Top Stats</a>
-        <a href="#schedule" class="nav-link"><i class="fas fa-calendar-day"></i> Schedule</a>
-        <a href="#results" class="nav-link"><i class="fas fa-trophy"></i> Results</a>
-        <a href="#points" class="nav-link"><i class="fas fa-table"></i> Points</a>
-        <a href="#teams" class="nav-link"><i class="fas fa-users"></i> Teams</a>
-        <a href="#rules" class="nav-link"><i class="fas fa-book"></i> Rules</a>
-    </nav>
 
     <div class="container">
         <!-- Top Stats Section -->
@@ -1100,35 +1080,25 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation (Mobile Only) -->
-    <nav class="bottom-nav">
-        <a href="#stats" class="nav-item active">
-            <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
-            <span>Stats</span>
+    <!-- Footer (Mobile Only) -->
+    <footer class="footer">
+        <a href="<?php echo base_url(); ?>Welcome/landing_page" class="footer__link <?php echo current_url() == base_url('Welcome/landing_page') ? 'active' : ''; ?>" aria-label="Go to Home page">
+            <i class="fas fa-home footer__icon"></i>
+            <span>Home</span>
         </a>
-        <a href="#schedule" class="nav-item">
-            <span class="nav-icon"><i class="fas fa-calendar-day"></i></span>
-            <span>Schedule</span>
-        </a>
-        <a href="#results" class="nav-item">
-            <span class="nav-icon"><i class="fas fa-trophy"></i></span>
-            <span>Results</span>
-        </a>
-        <a href="#points" class="nav-item">
-            <span class="nav-icon"><i class="fas fa-table"></i></span>
-            <span>Points</span>
-        </a>
-        <a href="#teams" class="nav-item">
-            <span class="nav-icon"><i class="fas fa-users"></i></span>
-            <span>Teams</span>
-        </a>
-    </nav>
+        <?php if ($this->session->userdata('user_id') == $league['user_id']): ?>
+            <a href="<?php echo base_url(); ?>Welcome/tournament_main/<?php echo htmlspecialchars($league['league_id']); ?>" class="footer__link <?php echo strpos(current_url(), 'tournament_main') !== false ? 'active' : ''; ?>" aria-label="Go to League Dashboard">
+                <i class="fas fa-tachometer-alt footer__icon"></i>
+                <span>Dashboard</span>
+            </a>
+        <?php endif; ?>
+    </footer>
 
     <script>
         // Enhanced JavaScript for better interactivity
         document.addEventListener('DOMContentLoaded', function() {
             // Navigation handling
-            const navItems = document.querySelectorAll('.nav-item, .nav-link');
+            const navItems = document.querySelectorAll('.footer__link, .nav-link');
             const sections = document.querySelectorAll('section[id], .section-title');
             
             function highlightNav() {
@@ -1169,14 +1139,14 @@
             });
             
             function checkScreenSize() {
-                const bottomNav = document.querySelector('.bottom-nav');
+                const footer = document.querySelector('.footer');
                 const horizontalNav = document.querySelector('.nav-scroll');
                 
                 if (window.innerWidth >= 768) {
-                    bottomNav.style.display = 'none';
+                    footer.style.display = 'none';
                     horizontalNav.style.display = 'block';
                 } else {
-                    bottomNav.style.display = 'flex';
+                    footer.style.display = 'flex';
                     horizontalNav.style.display = 'none';
                 }
             }

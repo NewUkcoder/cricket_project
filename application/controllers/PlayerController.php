@@ -162,11 +162,13 @@ class PlayerController extends CI_Controller {
             }
     }
 
-    public function join_team($player_id)
-    {
-        $data['player_id']=$player_id;
+    public function join_team($player_id) {
+        $user_id = $this->session->userdata('user_id');
+       // Assuming this fetches available teams
+        $player_data['player_id'] = $player_id;
+        $player_data['player_name'] = $this->Player_model->get_player(array('player_id' => $player_id)); // Fetch player name for footer
         $this->load->view('header');
-        $this->load->view('join_team',$data);
+        $this->load->view('join_team', $player_data);
     }
 
     public function search_team()
@@ -176,9 +178,10 @@ class PlayerController extends CI_Controller {
      //   echo $player_id;
         // If a search query is provided, search teams, otherwise show all teams
         $data['player_id']=$player_id;
+          $player_data['player_name'] = $this->Player_model->get_player(array('player_id' => $player_id));
         $data['teams'] = $this->Player_model->searchTeams($search_query);
 
-        // Load the view and pass the teams data
+         $this->load->view('header');
         $this->load->view('join_team', $data);
     }
 
@@ -215,16 +218,19 @@ class PlayerController extends CI_Controller {
         }
     }
 
-    public function sent_team_request($player_id)
-    {   
-        $user_id=$this->session->userdata('user_id');
-        $player_data['data']=$this->Player_model->get_player_team(array('user_id'=>$user_id, 'player_id'=>$player_id),'player_team');
-         $player_data['player_name']=$this->Player_model->get_player(array('player_id'=>$player_id),'add_player');
-             // var_dump($player_data);
+ 
 
-         $this->load->view('header');
-        $this->load->view('sent_team_request',$player_data);
+    public function sent_team_request($player_id) {
+        $user_id = $this->session->userdata('user_id');
+        $player_data['data'] = $this->Player_model->get_player_team(array('user_id' => $user_id, 'player_id' => $player_id));
+        $player_data['player_name'] = $this->Player_model->get_player(array('player_id' => $player_id));
+        $player_data['team_id'] = !empty($player_data['data']) ? $player_data['data'][0]->team_id : 0;
+        $player_data['team_name'] = !empty($player_data['data']) ? $player_data['data'][0]->team_name : 'Team Profile';
+
+        $this->load->view('header');
+        $this->load->view('sent_team_request', $player_data);
     }
+
 
     public function cancel_request($player_id,$team_id)
     {
@@ -270,56 +276,117 @@ class PlayerController extends CI_Controller {
     }
 
    
-
-    public function update_profile_picture($player_id) {
-        // Load necessary helpers and models
-        $this->load->helper(array('form', 'url'));
-        $this->load->model('Player_Model');
-        
-        // Check if a file is uploaded
-        if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
-            // Configure upload settings
-            $config['upload_path'] = './uploads/';
-            $config['allowed_types'] = 'jpg|jpeg|png|gif';
-            $config['max_size'] = 2048;  // 2MB max size
-            $config['file_name'] = 'profile_' . $player_id . '_' . time();  // Unique file name to avoid conflicts
-            
-            // Load upload library with the above config
-            $this->load->library('upload', $config);
-            
-            // Perform the file upload
-            if (!$this->upload->do_upload('profile_pic')) {
-                // If upload fails, set error message
-                $error = $this->upload->display_errors();
-                $this->session->set_flashdata('error', $error);
-                redirect('PlayerController/update_player/' . $player_id);
-            } else {
-                // Get the uploaded file data
-                $upload_data = $this->upload->data();
-                
-                // Prepare image path for saving to the database
-                $image_path = 'uploads/' . $upload_data['file_name'];
-                
-                // Call the model function to update the image path in the database
-                $update_result = $this->Player_Model->update_profile_picture($player_id, $image_path);
-                
-                // Check if the update was successful
-                if ($update_result) {
-                    $this->session->set_flashdata('success', 'Profile picture updated successfully!');
-                } else {
-                    $this->session->set_flashdata('error', 'Error updating profile picture!');
-                }
-                
-                // Redirect to the profile edit page
-                redirect('PlayerController/update_player/' . $player_id);
-            }
-        } else {
-            // No file uploaded or there was an error
-            $this->session->set_flashdata('error', 'No valid file uploaded or upload error occurred!');
-            redirect('PlayerController/update_player/' . $player_id);
+ public function update_player_picture($player_id) {
+        // Verify the logged-in user owns the player profile
+        $user_id = $this->session->userdata('user_id');
+        $player = $this->Player_model->get_player(['player_id' => $player_id]);
+        if (!$player || $player['user_id'] != $user_id) {
+            $this->session->set_flashdata('error', 'Unauthorized access.');
+            redirect('Welcome/landing_page');
         }
-    }
 
+        // Configure upload parameters
+        $config['upload_path'] = './Uploads/';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = 2048; // 2 MB
+        $config['max_width'] = 1920; // Max upload width
+        $config['max_height'] = 1920; // Max upload height
+        $config['file_name'] = 'profile_' . $player_id . '_' . time();
+
+        $this->upload->initialize($config);
+
+        // Check if a file is uploaded
+        if (empty($_FILES['profile_image']['name'])) {
+            $this->session->set_flashdata('error', 'Please select an image to upload.');
+            redirect('Welcome/landing_page');
+        }
+
+        // Attempt to upload the file
+        if (!$this->upload->do_upload('profile_image')) {
+            $this->session->set_flashdata('error', $this->upload->display_errors());
+            redirect('Welcome/landing_page');
+        }
+
+        // Upload successful
+        $upload_data = $this->upload->data();
+        $uploaded_file = $upload_data['full_path'];
+
+        // Load image_lib for resizing
+        $this->load->library('image_lib');
+
+        // Check if GD is available
+        if (!extension_loaded('gd')) {
+            $this->session->set_flashdata('error', 'Image resizing is not supported. Please enable the GD extension in PHP.');
+            unlink($uploaded_file); // Delete uploaded file
+            redirect('Welcome/landing_page');
+        }
+
+        // Resize the image to 300x300 pixels
+        $resize_config = [
+            'image_library' => 'gd2',
+            'source_image' => $uploaded_file,
+            'maintain_ratio' => TRUE,
+            'width' => 300,
+            'height' => 300,
+            'new_image' => $uploaded_file, // Overwrite the original
+            'quality' => '80%', // Compress JPGs to reduce file size
+            'master_dim' => 'auto'
+        ];
+
+        $this->image_lib->initialize($resize_config);
+        if (!$this->image_lib->resize()) {
+            $this->session->set_flashdata('error', 'Failed to resize image: ' . $this->image_lib->display_errors());
+            unlink($uploaded_file); // Delete uploaded file on failure
+            redirect('Welcome/landing_page');
+        }
+        $this->image_lib->clear();
+
+        // Ensure the image is square by cropping if necessary
+        $image_size = getimagesize($uploaded_file);
+        if ($image_size[0] != $image_size[1]) {
+            $crop_size = min($image_size[0], $image_size[1]);
+            $crop_config = [
+                'image_library' => 'gd2',
+                'source_image' => $uploaded_file,
+                'maintain_ratio' => FALSE,
+                'width' => $crop_size,
+                'height' => $crop_size,
+                'x_axis' => ($image_size[0] - $crop_size) / 2,
+                'y_axis' => ($image_size[1] - $crop_size) / 2,
+                'new_image' => $uploaded_file
+            ];
+
+            $this->image_lib->initialize($crop_config);
+            if (!$this->image_lib->crop()) {
+                $this->session->set_flashdata('error', 'Failed to crop image: ' . $this->image_lib->display_errors());
+                unlink($uploaded_file);
+                redirect('Welcome/landing_page');
+            }
+            $this->image_lib->clear();
+        }
+
+        // Store the image path
+        $image_path = base_url('Uploads/' . $upload_data['file_name']);
+
+        // Get old image path to delete it
+        $old_image = $this->Player_model->get_player_image($player_id);
+
+        // Update profile picture in the database
+        if ($this->Player_model->update_profile_picture($player_id, $image_path)) {
+            // Delete old image if it exists
+            if ($old_image && file_exists(FCPATH . 'Uploads/' . basename($old_image))) {
+                unlink(FCPATH . 'Uploads/' . basename($old_image));
+            }
+            $this->session->set_flashdata('success', 'Profile picture updated successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to update profile picture in database.');
+            unlink($uploaded_file); // Delete new image on database failure
+        }
+
+        // Redirect to landing page
+        redirect('Welcome/landing_page');
+    }
+    
     public function update_field($player_id, $field_name) {
         // Get the new value from the POST request
         $new_value = $this->input->post($field_name);
@@ -337,7 +404,6 @@ class PlayerController extends CI_Controller {
         // Redirect to the player profile edit page
         redirect('PlayerController/update_player/' . $player_id);
     }
-
 
 
    }

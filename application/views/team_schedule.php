@@ -17,13 +17,23 @@
             background-color: #f3f4f6;
             color: #333;
             padding: 20px;
+            padding-bottom: 70px; /* Space for fixed footer */
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         h2 {
             text-align: center;
             font-size: 24px;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             color: #2c3e50;
+        }
+
+        .team-name-header {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
         }
 
         .container {
@@ -31,6 +41,9 @@
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
+            max-height: calc(100vh - 200px); /* Adjust based on header and footer */
+            overflow-y: auto; /* Enable vertical scrollbar */
+            padding-bottom: 20px;
         }
 
         .card {
@@ -115,6 +128,42 @@
             background-color: #d0d5d9;
         }
 
+        /* Fixed Mobile Footer */
+        .tm-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2c3e50;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .tm-footer-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .tm-footer-nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tm-footer-nav a i {
+            font-size: 18px;
+        }
+
+        .tm-footer-nav a:hover {
+            color: #3498db;
+        }
+
         @media (max-width: 768px) {
             .container {
                 width: 95%;
@@ -167,17 +216,24 @@
                 padding: 5px 10px;
                 font-size: 12px;
             }
-        }
 
+            .tm-footer-nav a {
+                font-size: 12px;
+            }
+
+            .tm-footer-nav a i {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 
 <body>
-
-    <h2> Schedule</h2>
+    <h2>Match Schedule</h2>
+    <p class="team-name-header">Schedule for <?php echo htmlspecialchars($team_name); ?></p>
 
     <div class="container">
-        <?php if($team_schedule == 0) { 
+        <?php if ($team_schedule == 0) { 
             echo "<p>No match is added yet</p>"; 
         } else { 
             foreach ($team_schedule as $value) { 
@@ -189,32 +245,51 @@
             <div class="card-body">
                 <div class="match-info">
                     <div class="team-logo-container">
-                        <img src="<?php echo $value->team_one_image;?>" alt="Team 5 Logo" class="team-logo">
-                        <p class="team-name"><?php echo strtoupper(substr($value->team_one_name, 0, 3));?></p> <!-- Team initials -->
+                        <img src="<?php echo $value->team_one_image; ?>" alt="Team Logo" class="team-logo">
+                        <p class="team-name"><?php echo strtoupper(substr($value->team_one_name, 0, 3)); ?></p>
                     </div>
-                     <?php $date=$value->match_date; $formatted_date = date("d F Y", strtotime($date)); ?>
-                    <span><?php echo $formatted_date;?></span>
+                    <?php 
+                        $date = $value->match_date; 
+                        $formatted_date = date("d F Y", strtotime($date)); 
+                    ?>
+                    <span><?php echo $formatted_date; ?></span>
                     <div class="team-logo-container">
-                        <img src="<?php echo $value->team_two_image;?>" alt="Team 6 Logo" class="team-logo">
-                        <p class="team-name"><?php echo strtoupper(substr($value->team_two_name, 0, 3));?></p> <!-- Team initials -->
+                        <img src="<?php echo $value->team_two_image; ?>" alt="Team Logo" class="team-logo">
+                        <p class="team-name"><?php echo strtoupper(substr($value->team_two_name, 0, 3)); ?></p>
                     </div>
                 </div>
                 <div class="match-details">
-                    <p><strong>Time:</strong> <?php echo $value->match_time;?></p>
-                    <p><strong>Overs:</strong> <?php echo $value->overs;?></p>
-                    <p><strong>Venue:</strong> <?php echo $value->location;?></p>
+                    <p><strong>Time:</strong> <?php echo $value->match_time; ?></p>
+                    <p><strong>Overs:</strong> <?php echo $value->overs; ?></p>
+                    <p><strong>Venue:</strong> <?php echo $value->location; ?></p>
                 </div>
             </div>
             <div class="card-footer actions">
-                   <?php if($this->session->userdata('user_id')==$value->user_id): ?>
-                <a href="<?php echo base_url();?>Welcome/toss/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>/<?php echo $value->match_id;?>" class="scorecard-btn">Add Scorecard</a>
-                 <?php endif; ?>
-                <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $value->team_one_id;?>/<?php echo $value->team_two_id;?>/<?php echo $value->match_id;?>" class="scorecard-btn">View Scorecard</a>
+                <?php if ($this->session->userdata('user_id') == $value->user_id) : ?>
+                    <a href="<?php echo base_url(); ?>Welcome/toss/<?php echo $value->team_one_id; ?>/<?php echo $value->team_two_id; ?>/<?php echo $value->match_id; ?>" class="scorecard-btn">Add Scorecard</a>
+                <?php endif; ?>
+                <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo $value->team_one_id; ?>/<?php echo $value->team_two_id; ?>/<?php echo $value->match_id; ?>" class="scorecard-btn">View Scorecard</a>
             </div>
         </div>
         <?php } } ?>
     </div>
 
+    <!-- Fixed Mobile Footer -->
+    <footer class="tm-footer">
+        <div class="tm-footer-nav">
+            <a href="<?php echo base_url(); ?>Welcome/landing_page">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $team_id; ?>">
+                <i class="fas fa-users"></i>
+                <span><?php echo htmlspecialchars($team_name); ?></span>
+            </a>
+        </div>
+    </footer>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 
 </html>

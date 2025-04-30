@@ -138,41 +138,37 @@ return $result;
 
 // In your model
 // In your model
-public function get_player_team($data) {
-    // Extract player_id and user_id from the $data array
-    $player_id = $data['player_id'];
-    $user_id = $data['user_id'];
+  public function get_player_team($data) {
+        // Extract player_id and user_id from the $data array
+        $player_id = $data['player_id'];
+        $user_id = $data['user_id'];
 
-    // Build the query
-    $this->db->select('
-        add_team.team_name, 
-         add_team.team_id,
-        add_team.image_path as team_image_path, 
-        add_player.playerName, 
-        add_player.image_path as player_image_path, 
-        player_team.*');
-    $this->db->from('player_team');
-    $this->db->join('add_team', 'add_team.team_id = player_team.team_id');
-    $this->db->join('add_player', 'add_player.player_id = player_team.player_id');
-
-    // Add conditions for player_id and user_id
-    $this->db->where('player_team.player_id', $player_id);
-    $this->db->where('player_team.user_id', $user_id);
-     $this->db->where('player_team.player_id', $player_id);
-    $this->db->where('player_team.status', 0); // Assuming user_id is in player_team table
+        // Build the query
+        $this->db->select('
+            add_team.team_name, 
+            add_team.team_id,
+            add_team.image_path as team_image_path, 
+            add_player.playerName, 
+            add_player.image_path as player_image_path, 
+            player_team.*');
+        $this->db->from('player_team');
+        $this->db->join('add_team', 'add_team.team_id = player_team.team_id');
+        $this->db->join('add_player', 'add_player.player_id = player_team.player_id');
+        $this->db->where('player_team.player_id', $player_id);
+        $this->db->where('player_team.user_id', $user_id);
+        $this->db->where('player_team.status', 0); // Pending requests only
     
-    // Execute the query
-    $query = $this->db->get();
+        // Execute the query
+        $query = $this->db->get();
 
-    // Check if any rows are returned and return the appropriate result
-    if ($query->num_rows() > 0) {
-        return $query->result(); // Return as an array of rows
-    } else {
-        return array(); // Return an empty array if no results
+        // Return results
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return array();
+        }
     }
-}
-
-
+    
  public function delete_player_from_team($data) {
         // Delete player record from player_team table where player_id matches
         $this->db->where($data);
@@ -353,15 +349,28 @@ public function calculate_player_bowling_stats($player_id) {
 
 
 
-    public function update_profile_picture($player_id, $image_path) {
-        // Prepare data to update
-        $data = array(
-            'image_path' => $image_path
-        );
+ public function update_profile_picture($player_id, $image_path) {
+        if (empty($player_id) || empty($image_path)) {
+            return false;
+        }
         
-        // Update the image path in the database for the given player ID
+        $data = [
+            'image_path' => $image_path
+        ];
+        
         $this->db->where('player_id', $player_id);
-        return $this->db->update('add_player', $data); // 'add_player' is your table name
+        return $this->db->update('add_player', $data);
+    }
+
+    public function get_player_image($player_id) {
+        $this->db->select('image_path');
+        $this->db->where('player_id', $player_id);
+        $query = $this->db->get('add_player');
+        
+        if ($query->num_rows() > 0) {
+            return $query->row()->image_path;
+        }
+        return null;
     }
 
     public function update_player_field($player_id, $field_name, $new_value) {

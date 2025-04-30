@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -33,7 +32,7 @@
             color: var(--text);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-            padding-bottom: 2rem;
+            padding-bottom: 60px;
             overflow-x: hidden;
         }
 
@@ -461,6 +460,47 @@
             min-width: 0;
         }
 
+        /* Footer Styles */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem 0;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .footer__link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 0.75rem;
+            padding: 0.5rem;
+            flex: 1;
+            transition: color 0.2s ease, transform 0.1s ease;
+        }
+
+        .footer__link.active,
+        .footer__link:hover,
+        .footer__link:focus {
+            color: var(--primary);
+        }
+
+        .footer__link:active {
+            transform: scale(0.95);
+        }
+
+        .footer__icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
         /* Laptop View */
         @media (min-width: 769px) {
             .match-header {
@@ -507,6 +547,14 @@
 
             .player-detail {
                 font-size: 0.8rem;
+            }
+
+            .footer {
+                display: none;
+            }
+
+            body {
+                padding-bottom: 2rem;
             }
         }
 
@@ -699,7 +747,6 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-
 <body>
     <div class="match-header">
         <div class="teams-container">
@@ -730,7 +777,6 @@
             </div>
         </div>
     </div>
-    //<?php var_dump($match_result);?>
     
     <div class="match-info-banner">
         <div class="info-item">
@@ -794,7 +840,7 @@
         </div>
     </div>
     
-    <div class="match-result <?php  echo empty($match_result) ? 'result-pending' : ''; ?>">
+    <div class="match-result <?php echo empty($match_result) ? 'result-pending' : ''; ?>">
         <?php if(isset($match_result) && !empty($match_result)) { ?>
             <?php echo $match_result; ?>
         <?php } else { ?>
@@ -857,7 +903,7 @@
                             <div class="player-cell">
                                 <img src="<?php echo isset($score->image_path) ? $score->image_path : 'https://via.placeholder.com/100';?>" alt="Player" class="player-avatar">
                                 <div class="player-main">
-                                    <span class="player-name"><?php echo $score->playerName;?></span>
+                                     <a href="<?php echo base_url(); ?>PlayerController/player_info/<?php echo $score->player_id; ?>"><span class="player-name"><?php echo $score->playerName;?></span></a>
                                     <span class="player-detail"><?php echo $dismissal_info; ?></span>
                                 </div>
                             </div>
@@ -921,7 +967,7 @@
                         <td>
                             <div class="player-cell">
                                 <img src="<?php echo isset($f_bowling->image_path) ? $f_bowling->image_path : 'https://via.placeholder.com/100';?>" alt="Bowler" class="player-avatar">
-                                <span class="player-name"><?php echo $f_bowling->playerName;?></span>
+                                <a href="<?php echo base_url(); ?>PlayerController/player_info/<?php echo $f_bowling->player_id; ?>"> <span class="player-name"><?php echo $f_bowling->playerName;?></span> </a>
                             </div>
                         </td>
                         <td><?php echo $f_bowling->overs;?></td>
@@ -976,7 +1022,7 @@
                             <div class="player-cell">
                                 <img src="<?php echo isset($score->image_path) ? $score->image_path : 'https://via.placeholder.com/100';?>" alt="Player" class="player-avatar">
                                 <div class="player-main">
-                                    <span class="player-name"><?php echo $score->playerName;?></span>
+                                     <a href="<?php echo base_url(); ?>PlayerController/player_info/<?php echo $score->player_id; ?>"><span class="player-name"><?php echo $score->playerName;?></span></a>
                                     <span class="player-detail"><?php echo $dismissal_info; ?></span>
                                 </div>
                             </div>
@@ -1037,7 +1083,7 @@
                         <td>
                             <div class="player-cell">
                                 <img src="<?php echo isset($f_bowling->image_path) ? $f_bowling->image_path : 'https://via.placeholder.com/100';?>" alt="Bowler" class="player-avatar">
-                                <span class="player-name"><?php echo $f_bowling->playerName;?></span>
+                                 <a href="<?php echo base_url(); ?>PlayerController/player_info/<?php echo $f_bowling->player_id; ?>"><span class="player-name"><?php echo $f_bowling->playerName;?></span></a>
                             </div>
                         </td>
                         <td><?php echo $f_bowling->overs;?></td>
@@ -1058,59 +1104,12 @@
         </div>
     </div>
     
-    <div class="squads-container">
-        <div class="squad-header">
-            <div class="squad-title"><?php echo $information['team_one_name'];?></div>
-            <div class="squad-count">
-                <?php if(isset($team_one_squad) && is_array($team_one_squad)) { 
-                    echo count($team_one_squad) . ' Players'; 
-                } else { 
-                    echo 'Squad'; 
-                } ?>
-            </div>
-        </div>
-        
-        <div class="squad-grid">
-            <?php if(isset($team_one_squad) && is_array($team_one_squad) && !empty($team_one_squad)) { 
-                foreach($team_one_squad as $player) { ?>
-                <div class="squad-player">
-                    <img src="<?php echo isset($player->image_path) ? $player->image_path : 'https://via.placeholder.com/100';?>" alt="Player" class="squad-avatar">
-                    <div class="squad-player-name"><?php echo $player->playerName; ?></div>
-                </div>
-            <?php } } else { ?>
-                <div class="squad-player">
-                    <img src="https://via.placeholder.com/100" alt="Player" class="squad-avatar">
-                    <div class="squad-player-name">Squad not announced</div>
-                </div>
-            <?php } ?>
-        </div>
-        
-        <div class="squad-header">
-            <div class="squad-title"><?php echo $information['team_two_name'];?></div>
-            <div class="squad-count">
-                <?php if(isset($team_two_squad) && is_array($team_two_squad)) { 
-                    echo count($team_two_squad) . ' Players'; 
-                } else { 
-                    echo 'Squad'; 
-                } ?>
-            </div>
-        </div>
-        
-        <div class="squad-grid">
-            <?php if(isset($team_two_squad) && is_array($team_two_squad) && !empty($team_two_squad)) { 
-                foreach($team_two_squad as $player) { ?>
-                <div class="squad-player">
-                    <img src="<?php echo isset($player->image_path) ? $player->image_path : 'https://via.placeholder.com/100';?>" alt="Player" class="squad-avatar">
-                    <div class="squad-player-name"><?php echo $player->playerName; ?></div>
-                </div>
-            <?php } } else { ?>
-                <div class="squad-player">
-                    <img src="https://via.placeholder.com/100" alt="Player" class="squad-avatar">
-                    <div class="squad-player-name">Squad not announced</div>
-                </div>
-            <?php } ?>
-        </div>
-    </div>
+    <footer class="footer">
+        <a href="<?php echo base_url(); ?>Welcome/landing_page" class="footer__link <?php echo current_url() == base_url('Welcome/landing_page') ? 'active' : ''; ?>" aria-label="Go to Home page">
+            <i class="fas fa-home footer__icon"></i>
+            <span>Home</span>
+        </a>
+     
+    </footer>
 </body>
-
 </html>

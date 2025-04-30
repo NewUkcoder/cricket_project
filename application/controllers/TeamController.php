@@ -225,9 +225,11 @@ class TeamController extends CI_Controller {
         redirect('TeamController/team_profile/' . $team_id);
     }
 
-    public function team_squad($team_id) {
+   public function team_squad($team_id) {
         $user_id = $this->session->userdata('user_id');
         $player_data['squad'] = $this->Team_model->get_squad($team_id);
+        $player_data['team_name'] = $this->Team_model->get_team_name($team_id); // Fetch team name
+        $player_data['team_id'] = $team_id; // Pass team_id to view
         $this->load->view('header');
         $this->load->view('team_squad', $player_data);
     }
@@ -297,11 +299,16 @@ class TeamController extends CI_Controller {
          redirect('Welcome/team_admin/' . $main_id);
     }
 
+    
     public function team_schedule($team_id) {
         $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team_id);
+        // Fetch team name for the given team_id
+        $team_data['team_name'] = $this->Team_model->get_team_name($team_id);
+        $team_data['team_id'] = $team_id; // Pass team_id to view
         $this->load->view('header');
-        redirect('Welcome/team_admin/' . $team_id);
+        $this->load->view('team_schedule', $team_data);
     }
+
 
     public function update_team_info() {
         $team_id = $this->input->post('team_id');
