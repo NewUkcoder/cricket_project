@@ -25,33 +25,7 @@ class PlayerController extends CI_Controller {
 
     public function add_player()
     {
-        $config['upload_path'] = './uploads/'; // Specify the directory to store images
-        $config['allowed_types'] = 'gif|jpg|png|jpeg'; // Allowed file types
-        $config['max_size'] = 1000000; // Max size in KB
-        $config['file_name'] = time(); // Use the current timestamp for file name to avoid name collision
-
-        // Initialize the upload library with the configuration
-        $this->upload->initialize($config);
-
-        // Check if the form was submitted and a file is selected
-        if (empty($_FILES['userfile']['name'])) {
-            $this->session->set_flashdata('error', 'Please select a file to upload.');
-                $this->load->view('header');
-            redirect('Welcome/enter_player');
-        }
-
-        // Check if file was uploaded successfully
-        if (!$this->upload->do_upload('userfile')) {
-            // If upload fails, show errors
-            $error = $this->upload->display_errors();
-            $this->session->set_flashdata('error', $error);
-                $this->load->view('header');
-            redirect('Welcome/enter_player');
-        } else {
-            // If upload is successful, get file data
-            $file_data = $this->upload->data();
-            // Save file info to the database
-            $image_data = base_url('uploads/' . $file_data['file_name']);
+        
 
             $user_id=$this->session->userdata('user_id');
             
@@ -62,7 +36,7 @@ class PlayerController extends CI_Controller {
                 'date_of_birth'=>ucwords($this->input->post('date_of_birth')),
                 'player_role'=>ucwords($this->input->post('playerRole')),
                 'additional_info'=>$this->input->post('additional_info'),
-                'image_path'=>$image_data,
+                'image_path'=>"",
                 'user_id'=>$user_id
                 
                 
@@ -72,12 +46,12 @@ class PlayerController extends CI_Controller {
             $this->Player_model->save_image($record);
 
             // Set a success message and redirect
-            $this->session->set_flashdata('success', 'Image uploaded successfully!');
+            $this->session->set_flashdata('success', 'Player is registered successfully!');
                 $this->load->view('header');
             redirect('Welcome/landing_page');
 
         }
-    }
+    
 
     public function add_match_player()
     {
@@ -386,7 +360,7 @@ class PlayerController extends CI_Controller {
         // Redirect to landing page
         redirect('Welcome/landing_page');
     }
-    
+
     public function update_field($player_id, $field_name) {
         // Get the new value from the POST request
         $new_value = $this->input->post($field_name);

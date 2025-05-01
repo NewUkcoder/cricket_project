@@ -101,14 +101,11 @@
 
             <form action="<?php echo base_url();?>PlayerController/add_player"  method="POST" enctype="multipart/form-data">
                 <!-- Profile Picture -->
-                <div class="mb-3">
-                    <label for="profilePicture" class="form-label">Upload Profile Picture</label>
-                    <input class="form-control" type="file" id="profilePicture" name="userfile" required>
-                </div>
+               
 
                 <!-- Player Information -->
                 <div class="mb-3">
-                    <label for="playerName" class="form-label">Player Name</label>
+                    <label for="playerName" class="form-label">Player Full Name</label>
                     <input type="text" class="form-control" id="playerName" name="playerName" placeholder="Enter player's name" required>
                 </div>
 
