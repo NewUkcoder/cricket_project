@@ -1,3 +1,9 @@
+<?php
+// Prevent browser caching
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,7 +99,7 @@
       <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($this->session->flashdata('success')); ?></div>
     <?php endif; ?>
     <?php echo validation_errors('<div class="alert alert-danger" role="alert">', '</div>'); ?>
-    <?php echo form_open('auth/sign_in_submit', ['id' => 'signin-form']); ?>
+    <?php echo form_open(base_url('Auth/sign_in_submit'), ['id' => 'signin-form']); ?>
       <div class="mb-3">
         <label for="identifier" class="form-label">Username or Email</label>
         <input type="text" name="identifier" class="form-control" id="identifier" placeholder="Enter username or email" value="<?php echo set_value('identifier'); ?>" required>
@@ -109,8 +115,8 @@
       </div>
       <button type="submit" class="btn btn-primary w-100">Sign In</button>
       <div class="form-footer">
-        <p>Don't have an account? <a href="<?php echo base_url('auth/sign_up'); ?>">Sign Up</a></p>
-        <p><a href="<?php echo base_url('auth/reset_password'); ?>">Forgot Password?</a></p>
+        <p>Don't have an account? <a href="<?php echo base_url('Auth/sign_up'); ?>">Sign Up</a></p>
+        <p><a href="<?php echo base_url('Auth/reset_password'); ?>">Forgot Password?</a></p>
       </div>
     <?php echo form_close(); ?>
   </div>
@@ -154,9 +160,8 @@
       }
     });
 
-    // Form submission
+    // Form submission validation
     document.getElementById('signin-form').addEventListener('submit', function(e) {
-      e.preventDefault();
       let isValid = true;
 
       const identifier = document.getElementById('identifier');
@@ -166,16 +171,20 @@
         document.getElementById('identifierFeedback').className = 'feedback invalid';
         document.getElementById('identifierFeedback').textContent = 'Username or email is required.';
         isValid = false;
+      } else {
+        document.getElementById('identifierFeedback').textContent = '';
       }
 
       if (!password.value) {
         document.getElementById('passwordFeedback').className = 'feedback invalid';
         document.getElementById('passwordFeedback').textContent = 'Password is required.';
         isValid = false;
+      } else {
+        document.getElementById('passwordFeedback').textContent = '';
       }
 
-      if (isValid) {
-        this.submit();
+      if (!isValid) {
+        e.preventDefault();
       }
     });
   </script>

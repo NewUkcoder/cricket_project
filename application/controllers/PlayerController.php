@@ -86,7 +86,7 @@ class PlayerController extends CI_Controller {
         $player_data['player_stats'] = $this->Player_model->calculate_player_stats($player_id);
         $player_data['bowling_stats'] = $this->Player_model->calculate_player_bowling_stats($player_id);
         $player_data['leagues'] = $this->Player_model->get_player_leagues($player_id); // New line
-        var_dump( $player_data['leagues'] );
+     //   var_dump( $player_data['leagues'] );
         $this->load->view('header');
         $this->load->view('profile_player', $player_data);
     }

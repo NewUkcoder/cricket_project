@@ -128,7 +128,7 @@
       <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($this->session->flashdata('success')); ?></div>
     <?php endif; ?>
     <?php echo validation_errors('<div class="alert alert-danger" role="alert">', '</div>'); ?>
-    <?php echo form_open('auth/sign_up_submit', ['id' => 'signup-form']); ?>
+    <?php echo form_open('Auth/sign_up_submit', ['id' => 'signup-form']); ?>
       <div class="mb-3 position-relative">
         <label for="username" class="form-label">Username</label>
         <input type="text" name="username" class="form-control" id="username" placeholder="Enter a unique username" value="<?php echo set_value('username'); ?>" required aria-describedby="usernameHelp">
@@ -139,7 +139,7 @@
       <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
         <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" value="<?php echo set_value('email'); ?>" required aria-describedby="emailHelp">
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone.</div>
+        <div id="emailHelp" class="form-text">This will be used in searching to get records</div>
         <div class="feedback" id="emailFeedback"></div>
       </div>
       <div class="mb-3">

@@ -19,18 +19,21 @@ class Auth extends CI_Controller {
 
     public function sign_in() {
         log_message('debug', 'Loading view: sign_in');
+        $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate');
+        $this->output->set_header('Pragma: no-cache');
+        $this->output->set_header('Expires: 0');
         $this->load->view('sign_in');
     }
 
     public function sign_up_submit() {
-        $this->form_validation->set_rules('username', 'Username', 'required|trim|min_length[3]|max_length[50]|alpha_numeric|xss_clean');
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|max_length[100]|xss_clean');
+        $this->form_validation->set_rules('username', 'Username', 'required|trim|min_length[3]|max_length[50]|alpha_numeric');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|max_length[100]');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|callback_password_strength');
         $this->form_validation->set_rules('password_confirm', 'Confirm Password', 'required|matches[password]');
         $this->form_validation->set_rules('security_question1', 'First Security Question', 'required');
-        $this->form_validation->set_rules('security_answer1', 'First Security Answer', 'required|trim|min_length[2]|max_length[100]|xss_clean');
+        $this->form_validation->set_rules('security_answer1', 'First Security Answer', 'required|trim|min_length[2]|max_length[100]');
         $this->form_validation->set_rules('security_question2', 'Second Security Question', 'required');
-        $this->form_validation->set_rules('security_answer2', 'Second Security Answer', 'required|trim|min_length[2]|max_length[100]|xss_clean');
+        $this->form_validation->set_rules('security_answer2', 'Second Security Answer', 'required|trim|min_length[2]|max_length[100]');
         $this->form_validation->set_rules('agreement', 'Agreement', 'required');
 
         if ($this->form_validation->run() === FALSE) {
@@ -73,7 +76,7 @@ class Auth extends CI_Controller {
             $this->session->set_flashdata('success', 'Registration successful! You can now sign in.');
             redirect('Auth/sign_in');
         } else {
-            $this->session->set_flashdata('error', 'Registration failed. Please try again.');
+          $this->session->set_flashdata('error', 'Registration failed. Please try again.');
             redirect('Auth/sign_up');
         }
     }
@@ -94,11 +97,13 @@ class Auth extends CI_Controller {
     }
 
     public function sign_in_submit() {
-        $this->form_validation->set_rules('identifier', 'Username or Email', 'required|trim|xss_clean');
+        // Set form validation rules
+        $this->form_validation->set_rules('identifier', 'Username or Email', 'required|trim');
         $this->form_validation->set_rules('password', 'Password', 'required');
 
         if ($this->form_validation->run() === FALSE) {
-            log_message('debug', 'Sign-in validation failed');
+            log_message('debug', 'Sign-in validation failed: ' . validation_errors());
+            $this->session->set_flashdata('error', validation_errors());
             $this->load->view('sign_in');
             return;
         }
@@ -106,19 +111,36 @@ class Auth extends CI_Controller {
         $identifier = $this->input->post('identifier', TRUE);
         $password = $this->input->post('password', TRUE);
 
+        // Check login attempts (expire after 15 minutes)
         $attempt_key = 'login_attempts_' . md5($identifier);
-        $attempts = $this->session->userdata($attempt_key) ?: 0;
-        if ($attempts >= 5) {
-            $this->session->set_flashdata('error', 'Too many failed login attempts. Please try again later.');
+        $attempt_data = $this->session->userdata($attempt_key);
+        $attempts = isset($attempt_data['count']) ? $attempt_data['count'] : 0;
+        $attempt_time = isset($attempt_data['time']) ? $attempt_data['time'] : time();
+
+        if ($attempts >= 5 && (time() - $attempt_time) < 900) {
+            log_message('error', 'Too many login attempts for identifier: ' . $identifier);
+            $this->session->set_flashdata('error', 'Too many failed login attempts. Please try again after 15 minutes.');
             redirect('Auth/sign_in');
         }
 
+        // Fetch user from database
         $user = $this->Auth_model->get_user($identifier);
+        if (!$user) {
+            log_message('error', 'No user found for identifier: ' . $identifier);
+            $this->session->set_userdata($attempt_key, ['count' => $attempts + 1, 'time' => time()]);
+            $this->session->set_flashdata('error', 'Invalid username or email.');
+            redirect('Auth/sign_in');
+        }
 
-        if ($user && password_verify($password, $user['password'])) {
+        // Verify password
+        if (password_verify($password, $user['password'])) {
+            // Clear login attempts
             $this->session->unset_userdata($attempt_key);
-            $this->session->sess_regenerate(TRUE);
 
+            // Regenerate session ID without destroying old session
+            $this->session->sess_regenerate();
+
+            // Set session data
             $session_data = array(
                 'user_id' => $user['user_id'],
                 'username' => $user['username'],
@@ -127,12 +149,12 @@ class Auth extends CI_Controller {
             );
             $this->session->set_userdata($session_data);
 
-            log_message('info', 'User ID ' . $user['user_id'] . ' logged in.');
-            redirect('Welcome/welcome_message');
+            log_message('info', 'User ID ' . $user['user_id'] . ' logged in successfully.');
+            redirect('Welcome/landing_page'); // Redirect to dashboard
         } else {
-            $this->session->set_userdata($attempt_key, $attempts + 1);
-            log_message('error', 'Failed login attempt for identifier: ' . $identifier);
-            $this->session->set_flashdata('error', 'Invalid username/email or password.');
+            log_message('error', 'Invalid password for identifier: ' . $identifier);
+            $this->session->set_userdata($attempt_key, ['count' => $attempts + 1, 'time' => time()]);
+            $this->session->set_flashdata('error', 'Invalid password.');
             redirect('Auth/sign_in');
         }
     }
@@ -173,9 +195,9 @@ class Auth extends CI_Controller {
     }
 
     public function reset_password_submit() {
-        $this->form_validation->set_rules('identifier', 'Username or Email', 'required|trim|xss_clean');
-        $this->form_validation->set_rules('security_answer1', 'First Security Answer', 'required|trim|xss_clean');
-        $this->form_validation->set_rules('security_answer2', 'Second Security Answer', 'required|trim|xss_clean');
+        $this->form_validation->set_rules('identifier', 'Username or Email', 'required|trim');
+        $this->form_validation->set_rules('security_answer1', 'First Security Answer', 'required|trim');
+        $this->form_validation->set_rules('security_answer2', 'Second Security Answer', 'required|trim');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|callback_password_strength');
         $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|matches[password]');
 
@@ -228,22 +250,18 @@ class Auth extends CI_Controller {
     public function logout() {
         $user_id = $this->session->userdata('user_id');
         $this->session->unset_userdata(array(
-            'user_id', 
-            'username', 
-            'email', 
+            'user_id',
+            'username',
+            'email',
             'logged'
         ));
         $this->session->sess_destroy();
-        session_unset();
-        session_destroy();
         delete_cookie($this->config->item('sess_cookie_name'));
-        session_regenerate_id(true);
         log_message('info', 'User ID ' . $user_id . ' logged out.');
         $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate');
         $this->output->set_header('Pragma: no-cache');
         $this->output->set_header('Expires: 0');
-        redirect('Auth/sign_in', 'refresh');
-        exit;
+        redirect('Auth/sign_in');
     }
 
     public function delete_account() {

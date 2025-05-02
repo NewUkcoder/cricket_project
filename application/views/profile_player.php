@@ -375,6 +375,9 @@
             border-radius: 5px;
             transition: all 0.3s ease;
             min-height: 44px; /* Touch-friendly */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .nav-link:hover, .nav-link.active {
@@ -401,12 +404,40 @@
             box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .fixed-footer .nav {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .fixed-footer .nav-item {
+            flex: 1;
+            text-align: center;
         }
 
         .fixed-footer .nav-link {
-            font-size: 0.85rem;
-            padding: 6px 12px;
-            min-height: 44px; /* Touch-friendly */
+            font-size: 0.75rem;
+            padding: 6px 8px;
+            min-height: 48px; /* Touch-friendly */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .fixed-footer .nav-link i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .fixed-footer .nav-link span {
+            display: block;
+            font-size: 0.7rem;
         }
 
         /* Responsive Adjustments */
@@ -478,19 +509,21 @@
                 text-align: center;
             }
 
-            .fixed-footer .nav {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .fixed-footer .nav-item {
-                margin: 5px 0;
-                width: 100%;
+            .fixed-footer {
+                padding: 8px 0;
             }
 
             .fixed-footer .nav-link {
-                width: 100%;
-                text-align: center;
+                font-size: 0.7rem;
+                padding: 4px 6px;
+            }
+
+            .fixed-footer .nav-link i {
+                font-size: 1.1rem;
+            }
+
+            .fixed-footer .nav-link span {
+                font-size: 0.65rem;
             }
         }
 
@@ -503,6 +536,19 @@
             .info-badge {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .fixed-footer .nav-link {
+                font-size: 0.65rem;
+                padding: 4px 5px;
+            }
+
+            .fixed-footer .nav-link i {
+                font-size: 1rem;
+            }
+
+            .fixed-footer .nav-link span {
+                font-size: 0.6rem;
             }
         }
 
@@ -541,11 +587,11 @@
                 </div>
                 <div class="info-badge">
                     <i class="fas fa-baseball-ball"></i>
-                    <?php echo $data['batting_style']; ?> Batting
+                    <?php echo $data['batting_style']; ?> 
                 </div>
                 <div class="info-badge">
                     <i class="fas fa-baseball-ball"></i>
-                    <?php echo $data['bowling_style']; ?> Bowling
+                    <?php echo $data['bowling_style']; ?> 
                 </div>
             </div>
         </div>
@@ -565,16 +611,6 @@
                         </a>
                     </li>
                 <?php endif; ?>
-                <li class="nav-item">
-                    <a class="nav-link active" href="#stats">
-                        <i class="fas fa-chart-line"></i> Statistics
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#leagues">
-                        <i class="fas fa-trophy"></i> Leagues
-                    </a>
-                </li>
             </ul>
         </div>
         
@@ -934,33 +970,26 @@
     <nav class="fixed-footer navbar navbar-light">
         <div class="container-fluid">
             <ul class="nav justify-content-center w-100">
-                <li> <a href="<?php echo base_url(); ?>Welcome/landing_page">
-                <i class="fas fa-paper-plane"></i>
-                <span>Home</span>
-            </a>
-        </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo base_url(); ?>Welcome/landing_page">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
                 <?php if($this->session->userdata('user_id') == $data['user_id']): ?>
                     <li class="nav-item">
                         <a class="nav-link join-team" href="<?php echo base_url(); ?>PlayerController/join_team/<?php echo $data['player_id']; ?>">
-                            <i class="fas fa-plus-circle"></i> Join Team
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Join Team</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo base_url(); ?>PlayerController/sent_team_request/<?php echo $data['player_id']; ?>">
-                            <i class="fas fa-paper-plane"></i> Sent Requests
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Sent Requests</span>
                         </a>
                     </li>
                 <?php endif; ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="#stats">
-                        <i class="fas fa-chart-line"></i> Statistics
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#leagues">
-                        <i class="fas fa-trophy"></i> Leagues
-                    </a>
-                </li>
             </ul>
         </div>
     </nav>
