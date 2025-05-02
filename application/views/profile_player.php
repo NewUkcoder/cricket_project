@@ -18,14 +18,14 @@
             --dark-text: #1e293b;
             --light-text: #64748b;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-bg);
             color: var(--dark-text);
-            padding-bottom: 80px;
+            padding-bottom: 80px; /* Adjusted for fixed footer height */
         }
-        
+
         /* Header Styles */
         .profile-header {
             background: linear-gradient(135deg, var(--primary-color) 0%, #0f172a 100%);
@@ -37,7 +37,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .profile-header::before {
             content: '';
             position: absolute;
@@ -48,7 +48,7 @@
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
         }
-        
+
         .player-img-container {
             position: relative;
             width: 200px;
@@ -60,31 +60,31 @@
             overflow: hidden;
             transition: all 0.3s ease;
         }
-        
+
         .player-img-container:hover {
             transform: scale(1.05);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
         }
-        
+
         .player-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .player-name {
             font-size: 2.2rem;
             font-weight: 700;
             margin-top: 15px;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-        
+
         .player-title {
             font-size: 1.1rem;
             color: rgba(255, 255, 255, 0.9);
             margin-bottom: 10px;
         }
-        
+
         .player-basic-info {
             display: flex;
             flex-wrap: wrap;
@@ -92,7 +92,7 @@
             gap: 15px;
             margin-top: 15px;
         }
-        
+
         .info-badge {
             background-color: rgba(255, 255, 255, 0.1);
             padding: 8px 15px;
@@ -102,7 +102,7 @@
             align-items: center;
             gap: 5px;
         }
-        
+
         /* Content Cards */
         .stats-card {
             background-color: white;
@@ -112,12 +112,12 @@
             margin-bottom: 20px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .stats-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
         }
-        
+
         .card-title {
             font-size: 1.3rem;
             font-weight: 600;
@@ -129,63 +129,91 @@
             align-items: center;
             gap: 10px;
         }
-        
+
+        /* Scrollable Container */
+        .scrollable-section {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .scrollable-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollable-section::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+
+        .scrollable-section::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .scrollable-section::-webkit-scrollbar-thumb:hover {
+            background: #0f172a;
+        }
+
         /* Team Display */
         .team-card {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 10px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             transition: all 0.3s ease;
         }
-        
+
         .team-card:hover {
-            transform: translateX(5px);
+            transform: translateX(3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .team-logo {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            margin-right: 15px;
+            margin-right: 12px;
             border: 2px solid #e2e8f0;
         }
-        
+
         .team-info {
             flex-grow: 1;
         }
-        
+
         .team-name {
             font-weight: 600;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
+            font-size: 0.95rem;
         }
-        
-        .team-league {
-            font-size: 0.8rem;
-            color: var(--light-text);
-        }
-        
-        .team-link {
+
+        .team-name a {
             color: var(--primary-color);
             text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
         }
-        
+
+        .team-name a:hover {
+            text-decoration: underline;
+        }
+
+        .team-league {
+            font-size: 0.75rem;
+            color: var(--light-text);
+        }
+
         /* Stats Tables */
         .stats-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
         }
-        
+
         .stats-table th {
             background-color: var(--primary-color);
             color: white;
@@ -193,26 +221,26 @@
             text-align: center;
             font-weight: 500;
         }
-        
+
         .stats-table td {
             padding: 12px 15px;
             text-align: center;
             border-bottom: 1px solid #e2e8f0;
         }
-        
+
         .stats-table tr:nth-child(even) {
             background-color: #f8fafc;
         }
-        
+
         .stats-table tr:hover {
             background-color: #f1f5f9;
         }
-        
+
         .highlight-stat {
             font-weight: 600;
             color: var(--secondary-color);
         }
-        
+
         /* Performance Cards */
         .performance-container {
             display: grid;
@@ -220,7 +248,7 @@
             gap: 20px;
             margin-top: 20px;
         }
-        
+
         .performance-card {
             background-color: white;
             border-radius: 8px;
@@ -228,12 +256,12 @@
             padding: 15px;
             transition: all 0.3s ease;
         }
-        
+
         .performance-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
         }
-        
+
         .match-header {
             display: flex;
             justify-content: space-between;
@@ -242,33 +270,33 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #e2e8f0;
         }
-        
+
         .match-teams {
             font-weight: 600;
         }
-        
+
         .match-type {
             font-size: 0.8rem;
             background-color: #e2e8f0;
             padding: 3px 8px;
             border-radius: 10px;
         }
-        
+
         .match-stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
-        
+
         .stat-item {
             font-size: 0.9rem;
         }
-        
+
         .stat-label {
             color: var(--light-text);
             font-size: 0.8rem;
         }
-        
+
         .match-result {
             margin-top: 10px;
             padding-top: 10px;
@@ -278,101 +306,55 @@
             align-items: center;
             gap: 5px;
         }
-        
+
         .won {
             color: #16a34a;
         }
-        
+
         .lost {
             color: #dc2626;
         }
-        
-        /* Tournament Card Styles */
-        .tournament-card {
-            display: flex;
-            align-items: center;
-            padding: 12px;
+
+        /* League Card Styles */
+        .league-card {
+            padding: 10px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             transition: all 0.3s ease;
             border-left: 4px solid var(--primary-color);
         }
-        
-        .tournament-card:hover {
+
+        .league-card:hover {
             transform: translateX(3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        
-        .tournament-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 12px;
-            border: 2px solid #e2e8f0;
-        }
-        
-        .tournament-info {
+
+        .league-info {
             flex-grow: 1;
         }
-        
-        .tournament-name {
+
+        .league-name {
             font-weight: 600;
             margin-bottom: 2px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
-        
-        .tournament-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.75rem;
+
+        .league-name a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .league-name a:hover {
+            text-decoration: underline;
+        }
+
+        .league-details {
+            font-size: 0.7rem;
             color: var(--light-text);
         }
-        
-        .tournament-status {
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: 500;
-        }
-        
-        .status-active {
-            background-color: #dcfce7;
-            color: #166534;
-        }
-        
-        .status-upcoming {
-            background-color: #fef9c3;
-            color: #854d0e;
-        }
-        
-        .status-completed {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
-        
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .player-name {
-                font-size: 1.8rem;
-            }
-            
-            .performance-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-table {
-                font-size: 0.9rem;
-            }
-            
-            .stats-table th, .stats-table td {
-                padding: 8px 10px;
-            }
-        }
-        
+
         /* Navigation */
         .profile-nav {
             background-color: white;
@@ -381,50 +363,154 @@
             padding: 10px;
             margin-bottom: 20px;
         }
-        
+
         .nav-item {
             margin: 0 5px;
         }
-        
+
         .nav-link {
             color: var(--dark-text);
             font-weight: 500;
             padding: 8px 15px;
             border-radius: 5px;
             transition: all 0.3s ease;
+            min-height: 44px; /* Touch-friendly */
         }
-        
+
         .nav-link:hover, .nav-link.active {
             background-color: var(--primary-color);
             color: white;
         }
-        
+
         .nav-link.join-team {
             background-color: var(--secondary-color);
             color: white;
         }
-        
+
         .nav-link.join-team:hover {
             background-color: #b91c1c;
         }
-        
-        /* Footer */
-        .profile-footer {
+
+        /* Fixed Footer */
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             background-color: white;
-            border-radius: 10px;
             box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            margin-top: 30px;
-            text-align: center;
-            color: var(--light-text);
-            font-size: 0.9rem;
+            z-index: 1000;
+            padding: 10px 0;
         }
-        
+
+        .fixed-footer .nav-link {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            min-height: 44px; /* Touch-friendly */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .player-name {
+                font-size: 1.8rem;
+            }
+
+            .player-img-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .performance-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-table {
+                font-size: 0.8rem;
+            }
+
+            .stats-table th, .stats-table td {
+                padding: 8px 10px;
+            }
+
+            .scrollable-section {
+                max-height: 200px;
+            }
+
+            .team-card, .league-card {
+                padding: 8px;
+                margin-bottom: 6px;
+            }
+
+            .team-logo {
+                width: 36px;
+                height: 36px;
+                margin-right: 10px;
+            }
+
+            .team-name {
+                font-size: 0.9rem;
+            }
+
+            .team-league {
+                font-size: 0.7rem;
+            }
+
+            .league-name {
+                font-size: 0.85rem;
+            }
+
+            .league-details {
+                font-size: 0.65rem;
+            }
+
+            .profile-nav .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-item {
+                margin: 5px 0;
+                width: 100%;
+            }
+
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+
+            .fixed-footer .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .fixed-footer .nav-item {
+                margin: 5px 0;
+                width: 100%;
+            }
+
+            .fixed-footer .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .player-basic-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .info-badge {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
         /* Utility Classes */
         .text-accent {
             color: var(--accent-color);
         }
-        
+
         .bg-highlight {
             background-color: #fef3c7;
         }
@@ -445,7 +531,7 @@
                     <i class="fas fa-birthday-cake"></i>
                     <?php 
                         $dob = new DateTime($data['date_of_birth']);
-                        $today = new DateTime(); // Initialize today variable
+                        $today = new DateTime();
                         echo $dob->format('M j, Y') . " (" . $today->diff($dob)->y . " yrs)";
                     ?>
                 </div>
@@ -467,14 +553,14 @@
         <!-- Navigation -->
         <div class="profile-nav">
             <ul class="nav justify-content-center">
-                <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
+                <?php if($this->session->userdata('user_id') == $data['user_id']): ?>
                     <li class="nav-item">
-                        <a class="nav-link join-team" href="<?php echo base_url();?>PlayerController/join_team/<?php echo $data['player_id'];?>">
+                        <a class="nav-link join-team" href="<?php echo base_url(); ?>PlayerController/join_team/<?php echo $data['player_id']; ?>">
                             <i class="fas fa-plus-circle"></i> Join Team
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo base_url();?>PlayerController/sent_team_request/<?php echo $data['player_id'];?>">
+                        <a class="nav-link" href="<?php echo base_url(); ?>PlayerController/sent_team_request/<?php echo $data['player_id']; ?>">
                             <i class="fas fa-paper-plane"></i> Sent Requests
                         </a>
                     </li>
@@ -485,23 +571,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#teams">
-                        <i class="fas fa-users"></i> Teams
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#tournaments">
-                        <i class="fas fa-trophy"></i> Tournaments
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#performance">
-                        <i class="fas fa-star"></i> Performance
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#awards">
-                        <i class="fas fa-medal"></i> Awards
+                    <a class="nav-link" href="#leagues">
+                        <i class="fas fa-trophy"></i> Leagues
                     </a>
                 </li>
             </ul>
@@ -516,98 +587,67 @@
                         <i class="fas fa-users text-accent"></i> Current Teams
                     </h3>
                     
-                    <?php if (!empty($team_names)): ?>
-                        <?php foreach ($team_names as $team): ?>
-                            <div class="team-card">
-                                <img src="https://via.placeholder.com/100?text=<?php echo substr($team->team_name, 0, 2); ?>" alt="<?php echo $team->team_name; ?>" class="team-logo">
-                                <div class="team-info">
-                                    <div class="team-name"><?php echo $team->team_name; ?></div>
-                                    <div class="team-league"><?php echo $team->league_name ?? 'Local League'; ?></div>
+                    <div class="scrollable-section">
+                        <?php if (!empty($team_names)): ?>
+                            <?php foreach ($team_names as $team): ?>
+                                <div class="team-card">
+                                    <img src="https://via.placeholder.com/100?text=<?php echo substr($team->team_name, 0, 2); ?>" alt="<?php echo $team->team_name; ?>" class="team-logo">
+                                    <div class="team-info">
+                                        <div class="team-name">
+                                            <a href="<?php echo base_url(); ?>TeamController/view_team/<?php echo $team->team_id; ?>">
+                                                <?php echo $team->team_name; ?>
+                                            </a>
+                                        </div>
+                                        <div class="team-league"><?php echo $team->league_name ?? 'Local League'; ?></div>
+                                    </div>
                                 </div>
-                                <a href="<?php echo base_url(); ?>TeamController/view_team/<?php echo $team->team_id; ?>" class="team-link">
-                                    View <i class="fas fa-arrow-right"></i>
-                                </a>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="text-center py-3">
+                                <i class="fas fa-users-slash fa-2x text-muted mb-2"></i>
+                                <p class="text-muted">No active teams found</p>
+                                <?php if($this->session->userdata('user_id') == $data['user_id']): ?>
+                                    <a href="<?php echo base_url(); ?>PlayerController/join_team/<?php echo $data['player_id']; ?>" class="btn btn-sm btn-primary">
+                                        Join a Team
+                                    </a>
+                                <?php endif; ?>
                             </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="text-center py-3">
-                            <i class="fas fa-users-slash fa-2x text-muted mb-2"></i>
-                            <p class="text-muted">No active teams found</p>
-                            <?php if($this->session->userdata('user_id')==$data['user_id']): ?>
-                                <a href="<?php echo base_url();?>PlayerController/join_team/<?php echo $data['player_id'];?>" class="btn btn-sm btn-primary">
-                                    Join a Team
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 
-                <!-- Tournaments Section -->
-                <div class="stats-card" id="tournaments">
+                <!-- Leagues Section -->
+                <div class="stats-card" id="leagues">
                     <h3 class="card-title">
-                        <i class="fas fa-trophy text-accent"></i> Current Tournaments
+                        <i class="fas fa-trophy text-accent"></i> Current Leagues
                     </h3>
                     
-                    <!-- Sample Tournament Data - Replace with PHP code -->
-                    <div class="tournament-card">
-                        <img src="https://via.placeholder.com/100?text=CPL" alt="City Premier League" class="tournament-logo">
-                        <div class="tournament-info">
-                            <div class="tournament-name">City Premier League 2023</div>
-                            <div class="tournament-details">
-                                <span><i class="far fa-calendar-alt"></i> Jun 10 - Aug 15</span>
-                                <span><i class="fas fa-map-marker-alt"></i> <?php echo $data['city']; ?></span>
+                    <div class="scrollable-section">
+                        <?php if (!empty($leagues)): ?>
+                            <?php foreach ($leagues as $league): ?>
+                                <div class="league-card">
+                                    <div class="league-info">
+                                        <div class="league-name">
+                                            <a href="<?php echo base_url('Welcome/tournament_landing/' . ($league['league_id'])); ?>">
+                                                <?php echo $league['league_name']; ?>
+                                            </a>
+                                        </div>
+                                        <div class="league-details">
+                                            <span>
+                                                <i class="fas fa-map-marker-alt"></i> <?php echo $league['city']; ?> | 
+                                                <i class="far fa-calendar-alt"></i> Created <?php echo date('M Y', strtotime($league['created_at'])); ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="text-center py-3">
+                                <i class="fas fa-trophy fa-2x text-muted mb-2"></i>
+                                <p class="text-muted">No league participation found</p>
                             </div>
-                        </div>
-                        <span class="tournament-status status-active">Active</span>
+                        <?php endif; ?>
                     </div>
-                    
-                    <div class="tournament-card">
-                        <img src="https://via.placeholder.com/100?text=T20" alt="T20 Challenge" class="tournament-logo">
-                        <div class="tournament-info">
-                            <div class="tournament-name">T20 Challenge Cup</div>
-                            <div class="tournament-details">
-                                <span><i class="far fa-calendar-alt"></i> Sep 5 - Oct 20</span>
-                                <span><i class="fas fa-map-marker-alt"></i> National</span>
-                            </div>
-                        </div>
-                        <span class="tournament-status status-upcoming">Upcoming</span>
-                    </div>
-                    
-                    <div class="tournament-card">
-                        <img src="https://via.placeholder.com/100?text=CL" alt="Champions League" class="tournament-logo">
-                        <div class="tournament-info">
-                            <div class="tournament-name">Champions League 2023</div>
-                            <div class="tournament-details">
-                                <span><i class="far fa-calendar-alt"></i> Jan 15 - Mar 30</span>
-                                <span><i class="fas fa-map-marker-alt"></i> International</span>
-                            </div>
-                        </div>
-                        <span class="tournament-status status-completed">Completed</span>
-                    </div>
-                    
-                    <!-- Add PHP code here to loop through tournaments -->
-                    <?php /*
-                    if (!empty($tournaments)) {
-                        foreach ($tournaments as $tournament) {
-                            echo '<div class="tournament-card">';
-                            echo '<img src="'.$tournament['logo'].'" alt="'.$tournament['name'].'" class="tournament-logo">';
-                            echo '<div class="tournament-info">';
-                            echo '<div class="tournament-name">'.$tournament['name'].'</div>';
-                            echo '<div class="tournament-details">';
-                            echo '<span><i class="far fa-calendar-alt"></i> '.$tournament['start_date'].' - '.$tournament['end_date'].'</span>';
-                            echo '<span><i class="fas fa-map-marker-alt"></i> '.$tournament['location'].'</span>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '<span class="tournament-status status-'.$tournament['status'].'">'.ucfirst($tournament['status']).'</span>';
-                            echo '</div>';
-                        }
-                    } else {
-                        echo '<div class="text-center py-3">';
-                        echo '<i class="fas fa-trophy fa-2x text-muted mb-2"></i>';
-                        echo '<p class="text-muted">No tournament participation found</p>';
-                        echo '</div>';
-                    }
-                    */ ?>
                 </div>
                 
                 <!-- Quick Stats -->
@@ -699,18 +739,14 @@
                             </thead>
                             <tbody>
                                 <?php 
-                                // Calculate batting averages and strike rates for each format
                                 $formats = ['leather_ball', 'tape_ball', 'tennis_ball'];
                                 foreach ($formats as $format):
                                     $matches = $player_stats[$format]['total_matches'];
                                     $runs = $player_stats[$format]['total_runs'];
                                     $balls = $player_stats[$format]['total_balls'] ?? 0;
-                                    $outs = $player_stats[$format]['total_outs'] ?? $matches; // Default to matches if outs not available
+                                    $outs = $player_stats[$format]['total_outs'] ?? $matches;
                                     
-                                    // Calculate average (runs per out)
                                     $average = $outs > 0 ? round($runs / $outs, 2) : '-';
-                                    
-                                    // Calculate strike rate (runs per 100 balls)
                                     $strike_rate = $balls > 0 ? round(($runs / $balls) * 100, 2) : '-';
                                 ?>
                                 <tr>
@@ -763,13 +799,8 @@
                                         $balls_bowled = $stats['total_balls'] ?? 0;
                                         $matches = $stats['total_matches'];
                                         
-                                        // Calculate bowling average (runs per wicket)
                                         $bowling_avg = $wickets > 0 ? round($runs_given / $wickets, 2) : '-';
-                                        
-                                        // Calculate economy rate (runs per over)
                                         $economy = $balls_bowled > 0 ? round(($runs_given / $balls_bowled) * 6, 2) : '-';
-                                        
-                                        // Calculate strike rate (balls per wicket)
                                         $bowling_sr = $wickets > 0 ? round($balls_bowled / $wickets, 2) : '-';
                                         ?>
                                         <tr>
@@ -790,7 +821,7 @@
                         </table>
                     </div>
                 </div>
-               
+                
                 <!-- Recent Performance -->
                 <div class="stats-card" id="performance">
                     <h3 class="card-title">
@@ -798,7 +829,6 @@
                     </h3>
                     
                     <div class="performance-container">
-                        <!-- Match 1 -->
                         <div class="performance-card">
                             <div class="match-header">
                                 <div class="match-teams">RCB vs MI</div>
@@ -827,7 +857,6 @@
                             </div>
                         </div>
                         
-                        <!-- Match 2 -->
                         <div class="performance-card">
                             <div class="match-header">
                                 <div class="match-teams">CSK vs KKR</div>
@@ -856,7 +885,6 @@
                             </div>
                         </div>
                         
-                        <!-- Match 3 -->
                         <div class="performance-card">
                             <div class="match-header">
                                 <div class="match-teams">DC vs SRH</div>
@@ -900,12 +928,42 @@
                 </div>
             </div>
         </div>
-        
-        <div class="profile-footer">
-            <p>Last updated: <?php echo date("F j, Y, g:i a"); ?></p>
-            <p>&copy; <?php echo date("Y"); ?> Local Cricket Network. All rights reserved.</p>
-        </div>
     </div>
+    
+    <!-- Fixed Footer -->
+    <nav class="fixed-footer navbar navbar-light">
+        <div class="container-fluid">
+            <ul class="nav justify-content-center w-100">
+                <li> <a href="<?php echo base_url(); ?>Welcome/landing_page">
+                <i class="fas fa-paper-plane"></i>
+                <span>Home</span>
+            </a>
+        </li>
+                <?php if($this->session->userdata('user_id') == $data['user_id']): ?>
+                    <li class="nav-item">
+                        <a class="nav-link join-team" href="<?php echo base_url(); ?>PlayerController/join_team/<?php echo $data['player_id']; ?>">
+                            <i class="fas fa-plus-circle"></i> Join Team
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo base_url(); ?>PlayerController/sent_team_request/<?php echo $data['player_id']; ?>">
+                            <i class="fas fa-paper-plane"></i> Sent Requests
+                        </a>
+                    </li>
+                <?php endif; ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="#stats">
+                        <i class="fas fa-chart-line"></i> Statistics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#leagues">
+                        <i class="fas fa-trophy"></i> Leagues
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -916,7 +974,6 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });

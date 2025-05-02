@@ -7,49 +7,65 @@
   <title>Player Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #006D77;
-      --primary-hover: #005A62;
+      --primary-color: #005F66;
+      --primary-hover: #004C52;
       --secondary-color: #283618;
       --accent-color: #FEFAE0;
       --danger-color: #BC4749;
       --warning-color: #DDA15E;
       --success-color: #606C38;
       --light-bg: #F8F1E9;
-      --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      --card-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
-      --border-radius: 12px;
-      --transition: all 0.3s ease;
+      --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      --card-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.12);
+      --spacing-xs: 2px;
+      --spacing-sm: 5px;
+      --spacing-md: 8px;
+      --spacing-lg: 12px;
+      --font-xs: 0.85rem;
+      --font-sm: 0.875rem;
+      --font-md: 1rem;
+      --font-lg: 1.5rem;
+      --border-radius: 8px;
+      --transition: all 0.2s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--light-bg);
       color: var(--secondary-color);
-      line-height: 1.6;
+      line-height: 1.4;
       margin: 0;
-      padding: 0;
+      padding-bottom: 50px;
+      font-size: var(--font-sm);
     }
 
     .container {
-      padding: 2rem 1rem;
-      max-width: 1400px;
+      padding: var(--spacing-md);
+      max-width: 1200px;
       margin: 0 auto;
     }
 
     .main-content {
       display: flex;
-      gap: 1.5rem;
+      gap: var(--spacing-md);
       flex-wrap: wrap;
     }
 
     .player-section {
-      flex: 0 0 280px;
+      flex: 0 0 240px;
       background-color: #fff;
       border-radius: var(--border-radius);
       box-shadow: var(--card-shadow);
-      padding: 1.5rem;
+      padding: var(--spacing-sm);
       text-align: center;
       height: fit-content;
     }
@@ -61,76 +77,82 @@
     }
 
     .player-section img {
-      width: 100px;
-      height: 100px;
+      width: 60px;
+      height: 60px;
       object-fit: cover;
       border-radius: 50%;
-      border: 3px solid var(--primary-color);
-      margin-bottom: 1rem;
+      margin-bottom: var(--spacing-xs);
     }
 
     .player-section h5 {
-      font-size: 1.25rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      margin: 0.5rem 0;
+      margin: var(--spacing-xs) 0;
       color: var(--secondary-color);
+      letter-spacing: 0.5px;
     }
 
     .player-section p {
-      font-size: 0.9rem;
+      font-size: var(--font-xs);
       color: #6c757d;
-      margin: 0.25rem 0;
+      margin: var(--spacing-xs) 0;
     }
 
     .player-section a {
-      display: inline-block;
-      margin-top: 0.5rem;
+      display: block;
+      margin: var(--spacing-xs) 0 0;
       text-decoration: none;
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: var(--font-xs);
       transition: var(--transition);
     }
 
     .btn-view-profile {
-      background: linear-gradient(135deg, var(--primary-color), #008B97);
+      background: linear-gradient(135deg, var(--primary-color), #007A85);
       color: #fff;
       border: none;
-      border-radius: 20px;
-      padding: 0.6rem 1.2rem;
-      font-weight: 600;
+      border-radius: var(--border-radius);
+      padding: 0.2rem 0.5rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      letter-spacing: 0.5px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       transition: var(--transition);
+      min-height: 24px;
     }
 
     .btn-view-profile:hover {
-      background: linear-gradient(135deg, var(--primary-hover), #007A85);
-      color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 109, 119, 0.2);
-      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--primary-hover), #006671);
+      box-shadow: 0 2px 4px rgba(0, 95, 102, 0.2);
+      transform: scale(1.05);
     }
 
     .link-bar {
       display: flex;
       justify-content: flex-start;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
       border-bottom: 1px solid #e9ecef;
-      padding-bottom: 1rem;
+      padding-bottom: var(--spacing-sm);
+      overflow-x: auto;
+      scrollbar-width: none;
     }
+
+    .link-bar::-webkit-scrollbar { display: none; }
 
     .link-bar button {
       background-color: transparent;
       border: none;
-      border-radius: 8px;
-      padding: 0.5rem 1.25rem;
-      font-size: 0.9rem;
+      border-radius: var(--border-radius);
+      padding: 0.2rem 0.5rem;
+      font-size: var(--font-sm);
       font-weight: 500;
       color: #6c757d;
       cursor: pointer;
       transition: var(--transition);
       position: relative;
+      white-space: nowrap;
+      min-height: 32px;
     }
 
     .link-bar button.active {
@@ -140,39 +162,39 @@
     .link-bar button.active::after {
       content: '';
       position: absolute;
-      bottom: -1.1rem;
+      bottom: -1px;
       left: 0;
       width: 100%;
-      height: 3px;
+      height: 2px;
       background-color: var(--primary-color);
-      border-radius: 3px 3px 0 0;
+      border-radius: 2px 2px 0 0;
     }
 
     .link-bar button:hover {
       color: var(--primary-color);
-      background-color: rgba(0, 109, 119, 0.1);
+      background-color: rgba(0, 95, 102, 0.1);
     }
 
     .content-section {
       flex: 1;
-      min-width: 300px;
+      min-width: 280px;
       background-color: #fff;
       border-radius: var(--border-radius);
       box-shadow: var(--card-shadow);
-      padding: 1.5rem;
+      padding: var(--spacing-md);
     }
 
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: var(--spacing-md);
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: var(--spacing-sm);
     }
 
     .section-header h4 {
-      font-size: 1.4rem;
+      font-size: var(--font-lg);
       font-weight: 600;
       margin: 0;
       color: var(--secondary-color);
@@ -180,32 +202,31 @@
 
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--spacing-sm);
     }
 
     .card {
       border: none;
       border-radius: var(--border-radius);
-      overflow: hidden;
       background-color: #fff;
       box-shadow: var(--card-shadow);
       transition: var(--transition);
-      padding: 1rem;
+      padding: var(--spacing-sm);
     }
 
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-3px);
       box-shadow: var(--card-shadow-hover);
     }
 
     .card img {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       object-fit: cover;
       border-radius: 50%;
-      margin-right: 1rem;
-      border: 2px solid #e9ecef;
+      margin-right: var(--spacing-sm);
+      border: 1px solid #e9ecef;
     }
 
     .card-body {
@@ -215,7 +236,7 @@
     }
 
     .card-title {
-      font-size: 1rem;
+      font-size: var(--font-md);
       font-weight: 600;
       margin: 0;
     }
@@ -233,17 +254,19 @@
 
     .action-buttons {
       display: flex;
-      justify-content: flex-start;
-      gap: 0.75rem;
-      margin-top: 1rem;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-xs);
+      margin-top: var(--spacing-sm);
     }
 
     .btn {
-      border-radius: 8px;
+      border-radius: var(--border-radius);
       font-weight: 500;
-      font-size: 0.85rem;
-      padding: 0.5rem 0.9rem;
+      font-size: var(--font-xs);
+      padding: 0.2rem 0.5rem;
       transition: var(--transition);
+      min-height: 24px;
     }
 
     .btn-primary {
@@ -255,7 +278,6 @@
     .btn-primary:hover {
       background-color: var(--primary-hover);
       border-color: var(--primary-hover);
-      color: #fff;
     }
 
     .btn-warning {
@@ -282,12 +304,22 @@
 
     .empty-state {
       text-align: center;
-      padding: 2rem;
+      padding: var(--spacing-md);
       color: #6c757d;
+      background: var(--light-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+    }
+
+    .empty-state i {
+      font-size: 1rem;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-xs);
     }
 
     .empty-state p {
-      margin-bottom: 1.5rem;
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-xs);
     }
 
     .section {
@@ -300,19 +332,22 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .profile-image-container {
       position: relative;
       display: inline-block;
-      margin-bottom: 1rem;
+      margin-bottom: var(--spacing-xs);
     }
 
     .profile-image-upload {
-      margin-top: 0.5rem;
+      margin-top: var(--spacing-xs);
       width: 100%;
+      display: flex;
+      gap: var(--spacing-xs);
+      justify-content: center;
     }
 
     .profile-image-upload input {
@@ -320,44 +355,43 @@
     }
 
     .default-profile-icon {
-      width: 100px;
-      height: 100px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background-color: #e9ecef;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1rem;
-      border: 3px solid var(--primary-color);
+      margin-bottom: var(--spacing-xs);
     }
 
     .default-profile-icon i {
-      font-size: 2.5rem;
+      font-size: 1.5rem;
       color: #6c757d;
     }
 
     .preview-container {
-      margin: 0.5rem 0;
+      margin: var(--spacing-xs) 0;
     }
 
     .preview-image {
-      width: 80px;
-      height: 80px;
+      width: 50px;
+      height: 50px;
       object-fit: cover;
       border-radius: 50%;
-      border: 2px solid var(--primary-color);
       display: none;
     }
 
     .alert {
-      margin-bottom: 1rem;
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-xs);
+      padding: var(--spacing-xs);
     }
 
     @media (max-width: 992px) {
       .player-section {
         flex: 0 0 100%;
       }
-      
       .content-section {
         flex: 1 0 100%;
       }
@@ -365,59 +399,81 @@
 
     @media (max-width: 768px) {
       .container {
-        padding: 1rem;
+        padding: var(--spacing-sm);
       }
-      
       .player-section {
-        padding: 1.25rem;
+        padding: var(--spacing-xs);
       }
-      
-      .player-section img {
-        width: 80px;
-        height: 80px;
+      .player-section img, .default-profile-icon {
+        width: 50px;
+        height: 50px;
       }
-      
+      .player-section h5 {
+        font-size: var(--font-xs);
+      }
+      .player-section p {
+        font-size: 0.8rem;
+      }
+      .action-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
       .link-bar {
-        justify-content: center;
+        justify-content: flex-start;
       }
-      
-      .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
       .section-header h4 {
-        font-size: 1.25rem;
+        font-size: var(--font-md);
       }
-      
       .grid-container {
         grid-template-columns: 1fr;
+      }
+      .card img {
+        width: 40px;
+        height: 40px;
+      }
+      .btn {
+        padding: 0.15rem 0.4rem;
+        font-size: 0.8rem;
+        min-height: 20px;
+      }
+      .btn-view-profile {
+        padding: 0.15rem 0.4rem;
+        font-size: 0.8rem;
+      }
+      .preview-image {
+        width: 40px;
+        height: 40px;
+      }
+      .empty-state i {
+        font-size: 0.9rem;
+      }
+      .default-profile-icon i {
+        font-size: 1.2rem;
       }
     }
 
     @media (max-width: 576px) {
       .link-bar {
-        gap: 0.5rem;
+        gap: var(--spacing-xs);
       }
-      
       .link-bar button {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.8rem;
+        padding: 0.15rem 0.4rem;
+        font-size: var(--font-xs);
       }
-      
-      .action-buttons {
-        flex-wrap: wrap;
+    }
+
+    @media (min-width: 1200px) {
+      .player-section {
+        flex: 0 0 260px;
       }
-      
-      .btn {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.75rem;
+      .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       }
     }
   </style>
 </head>
 <body>
-
   <div class="container">
     <!-- Main Content -->
     <div class="main-content">
@@ -425,21 +481,24 @@
       <div class="player-section">
         <div class="profile-info">
           <?php if ($data == 0) { ?>
-            <p>You are not registered as a player yet.</p>
-            <a href="<?php echo base_url(); ?>Welcome/enter_player">
-              <button class="btn btn-primary">Register as a Player</button>
-            </a>
+            <div class="empty-state">
+              <i class="fas fa-user-plus"></i>
+              <p>Not a player yet.</p>
+              <a href="<?php echo base_url(); ?>Welcome/enter_player" aria-label="Register as a Player">
+                <button class="btn btn-primary">Register</button>
+              </a>
+            </div>
           <?php } else { ?>
             <!-- Display success/error messages -->
             <?php if ($this->session->flashdata('success')): ?>
               <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?php echo $this->session->flashdata('success'); ?>
+                <?php echo htmlspecialchars($this->session->flashdata('success')); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
             <?php endif; ?>
             <?php if ($this->session->flashdata('error')): ?>
               <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?php echo $this->session->flashdata('error'); ?>
+                <?php echo htmlspecialchars($this->session->flashdata('error')); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
             <?php endif; ?>
@@ -447,29 +506,29 @@
             <?php echo form_open_multipart('PlayerController/update_player_picture/' . $data['player_id'], ['id' => 'profilePictureForm']); ?>
               <div class="profile-image-container">
                 <?php if (!empty($data['image_path'])) { ?>
-                  <img src="<?php echo $data['image_path']; ?>" alt="User Photo" id="currentImage">
+                  <img src="<?php echo htmlspecialchars($data['image_path']); ?>" alt="User Photo" id="currentImage" loading="lazy">
                 <?php } else { ?>
                   <div class="default-profile-icon">
                     <i class="fas fa-user"></i>
                   </div>
                 <?php } ?>
                 <div class="preview-container">
-                  <img id="imagePreview" class="preview-image">
+                  <img id="imagePreview" class="preview-image" alt="Profile Image Preview" loading="lazy">
                 </div>
                 <div class="profile-image-upload">
                   <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(event)">
-                  <label for="profile_image" class="btn btn-primary btn-sm">Choose Picture</label>
-                  <button type="submit" name="submit" class="btn btn-success btn-sm" style="display: none;" id="uploadButton">Upload</button>
+                  <label for="profile_image" class="btn btn-primary btn-sm" aria-label="Choose Profile Picture">Choose</label>
+                  <button type="submit" name="submit" class="btn btn-success btn-sm" style="display: none;" id="uploadButton" aria-label="Upload Profile Picture">Upload</button>
                 </div>
               </div>
             <?php echo form_close(); ?>
 
-            <h5><?php echo $data['playerName']; ?></h5>
-            <p>Role: <?php echo $data['player_role']; ?></p>
-            <p>City: <?php echo $data['city']; ?></p>
+            <h5><?php echo htmlspecialchars($data['playerName']); ?></h5>
+            <p>Role: <?php echo htmlspecialchars($data['player_role']); ?></p>
+            <p>City: <?php echo htmlspecialchars($data['city']); ?></p>
             <div class="action-buttons">
-              <a href="<?php echo base_url(); ?>PlayerController/profile_player/<?php echo $data['player_id']; ?>" class="btn-view-profile">View Profile</a>
-              <a href="<?php echo base_url(); ?>PlayerController/update_player/<?php echo $data['player_id']; ?>" class="btn btn-warning btn-sm">Edit Profile</a>
+              <a href="<?php echo base_url(); ?>PlayerController/profile_player/<?php echo htmlspecialchars($data['player_id']); ?>" class="btn-view-profile" aria-label="View Profile">View</a>
+              <a href="<?php echo base_url(); ?>PlayerController/update_player/<?php echo htmlspecialchars($data['player_id']); ?>" class="btn btn-warning btn-sm" aria-label="Edit Profile">Edit</a>
             </div>
           <?php } ?>
         </div>
@@ -479,20 +538,21 @@
       <div class="content-section">
         <!-- Link Bar -->
         <div class="link-bar">
-          <button onclick="showSection('teams')" class="active">Teams</button>
-          <button onclick="showSection('tournaments')">Tournaments</button>
+          <button onclick="showSection('teams')" class="active" aria-label="Show Teams Section">Teams</button>
+          <button onclick="showSection('tournaments')" aria-label="Show Tournaments Section">Tournaments</button>
         </div>
 
         <!-- Teams Section -->
         <div id="teams-section" class="section active">
           <div class="section-header">
             <h4>My Teams</h4>
-            <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">Add Team</button>
+            <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'" aria-label="Add Team">Add Team</button>
           </div>
           <?php if ($team == 0) { ?>
             <div class="empty-state">
-              <p>You do not have a team yet. Create one to get started.</p>
-              <a href="<?php echo base_url(); ?>Welcome/enter_team">
+              <i class="fas fa-users"></i>
+              <p>No teams yet.</p>
+              <a href="<?php echo base_url(); ?>Welcome/enter_team" aria-label="Create Team">
                 <button class="btn btn-primary">Create Team</button>
               </a>
             </div>
@@ -501,11 +561,15 @@
               <?php foreach ($team as $team_info) { ?>
                 <div class="card">
                   <div class="card-body">
-                    <img src="<?php echo $team_info->image_path; ?>" alt="Team Logo">
-                    <h5 class="card-title"><a href="<?php echo base_url();?>TeamController/team_profile/<?php echo $team_info->team_id;?>"><?php echo $team_info->team_name;?></a></h5>
+                    <img src="<?php echo htmlspecialchars($team_info->image_path); ?>" alt="Team Logo" loading="lazy">
+                    <h5 class="card-title">
+                      <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo htmlspecialchars($team_info->team_id); ?>" aria-label="View <?php echo htmlspecialchars($team_info->team_name); ?> Profile">
+                        <?php echo htmlspecialchars($team_info->team_name); ?>
+                      </a>
+                    </h5>
                   </div>
                   <div class="action-buttons">
-                    <button class="btn btn-warning btn-sm">Edit</button>
+                    <button class="btn btn-warning btn-sm" aria-label="Edit Team">Edit</button>
                   </div>
                 </div>
               <?php } ?>
@@ -517,22 +581,27 @@
         <div id="tournaments-section" class="section">
           <div class="section-header">
             <h4>Tournaments</h4>
-            <button class="btn btn-primary" onclick="location.href='<?php echo base_url();?>Welcome/add_tournament'">Add Tournament</button>
+            <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/add_tournament'" aria-label="Add Tournament">Add Tournament</button>
           </div>
           <?php if (empty($tournament)) { ?>
             <div class="empty-state">
-              <p>Currently no tournaments available. Create one to get started.</p>
-              <button class="btn btn-primary" onclick="location.href='<?php echo base_url();?>Welcome/add_tournament'">Create Tournament</button>
+              <i class="fas fa-trophy"></i>
+              <p>No tournaments available.</p>
+              <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/add_tournament'" aria-label="Create Tournament">Create Tournament</button>
             </div>
           <?php } else { ?>
             <div class="grid-container">
               <?php foreach ($tournament as $league) { ?>
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title"><a href="<?php echo base_url();?>Welcome/tournament_main/<?php echo $league->league_id;?>"><?php echo $league->league_name;?></a></h5>
+                    <h5 class="card-title">
+                      <a href="<?php echo base_url(); ?>Welcome/tournament_main/<?php echo htmlspecialchars($league->league_id); ?>" aria-label="View <?php echo htmlspecialchars($league->league_name); ?> Details">
+                        <?php echo htmlspecialchars($league->league_name); ?>
+                      </a>
+                    </h5>
                   </div>
                   <div class="action-buttons">
-                    <button class="btn btn-warning btn-sm">Edit</button>
+                    <button class="btn btn-warning btn-sm" aria-label="Edit Tournament">Edit</button>
                   </div>
                 </div>
               <?php } ?>
@@ -559,6 +628,7 @@
       const preview = document.getElementById('imagePreview');
       const uploadButton = document.getElementById('uploadButton');
       const currentImage = document.getElementById('currentImage');
+      const defaultIcon = document.querySelector('.default-profile-icon');
       const file = event.target.files[0];
 
       if (file) {
@@ -570,6 +640,9 @@
           if (currentImage) {
             currentImage.style.display = 'none';
           }
+          if (defaultIcon) {
+            defaultIcon.style.display = 'none';
+          }
         }
         reader.readAsDataURL(file);
       } else {
@@ -577,6 +650,9 @@
         uploadButton.style.display = 'none';
         if (currentImage) {
           currentImage.style.display = 'block';
+        }
+        if (defaultIcon) {
+          defaultIcon.style.display = 'flex';
         }
       }
     }
@@ -587,6 +663,5 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

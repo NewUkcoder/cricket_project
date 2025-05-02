@@ -71,38 +71,53 @@ class PlayerController extends CI_Controller {
 
     }
 
-    public function profile_player()
+   public function profile_player()
+{       
+    $user_id = $this->session->userdata('user_id');
+    $player_data['data'] = $this->Player_model->get_player(['user_id' => $user_id], 'add_player');
+    $player_info = $this->Player_model->get_player(['user_id' => $user_id], 'add_player');
+    
+    if ($player_data['data'] == 0) {
+        $this->load->view('header');
+        echo '<h2>please register as a player first, go back please</h2>';
+    } else {
+        $player_id = $player_info['player_id'];
+        $player_data['team_names'] = $this->Player_model->get_active_teams($player_id);
+        $player_data['player_stats'] = $this->Player_model->calculate_player_stats($player_id);
+        $player_data['bowling_stats'] = $this->Player_model->calculate_player_bowling_stats($player_id);
+        $player_data['leagues'] = $this->Player_model->get_player_leagues($player_id); // New line
+        var_dump( $player_data['leagues'] );
+        $this->load->view('header');
+        $this->load->view('profile_player', $player_data);
+    }
+}
+
+ public function player_info($player_id)
     {       
     //code for read bills table
 
                 $user_id=$this->session->userdata('user_id');
-               
-               
                 
-              $player_data['data']=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
+              $player_data['data']=$this->Player_model->get_player(array('player_id'=>$player_id),'add_player');
              // var_dump($player_data);
-              $player_info=$this->Player_model->get_player(array('user_id'=>$user_id),'add_player');
-           
-                
-                 if($player_data['data']==0)
-              {
 
-                 $this->load->view('header');
-                echo '<h2>please register as a player first, go back please</h2>';
-              } else {
-                 $player_id=$player_info['player_id'];
-                
                  $player_data['team_names'] = $this->Player_model->get_active_teams($player_id);
                  $player_data['player_stats'] = $this->Player_model->calculate_player_stats($player_id);
                   $player_data['bowling_stats'] = $this->Player_model->calculate_player_bowling_stats($player_id);
-               //   var_dump($player_data['bowling_stats']);
-                 // var_dump($player_data);
-             
+                   $player_data['leagues'] = $this->Player_model->get_player_leagues($player_id); 
+              /*if($player_data['data']==0)
+              {
+                 $this->load->view('header');
+                echo 'please register as a player first, go back please';
+              }
+              else
+              {*/
                     $this->load->view('header');
                 $this->load->view('profile_player',$player_data);
-            }
+           // }
                 
     }
+
 
     public function update_player()
     {
@@ -224,30 +239,7 @@ class PlayerController extends CI_Controller {
  
 
     }
-    public function player_info($player_id)
-    {       
-    //code for read bills table
-
-                $user_id=$this->session->userdata('user_id');
-                
-              $player_data['data']=$this->Player_model->get_player(array('player_id'=>$player_id),'add_player');
-             // var_dump($player_data);
-
-                 $player_data['team_names'] = $this->Player_model->get_active_teams($player_id);
-                 $player_data['player_stats'] = $this->Player_model->calculate_player_stats($player_id);
-                  $player_data['bowling_stats'] = $this->Player_model->calculate_player_bowling_stats($player_id);
-              /*if($player_data['data']==0)
-              {
-                 $this->load->view('header');
-                echo 'please register as a player first, go back please';
-              }
-              else
-              {*/
-                    $this->load->view('header');
-                $this->load->view('profile_player',$player_data);
-           // }
-                
-    }
+    
 
    
  public function update_player_picture($player_id) {

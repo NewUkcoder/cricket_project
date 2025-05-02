@@ -2,659 +2,274 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cricket Club</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #1e90ff;
+            --secondary-color: #ff4500;
+            --text-dark: #1a252f;
+            --text-muted: #6c757d;
+            --bg-white: #ffffff;
+            --bg-light: #f7f9fc;
+            --shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 5px 10px rgba(0, 0, 0, 0.15);
+            --spacing-xs: 6px;
+            --spacing-sm: 10px;
+            --spacing-md: 14px;
+            --spacing-lg: 20px;
+            --font-xs: 0.8rem;
+            --font-sm: 0.9rem;
+            --font-md: 1rem;
+            --font-lg: 1.6rem;
+            --border-radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            padding-bottom: 80px;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding-bottom: 70px;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 20px;
+            padding: var(--spacing-md);
         }
 
         .header-container {
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            margin: 15px 0;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: var(--bg-white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            box-shadow: var(--shadow);
         }
 
         .team-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 15px;
+            margin-bottom: var(--spacing-md);
         }
 
         .club-logo {
-            max-width: 60px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            border: 2px solid #007bff;
-            transition: transform 0.3s ease;
-        }
-
-        .club-logo:hover {
-            transform: scale(1.1);
+            border: 2px solid var(--primary-color);
+            object-fit: cover;
         }
 
         .club-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #007bff;
-            margin-left: 10px;
+            font-size: var(--font-lg);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-left: var(--spacing-sm);
         }
 
         .stats-container {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: var(--spacing-sm);
         }
 
         .stats-item {
-            background: linear-gradient(135deg, #ffffff, #e9ecef);
-            border-radius: 12px;
-            padding: 15px;
+            background: var(--bg-white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
             text-align: center;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-            font-weight: 600;
-            flex: 1;
-            min-width: 100px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stats-item.matches {
-            background: linear-gradient(135deg, #007bff, #00c4ff);
-            color: #fff;
-        }
-
-        .stats-item.wins {
-            background: linear-gradient(135deg, #28a745, #4caf50);
-            color: #fff;
-        }
-
-        .stats-item.losses {
-            background: linear-gradient(135deg, #dc3545, #ff5252);
-            color: #fff;
+            box-shadow: var(--shadow);
+            border: 1px solid #e9ecef;
+            transition: transform 0.2s ease;
         }
 
         .stats-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
         }
 
+        .stats-item.matches { background: linear-gradient(135deg, var(--primary-color), #40c4ff); color: #fff; }
+        .stats-item.wins { background: linear-gradient(135deg, #28a745, #66bb6a); color: #fff; }
+        .stats-item.losses { background: linear-gradient(135deg, #dc3545, #ef5350); color: #fff; }
+
         .stats-title {
-            font-size: 1rem;
+            font-size: var(--font-xs);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: 500;
         }
 
         .stats-value {
-            font-size: 1.5rem;
-            margin-top: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 3px;
         }
 
         .link-bar {
             display: flex;
+            gap: var(--spacing-xs);
             overflow-x: auto;
-            gap: 10px;
-            padding: 10px 0;
-            margin Grupo de WhatsApp de la comunidadbottom: 20px;
+            padding: var(--spacing-sm) 0;
+            margin-bottom: var(--spacing-md);
             scrollbar-width: none;
-            -ms-overflow-style: none;
         }
 
-        .link-bar::-webkit-scrollbar {
-            display: none;
-        }
+        .link-bar::-webkit-scrollbar { display: none; }
 
         .link-bar a {
             text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            background-color: #f8f9fa;
-            color: #007bff;
-            font-size: 0.8rem;
+            padding: 8px 14px;
+            border-radius: 18px;
+            background: var(--bg-light);
+            color: var(--primary-color);
+            font-size: var(--font-xs);
             font-weight: 500;
             white-space: nowrap;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         .link-bar a:hover {
-            background-color: #007bff;
+            background: var(--primary-color);
             color: #fff;
         }
 
-        .link-bar a.join-tournament {
-            background-color: #ff5722;
-            color: #fff;
+        .section {
+            background: var(--bg-white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow);
         }
 
-        .link-bar a.join-tournament:hover {
-            background-color: #e64a19;
-        }
-
-        .link-bar a.invite-team {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .link-bar a.invite-team:hover {
-            background-color: #218838;
-        }
-
-        .link-bar a.match-request {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .link-bar a.match-request:hover {
-            background-color: #c82333;
-        }
-
-        .link-bar a.player-request {
-            background-color: #ffc107;
-            color: #000;
-        }
-
-        .link-bar a.player-request:hover {
-            background-color: #e0a800;
-        }
-
-        .team-info-section {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .team-info-section h2 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #007bff;
-            margin-bottom: 20px;
+        .section h2, .tm-section-title {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            color: var(--primary-color);
             text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-bottom: var(--spacing-sm);
         }
 
         .team-info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            gap: var(--spacing-sm);
         }
 
         .info-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 10px;
-            padding: 15px;
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
             display: flex;
             align-items: center;
-            gap: 10px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #dee2e6;
+            gap: var(--spacing-xs);
+            border: 1px solid #e9ecef;
+            transition: transform 0.2s ease;
         }
 
         .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
         }
 
         .info-card i {
-            font-size: 1.5rem;
-            color: #007bff;
+            font-size: 1.1rem;
+            color: var(--primary-color);
         }
 
         .info-card p {
             margin: 0;
-            font-size: 0.9rem;
-            color: #333;
-        }
-
-        .info-card .team-admin-email {
-            color: #007bff;
-        }
-
-        .info-card .team-admin-phone {
-            color: #28a745;
-        }
-
-        .management-section {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .management-section h3 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #007bff;
-            margin-bottom: 20px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .management-list {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            gap: 12px;
-        }
-
-        .management-member {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 10px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #dee2e6;
-        }
-
-        .management-member:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .management-member i {
-            font-size: 1.4rem;
-            color: #ff5722;
-            flex-shrink: 0;
-        }
-
-        .management-member p {
-            margin: 0;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #333;
-            line-height: 1.4;
-        }
-
-        .management-member strong {
-            color: #007bff;
-        }
-
-        .top-performers-section {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .top-performers-section h3 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #ff5722;
-            margin-bottom: 20px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .performer-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .player-card {
-            background: linear-gradient(135deg, #fff, #e3f2fd);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            font-size: 0.9rem;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #dee2e6;
-        }
-
-        .player-card.bowler {
-            background: linear-gradient(135deg, #0288d1, #4fc3f7);
-            color: #fff;
-        }
-
-        .player-card.batsman {
-            background: linear-gradient(135deg, #d81b60, #f06292);
-            color: #fff;
-        }
-
-        .player-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .player-card h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
-
-        .player-image {
-            max-width: 80px;
-            border-radius: 50%;
-            border: 3px solid #007bff;
-            transition: transform 0.3s ease;
-            margin: 0 auto 12px;
-            display: block;
-        }
-
-        .player-image:hover {
-            transform: scale(1.1);
-        }
-
-        .player-stats {
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 8px 0;
-        }
-
-        .recent-matches-section {
-            background: #fff;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-        }
-
-        .recent-matches-section h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #007bff;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .list-group-item {
-            font-size: 0.9rem;
-            padding: 10px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .list-group-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .badge {
-            font-size: 0.9rem;
-        }
-
-        .flashdata-message {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 5px;
-        }
-
-        .flashdata-message.success {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .flashdata-message.error {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .current-captain-section {
-            background: #fff;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-        }
-
-        .current-captain-section h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #007bff;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .captain-cards {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .captain-card {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-            font-size: 0.9rem;
-            flex: 1;
-            min-width: 120px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .captain-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .captain-card h4 {
-            font-size: 1.1rem;
-            color: #007bff;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .captain-image {
-            max-width: 80px;
-            border-radius: 50%;
-            border: 3px solid #007bff;
-            transition: transform 0.3s ease;
-        }
-
-        .captain-image:hover {
-            transform: scale(1.1);
-        }
-
-        .opposition-team-section {
-            background: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-        }
-
-        .opposition-team-section h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #007bff;
-            margin-bottom: 20px;
-            text-align: center;
-            text-transform: uppercase;
+            font-size: var(--font-sm);
+            color: var(--text-dark);
         }
 
         .opposition-team-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--spacing-sm);
         }
 
         .opposition-team-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            gap: var(--spacing-xs);
+            box-shadow: var(--shadow);
             text-decoration: none;
-            color: inherit;
+            color: var(--text-dark);
+            transition: transform 0.2s ease, background-color 0.2s ease;
         }
 
         .opposition-team-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
             background: #e9ecef;
         }
 
         .opposition-team-card img {
-            width: 50px;
-            height: 50px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            border: 2px solid #007bff;
+            border: 2px solid var(--primary-color);
+            object-fit: cover;
         }
 
         .opposition-team-card p {
             margin: 0;
-            font-size: 0.9rem;
+            font-size: var(--font-sm);
             font-weight: 500;
-            color: #333;
         }
 
         .opposition-team-card .city-name {
-            color: #ff5722;
+            color: var(--secondary-color);
+            font-size: var(--font-xs);
             font-weight: 600;
-        }
-
-        .league-section {
-            background: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-        }
-
-        .league-section h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #007bff;
-            margin-bottom: 20px;
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        .league-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .league-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .league-card a {
-            text-decoration: none;
-            color: #333;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: block;
-        }
-
-        .league-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .league-card a:hover {
-            color: #007bff;
-        }
-
-        .tm-section {
-            background: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-        }
-
-        .tm-section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #007bff;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .tm-empty-state {
-            text-align: center;
-            color: #6c757d;
-            font-style: italic;
-            font-size: 1rem;
         }
 
         .tm-schedule-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .tm-schedule-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            box-shadow: var(--shadow);
         }
 
         .tm-match-header {
             display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             overflow-x: auto;
-            padding: 5px;
         }
 
         .tm-team {
             display: flex;
             align-items: center;
-            gap: 10px;
-            text-align: left;
-            max-width: 200px;
-            min-width: 120px;
+            gap: var(--spacing-xs);
+            min-width: 100px;
         }
 
         .tm-team img {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            border: 2px solid #007bff;
-            flex-shrink: 0;
+            border: 2px solid var(--primary-color);
+            object-fit: cover;
         }
 
         .tm-team p {
-            font-size: 0.9rem;
+            font-size: var(--font-sm);
             font-weight: 500;
             margin: 0;
             white-space: nowrap;
@@ -663,184 +278,220 @@
         }
 
         .tm-vs {
-            font-size: 1rem;
+            font-size: var(--font-sm);
             font-weight: 600;
-            color: #ff5722;
-            flex-shrink: 0;
+            color: var(--secondary-color);
         }
 
         .tm-match-details {
             text-align: center;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: #333;
+            margin-top: var(--spacing-xs);
+            font-size: var(--font-xs);
+            color: var(--text-muted);
         }
 
         .tm-match-details span {
-            margin: 0 5px;
+            margin: 0 4px;
         }
 
-        .hover-highlight:hover {
-            background-color: #f8f9fa;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
+        .performer-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: var(--spacing-sm);
         }
 
-        .list-group-item {
-            transition: all 0.2s ease;
+        .player-card {
+            background: var(--bg-white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .player-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .player-card.bowler { background: linear-gradient(135deg, #0288d1, #4fc3f7); color: #fff; }
+        .player-card.batsman { background: linear-gradient(135deg, #d81b60, #f06292); color: #fff; }
+
+        .player-card h4 {
+            font-size: var(--font-sm);
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .player-image, .captain-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            object-fit: cover;
+            margin: 0 auto var(--spacing-xs);
+        }
+
+        .captain-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--spacing-sm);
+        }
+
+        .captain-card {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .captain-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .captain-card h4 {
+            font-size: var(--font-sm);
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .league-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--spacing-sm);
+        }
+
+        .league-card {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .league-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .league-card a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: var(--font-sm);
+            font-weight: 500;
+        }
+
+        .management-list {
+            list-style: none;
+            display: grid;
+            gap: var(--spacing-xs);
+        }
+
+        .management-member {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            box-shadow: var(--shadow);
+        }
+
+        .management-member i {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+        }
+
+        .management-member p {
+            margin: 0;
+            font-size: var(--font-sm);
+            color: var(--text-dark);
         }
 
         .tm-footer {
             position: fixed;
             bottom: 0;
-            left: 0;
             width: 100%;
-            background-color: #ffffff;
-            padding: 10px 0;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            background: var(--bg-white);
+            padding: var(--spacing-xs) 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
             z-index: 1000;
         }
 
         .tm-footer-nav {
             display: flex;
             justify-content: space-around;
-            align-items: center;
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
         }
 
         .tm-footer-nav a {
-            color: #333;
+            color: var(--text-dark);
             text-decoration: none;
-            font-size: 12px;
+            font-size: var(--font-xs);
             font-weight: 500;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            padding: 8px;
-            transition: color 0.3s ease;
+            gap: 3px;
+            padding: var(--spacing-xs);
+            transition: color 0.2s ease;
         }
 
         .tm-footer-nav a i {
-            font-size: 20px;
-        }
-
-        .tm-footer-nav a:hover {
-            color: #008c8c;
+            font-size: 1.1rem;
         }
 
         .tm-footer-nav a.active {
-            color: #008c8c;
+            color: var(--primary-color);
             font-weight: 600;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-                margin: 0;
-                width: 100%;
-            }
-
-            .club-title {
-                font-size: 1.5rem;
-            }
-
-            .stats-item {
-                min-width: 100px;
-                padding: 10px;
-            }
-
-            .stats-title {
-                font-size: 0.9rem;
-            }
-
-            .stats-value {
-                font-size: 1.2rem;
-            }
-
-            .player-card, .captain-card {
-                min-width: 110px;
-            }
-
-            .player-image, .captain-image {
-                max-width: 60px;
-            }
-
-            .team-info-grid {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-                gap: 10px;
-            }
-
-            .opposition-team-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
-
-            .opposition-team-card {
-                padding: 8px;
-                flex-direction: row;
-                align-items: center;
-            }
-
-            .opposition-team-card img {
-                width: 35px;
-                height: 35px;
-            }
-
-            .opposition-team-card p {
-                font-size: 0.8rem;
-                line-height: 1.2;
-            }
-
-            .opposition-team-card .city-name {
-                font-size: 0.75rem;
-            }
-
-            .league-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-
-            .league-card {
-                padding: 10px;
-            }
-
-            .league-card a {
-                font-size: 0.8rem;
-            }
-
-            .section, .tm-section, .recent-matches-section, .team-info-section, .current-captain-section, .opposition-team-section, .league-section, .management-section, .top-performers-section {
-                padding: 15px;
-            }
-
-            .performer-row {
+            .container { padding: var(--spacing-xs); }
+            .header-container, .section { padding: var(--spacing-sm); margin: var(--spacing-sm) 0; }
+            .club-title { font-size: 1.3rem; }
+            .stats-container { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
+            .stats-item { padding: var(--spacing-xs); }
+            .stats-title { font-size: 0.75rem; }
+            .stats-value { font-size: 1rem; }
+            .team-info-grid, .opposition-team-grid, .performer-row, .captain-cards, .league-grid {
                 grid-template-columns: 1fr;
             }
-
-            .tm-footer-nav {
-                padding: 0 10px;
+            .info-card, .opposition-team-card, .tm-schedule-card, .league-card, .management-member {
+                padding: var(--spacing-xs);
             }
-
-            .tm-footer-nav a {
-                font-size: 11px;
-                padding: 6px;
+            .info-card p, .opposition-team-card p, .league-card a, .management-member p {
+                font-size: var(--font-xs);
             }
-
-            .tm-footer-nav a i {
-                font-size: 18px;
-            }
+            .opposition-team-card .city-name { font-size: 0.7rem; }
+            .section h2, .tm-section-title { font-size: 1.3rem; }
+            .tm-footer-nav a { font-size: 0.7rem; padding: 5px; }
+            .tm-footer-nav a i { font-size: 1rem; }
         }
 
         @media (max-width: 480px) {
-            .tm-footer-nav a {
-                font-size: 10px;
-                padding: 5px;
-            }
+            .club-logo, .opposition-team-card img, .tm-team img { width: 32px; height: 32px; }
+            .player-image, .captain-image { width: 45px; height: 45px; }
+            .club-title { font-size: 1.1rem; }
+            .stats-item { min-width: 75px; }
+            .section h2, .tm-section-title { font-size: 1.2rem; }
+            .tm-footer-nav a { font-size: 0.65rem; }
+            .tm-footer-nav a i { font-size: 0.9rem; }
+        }
 
-            .tm-footer-nav a i {
-                font-size: 16px;
-            }
+        @media (min-width: 1200px) {
+            .team-info-grid { grid-template-columns: repeat(3, 1fr); }
+            .opposition-team-grid { grid-template-columns: repeat(4, 1fr); }
+            .performer-row, .captain-cards { grid-template-columns: repeat(3, 1fr); }
+            .league-grid { grid-template-columns: repeat(3, 1fr); }
+            .stats-container { grid-template-columns: repeat(3, 1fr); }
+            .club-title { font-size: 1.7rem; }
+            .section h2, .tm-section-title { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -849,11 +500,10 @@
         <div class="header-container">
             <div class="team-header">
                 <div class="d-flex align-items-center">
-                    <img src="<?php echo htmlspecialchars($data['image_path'] ?? 'default_logo.png'); ?>" alt="Cricket Club Logo" class="club-logo">
+                    <img src="<?php echo htmlspecialchars($data['image_path'] ?? 'default_logo.png'); ?>" alt="Cricket Club Logo" class="club-logo" loading="lazy">
                     <div class="club-title"><?php echo htmlspecialchars($data['team_name'] ?? 'Team Name'); ?></div>
                 </div>
             </div>
-
             <div class="stats-container">
                 <div class="stats-item matches">
                     <div class="stats-title">Matches</div>
@@ -871,23 +521,23 @@
         </div>
 
         <?php if ($this->session->flashdata('message')): ?>
-            <div class="flashdata-message <?php echo htmlspecialchars($this->session->flashdata('message_type')); ?>">
+            <div class="alert alert-<?php echo htmlspecialchars($this->session->flashdata('message_type')); ?> text-center">
                 <?php echo htmlspecialchars($this->session->flashdata('message')); ?>
             </div>
         <?php endif; ?>
 
         <div class="link-bar">
             <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
-                <a href="<?php echo base_url(); ?>Welcome/team_admin/<?php echo htmlspecialchars($data['team_id']); ?>" class="dashboard">Dashboard</a>
+                <a href="<?php echo base_url(); ?>Welcome/team_admin/<?php echo htmlspecialchars($data['team_id']); ?>">Dashboard</a>
             <?php endif; ?>
             <a href="<?php echo base_url(); ?>TeamController/team_schedule/<?php echo htmlspecialchars($data['team_id']); ?>">View Schedule</a>
             <a href="<?php echo base_url(); ?>TeamController/team_squad/<?php echo htmlspecialchars($data['team_id']); ?>">Squad</a>
         </div>
 
-        <section class="recent-matches-section">
-            <h3 class="tm-section-title">Match Results</h3>
+        <section class="section recent-matches-section">
+            <h2>Match Results</h2>
             <?php if (empty($matches)): ?>
-                <div class="alert alert-info">No match results available for this team.</div>
+                <div class="alert alert-info text-center">No match results available for this team.</div>
             <?php else: ?>
                 <ul class="list-group">
                     <?php foreach ($matches as $match):
@@ -896,13 +546,13 @@
                         $opponent = ($data['team_id'] == $match->win_team_id) ? htmlspecialchars($match->lost_team_name) : htmlspecialchars($match->win_team_name);
                     ?>
                         <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo htmlspecialchars($match->win_team_id); ?>/<?php echo htmlspecialchars($match->lost_team_id); ?>/<?php echo htmlspecialchars($match->match_id); ?>" class="text-decoration-none">
-                            <li class="list-group-item d-flex justify-content-between align-items-center hover-highlight">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
                                     <?php echo date('d M Y', strtotime($match->match_date)); ?>: 
                                     vs <?php echo $opponent; ?> - 
                                     <?php echo htmlspecialchars($match->result_statement); ?>
                                 </div>
-                                <span class="badge bg-<?php echo $is_winner ? 'success' : 'danger'; ?>" aria-label="<?php echo $is_winner ? 'Win' : 'Loss'; ?>">
+                                <span class="badge bg-<?php echo $is_winner ? 'success' : 'danger'; ?>">
                                     <?php echo $is_winner ? 'W' : 'L'; ?>
                                 </span>
                             </li>
@@ -912,22 +562,22 @@
             <?php endif; ?>
         </section>
 
-        <section class="tm-section">
-            <h3 class="tm-section-title">Match Schedule</h3>
+        <section class="section tm-section">
+            <h2 class="tm-section-title">Match Schedule</h2>
             <?php if (empty($team_schedule)): ?>
-                <p class="tm-empty-state">No match is added yet</p>
+                <p class="text-center text-muted">No match is added yet</p>
             <?php else: ?>
                 <div class="tm-schedule-container">
                     <?php foreach ($team_schedule as $value): ?>
                         <div class="tm-schedule-card">
                             <div class="tm-match-header">
                                 <div class="tm-team">
-                                    <img src="<?php echo htmlspecialchars($value->team_one_image ?? 'default_team.png'); ?>" alt="<?php echo htmlspecialchars($value->team_one_name ?? 'Team 1'); ?> Logo">
+                                    <img src="<?php echo htmlspecialchars($value->team_one_image ?? 'default_team.png'); ?>" alt="<?php echo htmlspecialchars($value->team_one_name ?? 'Team 1'); ?> Logo" loading="lazy">
                                     <p><?php echo htmlspecialchars($value->team_one_name ?? 'Team 1'); ?></p>
                                 </div>
                                 <span class="tm-vs">VS</span>
                                 <div class="tm-team">
-                                    <img src="<?php echo htmlspecialchars($value->team_two_image ?? 'default_team.png'); ?>" alt="<?php echo htmlspecialchars($value->team_two_name ?? 'Team 2'); ?> Logo">
+                                    <img src="<?php echo htmlspecialchars($value->team_two_image ?? 'default_team.png'); ?>" alt="<?php echo htmlspecialchars($value->team_two_name ?? 'Team 2'); ?> Logo" loading="lazy">
                                     <p><?php echo htmlspecialchars($value->team_two_name ?? 'Team 2'); ?></p>
                                 </div>
                             </div>
@@ -947,59 +597,59 @@
             <?php endif; ?>
         </section>
 
-        <section class="top-performers-section">
-            <h3>Player of the Team</h3>
+        <section class="section top-performers-section">
+            <h2>Player of the Team</h2>
             <?php if ($top_performers['top_bowler']['playerName'] === 'N/A' && $top_performers['top_batsman']['playerName'] === 'N/A'): ?>
-                <p class="text-muted text-center">No performance data available yet.</p>
+                <p class="text-center text-muted">No performance data available yet.</p>
             <?php else: ?>
                 <div class="performer-row">
                     <div class="player-card bowler">
                         <h4>Leading Wicket-Taker</h4>
-                        <img src="<?php echo htmlspecialchars($top_performers['top_bowler']['image_path']); ?>" alt="Top Bowler <?php echo htmlspecialchars($top_performers['top_bowler']['playerName']); ?>" class="player-image" loading="lazy">
+                        <img src="<?php echo htmlspecialchars($top_performers['top_bowler']['image_path']); ?>" alt="Top Bowler" class="player-image" loading="lazy">
                         <p><?php echo htmlspecialchars($top_performers['top_bowler']['playerName']); ?></p>
-                        <p class="player-stats"><?php echo htmlspecialchars($top_performers['top_bowler']['total_wickets']); ?> wickets</p>
+                        <p><?php echo htmlspecialchars($top_performers['top_bowler']['total_wickets']); ?> wickets</p>
                     </div>
                     <div class="player-card batsman">
                         <h4>Leading Batsman</h4>
-                        <img src="<?php echo htmlspecialchars($top_performers['top_batsman']['image_path']); ?>" alt="Top Batsman <?php echo htmlspecialchars($top_performers['top_batsman']['playerName']); ?>" class="player-image" loading="lazy">
+                        <img src="<?php echo htmlspecialchars($top_performers['top_batsman']['image_path']); ?>" alt="Top Batsman" class="player-image" loading="lazy">
                         <p><?php echo htmlspecialchars($top_performers['top_batsman']['playerName']); ?></p>
-                        <p class="player-stats"><?php echo htmlspecialchars($top_performers['top_batsman']['total_runs']); ?> runs</p>
+                        <p><?php echo htmlspecialchars($top_performers['top_batsman']['total_runs']); ?> runs</p>
                     </div>
                 </div>
             <?php endif; ?>
         </section>
 
-        <section class="team-info-section">
+        <section class="section team-info-section">
             <h2>Team Information</h2>
             <div class="team-info-grid">
                 <div class="info-card">
-                    <i class="fas fa-city" aria-label="City Icon"></i>
+                    <i class="fas fa-city" aria-label="City"></i>
                     <p><strong>City:</strong> <?php echo htmlspecialchars($data['city'] ?? 'N/A'); ?></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-globe" aria-label="Country Icon"></i>
+                    <i class="fas fa-globe" aria-label="Country"></i>
                     <p><strong>Country:</strong> <?php echo htmlspecialchars($data['country'] ?? 'N/A'); ?></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-calendar-alt" aria-label="Joining Date Icon"></i>
+                    <i class="fas fa-calendar-alt" aria-label="Joining Date"></i>
                     <p><strong>Joining Date:</strong> <?php echo htmlspecialchars($data['created_at'] ?? 'N/A'); ?></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-stadium" aria-label="Home Ground Icon"></i>
+                    <i class="fas fa-stadium" aria-label="Home Ground"></i>
                     <p><strong>Home Ground:</strong> <?php echo htmlspecialchars($data['home_ground'] ?? 'N/A'); ?></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-envelope team-admin-email" aria-label="Admin Email Icon"></i>
-                    <p><strong>Admin Email:</strong> <span class="team-admin-email"><?php echo htmlspecialchars($data['email'] ?? 'N/A'); ?></span></p>
+                    <i class="fas fa-envelope" aria-label="Admin Email"></i>
+                    <p><strong>Admin Email:</strong> <?php echo htmlspecialchars($data['email'] ?? 'N/A'); ?></p>
                 </div>
                 <div class="info-card">
-                    <i class="fas fa-phone team-admin-phone" aria-label="Admin Phone Icon"></i>
-                    <p><strong>Admin Phone:</strong> <span class="team-admin-phone"><?php echo htmlspecialchars($data['phone_number'] ?? 'N/A'); ?></span></p>
+                    <i class="fas fa-phone" aria-label="Admin Phone"></i>
+                    <p><strong>Admin Phone:</strong> <?php echo htmlspecialchars($data['phone_number'] ?? 'N/A'); ?></p>
                 </div>
             </div>
         </section>
 
-        <section class="current-captain-section">
+        <section class="section current-captain-section">
             <h2>Current Captain</h2>
             <div class="captain-cards">
                 <?php
@@ -1010,7 +660,7 @@
                         <?php if ($captain[$key]['status'] === 0): ?>
                             <p>Not added yet</p>
                         <?php else: ?>
-                            <img src="<?php echo htmlspecialchars($captain[$key]['image_path'] ?? 'default_captain.png'); ?>" alt="<?php echo htmlspecialchars($label); ?> Captain" class="captain-image">
+                            <img src="<?php echo htmlspecialchars($captain[$key]['image_path'] ?? 'default_captain.png'); ?>" alt="<?php echo htmlspecialchars($label); ?> Captain" class="captain-image" loading="lazy">
                             <p><?php echo htmlspecialchars($captain[$key]['playerName'] ?? 'N/A'); ?></p>
                         <?php endif; ?>
                     </div>
@@ -1018,17 +668,15 @@
             </div>
         </section>
 
-        <section class="opposition-team-section" id="tm-opposition">
+        <section class="section opposition-team-section">
             <h2>Opposition Team</h2>
             <?php if ($opposition_team['status'] == 'error'): ?>
-                <div class="tm-empty-state">
-                    <?php echo htmlspecialchars($opposition_team['message']); ?>
-                </div>
+                <p class="text-center text-muted"><?php echo htmlspecialchars($opposition_team['message']); ?></p>
             <?php else: ?>
                 <div class="opposition-team-grid">
                     <?php foreach ($opposition_team['data'] as $team): ?>
-                        <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo htmlspecialchars($team->team_one_id); ?>" class="opposition-team-card">
-                            <img src="<?php echo htmlspecialchars($team->team_one_image ?? 'default_team.png'); ?>" alt="<?php echo htmlspecialchars($team->team_one_name); ?> Logo">
+                        <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo htmlspecialchars($team->team_one_id); ?>" class="opposition-team-card" aria-label="View profile of <?php echo htmlspecialchars($team->team_one_name); ?>">
+                            <img src="<?php echo htmlspecialchars($team->team_one_image ?? 'default_team.png'); ?>" alt="<?php echo htmlspecialchars($team->team_one_name); ?> Logo" loading="lazy">
                             <div>
                                 <p><?php echo htmlspecialchars($team->team_one_name); ?></p>
                                 <p class="city-name">Opposition Team</p>
@@ -1039,7 +687,7 @@
             <?php endif; ?>
         </section>
 
-        <section class="league-section">
+        <section class="section league-section">
             <h2>Leagues Participated</h2>
             <?php if (!empty($league_playing)): ?>
                 <div class="league-grid">
@@ -1052,50 +700,41 @@
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>
-                <p>This team is not currently participating in any leagues.</p>
+                <p class="text-center text-muted">This team is not currently participating in any leagues.</p>
             <?php endif; ?>
         </section>
 
-        <div class="row my-3">
-            <div class="col-md-6">
-                <div class="management-section">
-                    <h3>Team Management</h3>
-                    <ul class="management-list list-unstyled">
-                        <?php if (!empty($team_management)): ?>
-                            <?php foreach ($team_management as $staff): ?>
-                                <li class="management-member d-flex align-items-center">
-                                    <i class="fas fa-user-tie" aria-label="Management Member Icon"></i>
-                                    <p class="mb-0">
-                                        <strong><?php echo htmlspecialchars($staff->role); ?>:</strong>
-                                        <?php echo htmlspecialchars($staff->name); ?>
-                                    </p>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li class="management-member">
-                                <p class="text-muted">No team management members found.</p>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <section class="section management-section">
+            <h2>Team Management</h2>
+            <ul class="management-list">
+                <?php if (!empty($team_management)): ?>
+                    <?php foreach ($team_management as $staff): ?>
+                        <li class="management-member">
+                            <i class="fas fa-user-tie" aria-label="Management Member"></i>
+                            <p><strong><?php echo htmlspecialchars($staff->role); ?>:</strong> <?php echo htmlspecialchars($staff->name); ?></p>
+                        </li>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <li class="management-member">
+                        <p class="text-muted">No team management members found.</p>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </section>
     </div>
 
     <footer class="tm-footer">
         <div class="tm-footer-nav">
             <a href="<?php echo base_url(); ?>Welcome/landing_page" class="<?php echo current_url() == base_url('Welcome/landing_page') ? 'active' : ''; ?>">
-                <i class="fas fa-home"></i>
+                <i class="fas fa-home" aria-label="Home"></i>
                 <span>Home</span>
             </a>
-          
             <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
                 <a href="<?php echo base_url(); ?>Welcome/team_admin/<?php echo htmlspecialchars($data['team_id']); ?>" class="<?php echo strpos(current_url(), 'team_admin') !== false ? 'active' : ''; ?>">
-                    <i class="fas fa-tachometer-alt"></i>
+                    <i class="fas fa-tachometer-alt" aria-label="Dashboard"></i>
                     <span>Dashboard</span>
                 </a>
             <?php endif; ?>
-          
         </div>
     </footer>
 

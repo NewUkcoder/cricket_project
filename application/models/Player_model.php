@@ -347,7 +347,20 @@ public function calculate_player_bowling_stats($player_id) {
 }
 
 
-
+public function get_player_leagues($player_id) {
+    $this->db->select('al.league_id, al.league_name, al.city, al.created_at');
+    $this->db->from('player_team pt');
+    $this->db->join('add_team t', 'pt.team_id = t.team_id');
+    $this->db->join('league_teams lt', 't.team_id = lt.team_id');
+    $this->db->join('add_league al', 'lt.league_id = al.league_id');
+    $this->db->where('pt.player_id', $player_id);
+    $this->db->where('pt.status', 1); // Active team membership
+    $this->db->where('lt.status', 1); // Accepted team in league
+    $this->db->group_by('al.league_id, al.league_name, al.city, al.created_at');
+    $query = $this->db->get();
+    
+    return $query->num_rows() > 0 ? $query->result_array() : [];
+}
 
  public function update_profile_picture($player_id, $image_path) {
         if (empty($player_id) || empty($image_path)) {
