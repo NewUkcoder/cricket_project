@@ -10,6 +10,7 @@
             --primary-color: #005f8d;
             --secondary-color: #007bb5;
             --accent-color: #ff6b35;
+            --success-color: #d81b60; /* Pink for result statement */
             --text-color: #333;
             --light-text: #777;
             --bg-color: #f5f5f5;
@@ -17,6 +18,13 @@
             --border-radius: 8px;
             --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             --section-spacing: 20px;
+            /* Vibrant Colors for Circular Stats */
+            --color-runs: #ff4d4d;
+            --color-wickets: #4CAF50;
+            --color-high-score: #ff9800;
+            --color-best-bowling: #2196F3;
+            --color-team-high: #9c27b0;
+            --color-team-low: #e91e63;
         }
         
         * {
@@ -27,10 +35,11 @@
         }
 
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            font-size: 15px;
+            font-size: clamp(14px, 4vw, 16px);
             padding-bottom: 60px;
         }
 
@@ -51,7 +60,7 @@
             color: white;
             text-decoration: none;
             margin-bottom: 10px;
-            font-size: 14px;
+            font-size: clamp(13px, 3vw, 14px);
             padding: 5px 10px;
             border-radius: 4px;
             background-color: rgba(255,255,255,0.15);
@@ -63,7 +72,7 @@
         }
 
         .league-title {
-            font-size: 1.5rem;
+            font-size: clamp(1.3rem, 5vw, 1.8rem);
             font-weight: 700;
             margin-bottom: 5px;
             word-break: break-word;
@@ -71,7 +80,7 @@
         }
 
         .league-meta {
-            font-size: 12px;
+            font-size: clamp(11px, 3vw, 12px);
             opacity: 0.9;
             margin-bottom: 5px;
             line-height: 1.4;
@@ -115,7 +124,7 @@
             background: #f0f0f0;
             color: var(--primary-color);
             border-radius: 20px;
-            font-size: 13px;
+            font-size: clamp(12px, 3vw, 13px);
             font-weight: 600;
             text-decoration: none;
             transition: all 0.2s;
@@ -146,7 +155,7 @@
             align-items: center;
             text-decoration: none;
             color: var(--light-text);
-            font-size: 11px;
+            font-size: clamp(10px, 3vw, 11px);
             padding: 8px;
             flex: 1;
             transition: color 0.2s ease;
@@ -159,7 +168,7 @@
         }
 
         .footer__icon {
-            font-size: 20px;
+            font-size: clamp(18px, 5vw, 20px);
             margin-bottom: 4px;
         }
 
@@ -170,7 +179,7 @@
         }
 
         .section-title {
-            font-size: 1.2rem;
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
             color: var(--primary-color);
             margin: var(--section-spacing) 0 15px;
             padding-bottom: 8px;
@@ -183,10 +192,10 @@
             padding-top: 5px;
         }
 
-        /* Stats Cards */
+        /* Stats Cards with Circular Progress */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 12px;
             margin-bottom: var(--section-spacing);
         }
@@ -194,16 +203,17 @@
         .stat-card {
             background: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 12px;
+            padding: 15px;
             box-shadow: var(--box-shadow);
             text-align: center;
-            transition: transform 0.2s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
         .stat-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         .stat-img {
@@ -216,10 +226,10 @@
         }
 
         .stat-title {
-            font-size: 13px;
+            font-size: clamp(12px, 3.5vw, 14px);
             font-weight: 700;
             color: var(--primary-color);
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -227,56 +237,71 @@
         }
 
         .stat-value {
-            font-size: 12px;
+            font-size: clamp(11px, 3vw, 12px);
             color: var(--text-color);
-            margin-bottom: 3px;
+            margin-bottom: 5px;
             font-weight: 500;
         }
 
         .stat-team {
-            font-size: 11px;
+            font-size: clamp(10px, 3vw, 11px);
             color: var(--secondary-color);
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .see-more {
-            font-size: 11px;
+            font-size: clamp(10px, 3vw, 11px);
             color: var(--primary-color);
             text-decoration: none;
             display: inline-block;
-            margin-top: 5px;
+            margin-top: 8px;
             font-weight: 600;
+            transition: color 0.2s ease;
         }
 
-        /* Progress Bar for Stats */
-        .stat-progress {
-            width: 80%;
-            height: 6px;
-            background: #e0e0e0;
-            border-radius: 3px;
-            margin: 5px auto 8px;
-            overflow: hidden;
+        .see-more:hover {
+            color: var(--accent-color);
         }
 
-        .stat-progress-bar {
+        /* Circular Progress Styles */
+        .stat-circle-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+        }
+
+        .stat-circle {
+            width: 100%;
             height: 100%;
-            background: var(--accent-color);
-            border-radius: 3px;
-            transition: width 0.5s ease;
         }
 
-        /* Badge for Top Performers */
-        .stat-badge {
+        .stat-circle-svg {
+            transform: rotate(-90deg);
+        }
+
+        .stat-circle-bg {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 8;
+        }
+
+        .stat-circle-progress {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .stat-circle-text {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--accent-color);
-            color: white;
-            font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-weight: 600;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(14px, 4vw, 16px);
+            font-weight: 700;
+            color: var(--text-color);
         }
 
         /* Match Cards */
@@ -312,11 +337,11 @@
         .vs-text {
             font-weight: 700;
             color: var(--primary-color);
-            font-size: 14px;
+            font-size: clamp(13px, 3.5vw, 14px);
         }
 
         .match-title {
-            font-size: 14px;
+            font-size: clamp(13px, 3.5vw, 14px);
             font-weight: 700;
             text-align: center;
             margin-bottom: 10px;
@@ -327,7 +352,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 8px;
-            font-size: 13px;
+            font-size: clamp(12px, 3.5vw, 13px);
         }
 
         .match-detail {
@@ -342,12 +367,18 @@
             font-weight: 600;
         }
 
-        /* Results Section - Compact */
+        /* Results Section - Two Matches Per Row */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: var(--section-spacing);
+        }
+
         .result-card {
             background: var(--card-bg);
             border-radius: var(--border-radius);
             padding: 12px;
-            margin-bottom: 10px;
             box-shadow: var(--box-shadow);
             border-left: 4px solid var(--accent-color);
             transition: transform 0.2s;
@@ -362,93 +393,103 @@
 
         .result-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: clamp(11px, 3vw, 12px);
             color: var(--light-text);
+            margin-bottom: 8px;
         }
 
-        .result-date {
+        .result-league-info {
+            font-size: clamp(13px, 3.5vw, 14px);
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .result-match-type {
+            font-size: clamp(11px, 3vw, 12px);
+            color: var(--light-text);
+            margin-left: 8px;
+        }
+
+        .result-date-time {
+            font-size: clamp(11px, 3vw, 12px);
+            color: var(--light-text);
+            margin-top: 4px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .result-status {
-            background: var(--accent-color);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        .result-teams {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .result-team {
+        .result-teams-scores {
             display: flex;
             flex-direction: column;
+            gap: 4px;
+            font-size: clamp(12px, 3.5vw, 13px);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .result-team-score {
+            display: flex;
             align-items: center;
-            flex: 1;
-            gap: 5px;
+            gap: 8px;
         }
 
         .result-team-logo {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--secondary-color);
         }
 
         .result-team-name {
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        .result-vs {
             font-weight: 700;
             color: var(--primary-color);
-            font-size: 12px;
+            min-width: 100px;
         }
 
         .result-score {
-            font-size: 12px;
-            text-align: center;
-            line-height: 1.4;
-            color: var(--text-color);
+            font-weight: 500;
         }
 
         .result-outcome {
+            font-size: clamp(12px, 3.5vw, 13px);
             font-weight: 700;
-            color: var(--accent-color);
-            text-align: center;
-            font-size: 13px;
-            line-height: 1.3;
+            color: var(--success-color);
+            text-align: left;
+            margin-top: 4px;
         }
 
         .view-scorecard {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             background: var(--primary-color);
             color: white;
             border: none;
             border-radius: 4px;
-            padding: 8px;
-            font-size: 12px;
-            text-align: center;
+            padding: 8px 12px;
+            font-size: clamp(11px, 3vw, 12px);
             text-decoration: none;
             font-weight: 600;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, transform 0.2s;
+            cursor: pointer;
+            width: 100%;
+            max-width: 180px;
+            margin: 8px auto 0;
         }
 
         .view-scorecard:hover {
             background: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .view-scorecard:active {
+            transform: scale(0.95);
         }
 
         /* Points Table */
@@ -456,7 +497,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: var(--section-spacing);
-            font-size: 13px;
+            font-size: clamp(12px, 3.5vw, 13px);
             background: var(--card-bg);
             border-radius: var(--border-radius);
             overflow: hidden;
@@ -516,7 +557,7 @@
         }
 
         .team-name {
-            font-size: 15px;
+            font-size: clamp(14px, 4vw, 15px);
             font-weight: 700;
             color: var(--primary-color);
         }
@@ -541,14 +582,14 @@
         }
 
         .player-stat-title {
-            font-size: 12px;
+            font-size: clamp(11px, 3vw, 12px);
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 3px;
         }
 
         .player-stat-value {
-            font-size: 12px;
+            font-size: clamp(11px, 3vw, 12px);
             color: var(--text-color);
             font-weight: 500;
         }
@@ -559,7 +600,7 @@
             border-radius: var(--border-radius);
             padding: 15px;
             box-shadow: var(--box-shadow);
-            font-size: 14px;
+            font-size: clamp(13px, 3.5vw, 14px);
         }
 
         .rules-list li {
@@ -585,32 +626,20 @@
             background: var(--card-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            font-size: 14px;
+            font-size: clamp(13px, 3.5vw, 14px);
             color: var(--light-text);
             margin-bottom: var(--section-spacing);
         }
 
         /* Mobile Optimizations */
         @media (max-width: 767px) {
-            body {
-                font-size: 14px;
-            }
-
-            .league-title {
-                font-size: 1.3rem;
-            }
-
-            .league-meta {
-                font-size: 11px;
-            }
-
             .stats-grid {
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
 
             .stat-card {
-                padding: 10px;
+                padding: 12px;
             }
 
             .result-card {
@@ -623,16 +652,7 @@
             }
 
             .result-team-name {
-                font-size: 11px;
-            }
-
-            .result-score {
-                font-size: 11px;
-            }
-
-            .view-scorecard {
-                padding: 6px;
-                font-size: 11px;
+                min-width: 80px;
             }
 
             .player-stats {
@@ -641,6 +661,23 @@
 
             .match-details {
                 grid-template-columns: 1fr;
+            }
+
+            .view-scorecard {
+                padding: 10px;
+                font-size: clamp(10px, 3vw, 11px);
+            }
+
+            .result-league-info {
+                font-size: clamp(12px, 3.5vw, 13px);
+            }
+
+            .result-match-type {
+                font-size: clamp(10px, 3vw, 11px);
+            }
+
+            .result-date-time {
+                font-size: clamp(10px, 3vw, 11px);
             }
         }
 
@@ -670,18 +707,19 @@
                 padding: 20px 25px 15px;
             }
 
-            .league-title {
-                font-size: 2rem;
-            }
-
             .stats-grid {
                 grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
                 gap: 15px;
             }
 
+            .results-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
             .section-title {
                 top: 160px;
-                font-size: 1.4rem;
+                font-size: clamp(1.2rem, 3vw, 1.4rem);
             }
 
             .player-stats {
@@ -690,6 +728,20 @@
 
             .match-details {
                 grid-template-columns: 1fr 1fr;
+            }
+
+            .stat-circle-container {
+                width: 120px;
+                height: 120px;
+            }
+
+            .stat-circle-text {
+                font-size: clamp(16px, 3vw, 18px);
+            }
+
+            .view-scorecard {
+                width: auto;
+                padding: 8px 16px;
             }
         }
     </style>
@@ -720,14 +772,16 @@
             <!-- Top Batsman -->
             <div class="stat-card">
                 <?php if ($league_top_scorer): ?>
-                    <span class="stat-badge">Top Scorer</span>
-                    <img src="<?php echo $league_top_scorer->player_image; ?>" alt="<?php echo $league_top_scorer->playerName; ?>" class="stat-img">
                     <h3 class="stat-title"><i class="fas fa-bat"></i> Top Batsman</h3>
+                    <img src="<?php echo $league_top_scorer->player_image; ?>" alt="<?php echo $league_top_scorer->playerName; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_top_scorer->playerName; ?></p>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: <?php echo min(($league_top_scorer->total_runs / 500) * 100, 100); ?>%;"></div>
+                    <div class="stat-circle-container">
+                        <svg class="stat-circle" viewBox="0 0 36 36">
+                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
+                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-runs)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_top_scorer->total_runs / 500) * 100, 100); ?>"></circle>
+                        </svg>
+                        <span class="stat-circle-text"><?php echo $league_top_scorer->total_runs; ?> Runs</span>
                     </div>
-                    <p class="stat-value"><strong><?php echo $league_top_scorer->total_runs; ?> Runs</strong></p>
                     <p class="stat-team"><?php echo $league_top_scorer->team_name; ?></p>
                     <a href="<?php echo base_url();?>TournamentController/league_top_ten_scorer/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
@@ -741,14 +795,16 @@
             <!-- Top Bowler -->
             <div class="stat-card">
                 <?php if ($league_top_bowler): ?>
-                    <span class="stat-badge">Top Wickets</span>
-                    <img src="<?php echo $league_top_bowler->player_image; ?>" alt="<?php echo $league_top_bowler->playerName; ?>" class="stat-img">
                     <h3 class="stat-title"><i class="fas fa-bowling-ball"></i> Top Bowler</h3>
+                    <img src="<?php echo $league_top_bowler->player_image; ?>" alt="<?php echo $league_top_bowler->playerName; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_top_bowler->playerName; ?></p>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: <?php echo min(($league_top_bowler->total_wickets / 20) * 100, 100); ?>%;"></div>
+                    <div class="stat-circle-container">
+                        <svg class="stat-circle" viewBox="0 0 36 36">
+                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
+                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-wickets)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_top_bowler->total_wickets / 20) * 100, 100); ?>"></circle>
+                        </svg>
+                        <span class="stat-circle-text"><?php echo $league_top_bowler->total_wickets; ?> Wickets</span>
                     </div>
-                    <p class="stat-value"><strong><?php echo $league_top_bowler->total_wickets; ?> Wickets</strong></p>
                     <p class="stat-team"><?php echo $league_top_bowler->team_name; ?></p>
                     <a href="<?php echo base_url();?>TournamentController/league_top_ten_bowler/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
@@ -762,14 +818,16 @@
             <!-- Highest Individual Score -->
             <div class="stat-card">
                 <?php if ($league_highest_individual_score): ?>
-                    <span class="stat-badge">High Score</span>
-                    <img src="<?php echo $league_highest_individual_score->player_image; ?>" alt="<?php echo $league_highest_individual_score->playerName; ?>" class="stat-img">
                     <h3 class="stat-title"><i class="fas fa-star"></i> Highest Score</h3>
+                    <img src="<?php echo $league_highest_individual_score->player_image; ?>" alt="<?php echo $league_highest_individual_score->playerName; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_highest_individual_score->playerName; ?></p>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: <?php echo min(($league_highest_individual_score->highest_score / 200) * 100, 100); ?>%;"></div>
+                    <div class="stat-circle-container">
+                        <svg class="stat-circle" viewBox="0 0 36 36">
+                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
+                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-high-score)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_highest_individual_score->highest_score / 200) * 100, 100); ?>"></circle>
+                        </svg>
+                        <span class="stat-circle-text"><?php echo $league_highest_individual_score->highest_score; ?> Runs</span>
                     </div>
-                    <p class="stat-value"><strong><?php echo $league_highest_individual_score->highest_score; ?> Runs</strong></p>
                     <p class="stat-team"><?php echo $league_highest_individual_score->team_name; ?></p>
                     <a href="<?php echo base_url();?>TournamentController/league_ten_individual_scorer/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
@@ -783,14 +841,16 @@
             <!-- Best Bowling -->
             <div class="stat-card">
                 <?php if ($league_highest_wicket_taker): ?>
-                    <span class="stat-badge">Best Figures</span>
-                    <img src="<?php echo $league_highest_wicket_taker->player_image; ?>" alt="<?php echo $league_highest_wicket_taker->playerName; ?>" class="stat-img">
                     <h3 class="stat-title"><i class="fas fa-trophy"></i> Best Bowling</h3>
+                    <img src="<?php echo $league_highest_wicket_taker->player_image; ?>" alt="<?php echo $league_highest_wicket_taker->playerName; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_highest_wicket_taker->playerName; ?></p>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: <?php echo min(($league_highest_wicket_taker->wickets / 7) * 100, 100); ?>%;"></div>
+                    <div class="stat-circle-container">
+                        <svg class="stat-circle" viewBox="0 0 36 36">
+                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
+                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-best-bowling)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_highest_wicket_taker->wickets / 7) * 100, 100); ?>"></circle>
+                        </svg>
+                        <span class="stat-circle-text"><?php echo $league_highest_wicket_taker->wickets; ?>/<?php echo $league_highest_wicket_taker->given_runs; ?></span>
                     </div>
-                    <p class="stat-value"><strong><?php echo $league_highest_wicket_taker->wickets; ?>/<?php echo $league_highest_wicket_taker->given_runs; ?></strong></p>
                     <p class="stat-team"><?php echo $league_highest_wicket_taker->team_name; ?></p>
                     <a href="<?php echo base_url();?>TournamentController/league_top_ten_bowler_of_match/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
@@ -804,15 +864,17 @@
             <!-- Highest Team Score -->
             <div class="stat-card">
                 <?php if ($league_highest_team_score): ?>
-                    <span class="stat-badge">Team High</span>
-                    <img src="<?php echo $league_highest_team_score->team_image; ?>" alt="<?php echo $league_highest_team_score->team_name; ?>" class="stat-img">
                     <h3 class="stat-title"><i class="fas fa-users"></i> Highest Team Score</h3>
+                    <img src="<?php echo $league_highest_team_score->team_image; ?>" alt="<?php echo $league_highest_team_score->team_name; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_highest_team_score->team_name; ?></p>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: <?php echo min(($league_highest_team_score->highest_team_score / 400) * 100, 100); ?>%;"></div>
+                    <div class="stat-circle-container">
+                        <svg class="stat-circle" viewBox="0 0 36 36">
+                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
+                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-team-high)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_highest_team_score->highest_team_score / 400) * 100, 100); ?>"></circle>
+                        </svg>
+                        <span class="stat-circle-text"><?php echo $league_highest_team_score->highest_team_score; ?>/<?php echo $league_highest_team_score->wickets; ?></span>
                     </div>
-                    <p class="stat-value"><strong><?php echo $league_highest_team_score->highest_team_score; ?>/<?php echo $league_highest_team_score->wickets; ?></strong></p>
-                    <p class="stat-value"><?php echo $league_highest_team_score->t_overs; ?> overs</p>
+                    <p class="stat-team"><?php echo $league_highest_team_score->t_overs; ?> overs</p>
                     <a href="<?php echo base_url();?>TournamentController/league_top_five_team_score/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
                     </a>
@@ -825,15 +887,17 @@
             <!-- Lowest Team Score -->
             <div class="stat-card">
                 <?php if ($league_lowest_team_score): ?>
-                    <span class="stat-badge">Team Low</span>
-                    <img src="<?php echo $league_lowest_team_score->team_image; ?>" alt="<?php echo $league_lowest_team_score->team_name; ?>" class="stat-img">
                     <h3 class="stat-title"><i class="fas fa-users"></i> Lowest Team Score</h3>
+                    <img src="<?php echo $league_lowest_team_score->team_image; ?>" alt="<?php echo $league_lowest_team_score->team_name; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_lowest_team_score->team_name; ?></p>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: <?php echo min((100 - ($league_lowest_team_score->highest_team_score / 400) * 100), 100); ?>%;"></div>
+                    <div class="stat-circle-container">
+                        <svg class="stat-circle" viewBox="0 0 36 36">
+                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
+                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-team-low)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min((100 - ($league_lowest_team_score->highest_team_score / 400) * 100), 100); ?>"></circle>
+                        </svg>
+                        <span class="stat-circle-text"><?php echo $league_lowest_team_score->highest_team_score; ?>/<?php echo $league_lowest_team_score->wickets; ?></span>
                     </div>
-                    <p class="stat-value"><strong><?php echo $league_lowest_team_score->highest_team_score; ?>/<?php echo $league_lowest_team_score->wickets; ?></strong></p>
-                    <p class="stat-value"><?php echo $league_lowest_team_score->t_overs; ?> overs</p>
+                    <p class="stat-team"><?php echo $league_lowest_team_score->t_overs; ?> overs</p>
                     <a href="<?php echo base_url();?>TournamentController/league_lowest_five_score/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
                     </a>
@@ -880,53 +944,51 @@
             </div>
         <?php endif; ?>
 
-        <!-- Results Section - Compact -->
+        <!-- Results Section -->
         <h2 class="section-title" id="results">
             <i class="fas fa-trophy"></i> Recent Results
         </h2>
-        <?php if (!empty($match_results)): ?>
-            <?php foreach ($match_results as $match): ?>
-                <div class="result-card">
-                    <div class="result-header">
-                        <span class="result-date">
-                            <i class="far fa-calendar-alt"></i> <?php echo date("d M Y", strtotime($match->match_date)); ?>
-                            <i class="far fa-clock"></i> <?php echo $match->match_time; ?>
-                        </span>
-                        <span class="result-status">COMPLETED</span>
-                    </div>
-                    
-                    <div class="result-teams">
-                        <div class="result-team">
-                            <img src="<?php echo base_url($match->win_team_image); ?>" alt="<?php echo $match->win_team_name; ?>" class="result-team-logo">
-                            <span class="result-team-name"><?php echo $match->win_team_name; ?></span>
+        <div class="results-grid">
+            <?php if (!empty($match_results)): ?>
+                <?php foreach ($match_results as $match): ?>
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="result-league-info">
+                                <?php echo $league['league_name']; ?>
+                                <span class="result-match-type"><?php echo $league['match_type']; ?></span>
+                            </div>
+                            <div class="result-date-time">
+                                <i class="far fa-calendar-alt"></i> <?php echo date("d M Y", strtotime($match->match_date)); ?>
+                                <i class="far fa-clock"></i> <?php echo $match->match_time; ?>
+                            </div>
                         </div>
-                        <span class="result-vs">vs</span>
-                        <div class="result-team">
-                            <img src="<?php echo base_url($match->lost_team_image); ?>" alt="<?php echo $match->lost_team_name; ?>" class="result-team-logo">
-                            <span class="result-team-name"><?php echo $match->lost_team_name; ?></span>
+                        <div class="result-teams-scores">
+                            <div class="result-team-score">
+                                <img src="<?php echo $match->win_team_image; ?>" alt="<?php echo $match->win_team_name; ?>" class="result-team-logo">
+                                <span class="result-team-name"><?php echo $match->win_team_name; ?>:</span>
+                                <span class="result-score"><?php echo $match->total_runs_batting_order_1; ?>-<?php echo $match->wickets_batting_order_1; ?> (<?php echo $match->total_overs_batting_order_1; ?>)</span>
+                            </div>
+                            <div class="result-team-score">
+                                <img src="<?php echo $match->lost_team_image; ?>" alt="<?php echo $match->lost_team_name; ?>" class="result-team-logo">
+                                <span class="result-team-name"><?php echo $match->lost_team_name; ?>:</span>
+                                <span class="result-score"><?php echo $match->total_runs_batting_order_2; ?>-<?php echo $match->wickets_batting_order_2; ?> (<?php echo $match->total_overs_batting_order_2; ?>)</span>
+                            </div>
                         </div>
+                        <div class="result-outcome">
+                            <?php echo $match->result_statement; ?>
+                        </div>
+                        <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo $match->win_team;?>/<?php echo $match->lost_team; ?>/<?php echo $match->match_id; ?>" class="view-scorecard">
+                            <i class="fas fa-file-alt"></i> View Full Scorecard
+                        </a>
                     </div>
-                    
-                    <div class="result-score">
-                        <span><strong><?php echo $match->batting_team_batting_order_1; ?>:</strong> <?php echo $match->total_runs_batting_order_1; ?>/<?php echo $match->wickets_batting_order_1; ?> (<?php echo $match->total_overs_batting_order_1; ?> ov)</span><br>
-                        <span><strong><?php echo $match->batting_team_batting_order_2; ?>:</strong> <?php echo $match->total_runs_batting_order_2; ?>/<?php echo $match->wickets_batting_order_2; ?> (<?php echo $match->total_overs_batting_order_2; ?> ov)</span>
-                    </div>
-                    
-                    <div class="result-outcome">
-                        <?php echo $match->result_statement; ?>
-                    </div>
-                    
-                    <a href="<?php echo base_url(); ?>Welcome/scorecard/<?php echo $match->team_one_id; ?>/<?php echo $match->team_two_id; ?>/<?php echo $match->match_id; ?>" class="view-scorecard">
-                        <i class="fas fa-file-alt"></i> View Full Scorecard
-                    </a>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="empty-state">
+                    <i class="far fa-frown fa-2x" style="margin-bottom: 10px;"></i>
+                    <p>No match results available yet</p>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <div class="empty-state">
-                <i class="far fa-frown fa-2x" style="margin-bottom: 10px;"></i>
-                <p>No match results available yet</p>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
 
         <!-- Points Table -->
         <h2 class="section-title" id="points">

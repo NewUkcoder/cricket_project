@@ -822,7 +822,7 @@
                                     <th>SR</th>
                                     <th>4W</th>
                                     <th>5W</th>
-                                    <th>Maidens</th>
+                                  
                                 </tr>
                             </thead>
                             <tbody>
@@ -849,7 +849,7 @@
                                             <td><?php echo $bowling_sr; ?></td>
                                             <td><?php echo $stats['four_wickets'] ?? '0'; ?></td>
                                             <td><?php echo $stats['five_wickets'] ?? '0'; ?></td>
-                                            <td><?php echo $stats['maidens'] ?? '0'; ?></td>
+                                           
                                         </tr>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
