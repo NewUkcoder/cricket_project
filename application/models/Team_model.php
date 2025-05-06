@@ -441,6 +441,19 @@ class Team_model extends CI_Model {
         return $this->db->update('add_team', $data);
     }
 
+     public function get_team_by_id($team_id) {
+        $this->db->where('team_id', $team_id);
+        $query = $this->db->get('add_team');
+        return $query->row();
+    }
+
+    // In Team_model.php
+public function update_team_name($team_id, $data) {
+    $this->db->where('team_id', $team_id);
+    $this->db->where('team_name !=', $data['team_name']); // Avoid unique constraint violation
+    return $this->db->update('add_team', $data);
+}
+
     public function league_participation($team_id) {
         $this->db->select('add_league.league_name, add_league.league_id, add_league.city')
              ->from('league_teams')

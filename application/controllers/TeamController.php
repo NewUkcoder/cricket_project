@@ -332,6 +332,116 @@ class TeamController extends CI_Controller {
         redirect($_SERVER['HTTP_REFERER'] . '?scroll=' . $scroll_position . '#edit-anchor');
     }
 
+
+    public function update_team_name() {
+        // Check if the request is AJAX
+        $is_ajax = $this->input->is_ajax_request();
+
+        // Get POST data
+        $team_id = $this->input->post('team_id');
+        $team_name = trim($this->input->post('team_name')); // Trim to remove extra spaces
+
+        // Validate inputs
+        if (empty($team_id)) {
+            $response = ['status' => 'error', 'message' => 'Team ID is required'];
+            if ($is_ajax) {
+                echo json_encode($response);
+                return;
+            } else {
+                $this->session->set_flashdata('error', $response['message']);
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+        }
+
+        if (empty($team_name)) {
+            $response = ['status' => 'error', 'message' => 'Team name is required'];
+            if ($is_ajax) {
+                echo json_encode($response);
+                return;
+            } else {
+                $this->session->set_flashdata('error', $response['message']);
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+        }
+
+        // Validate team name length (example: max 100 characters)
+        if (strlen($team_name) > 100) {
+            $response = ['status' => 'error', 'message' => 'Team name must not exceed 100 characters'];
+            if ($is_ajax) {
+                echo json_encode($response);
+                return;
+            } else {
+                $this->session->set_flashdata('error', $response['message']);
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+        }
+
+        // Load the Team_model
+        $this->load->model('Team_model');
+
+        // Check if team exists and user has permission
+        $team = $this->Team_model->get_team_by_id($team_id);
+        if (!$team) {
+            $response = ['status' => 'error', 'message' => 'Team not found'];
+            if ($is_ajax) {
+                echo json_encode($response);
+                return;
+            } else {
+                $this->session->set_flashdata('error', $response['message']);
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+        }
+
+        // Check if the logged-in user is the team owner
+        $user_id = $this->session->userdata('user_id');
+        if ($team->user_id != $user_id) {
+            $response = ['status' => 'error', 'message' => 'You do not have permission to update this team'];
+            if ($is_ajax) {
+                echo json_encode($response);
+                return;
+            } else {
+                $this->session->set_flashdata('error', $response['message']);
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+        }
+
+        // Prepare data for update
+        $data = ['team_name' => $team_name];
+
+        // Attempt to update team name
+        try {
+            $result = $this->Team_model->update_team_name($team_id, $data);
+
+            if ($result) {
+                $response = ['status' => 'success', 'message' => 'Team name updated successfully'];
+                if ($is_ajax) {
+                    echo json_encode($response);
+                } else {
+                    $this->session->set_flashdata('success', $response['message']);
+                    redirect($_SERVER['HTTP_REFERER']);
+                }
+            } else {
+                $response = ['status' => 'error', 'message' => 'Failed to update team name'];
+                if ($is_ajax) {
+                    echo json_encode($response);
+                } else {
+                    $this->session->set_flashdata('error', $response['message']);
+                    redirect($_SERVER['HTTP_REFERER']);
+                }
+            }
+        } catch (Exception $e) {
+            // Log the error for debugging
+            log_message('error', 'Update team name failed: ' . $e->getMessage());
+            $response = ['status' => 'error', 'message' => 'An error occurred while updating the team name'];
+            if ($is_ajax) {
+                echo json_encode($response);
+            } else {
+                $this->session->set_flashdata('error', $response['message']);
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+        }
+    }
+
     public function add_management($team_id) {
         $data['team_id'] = $team_id;
         $this->load->view('add_management', $data);

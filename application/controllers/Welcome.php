@@ -9,7 +9,7 @@ class Welcome extends CI_Controller {
         $this->load->model('Scorecard_model');
         $this->load->model('Tournament_model');
         $this->load->model('Schedule_model');
-        $this->load->model('Player_model'); // Ensure Player_model is loaded
+        $this->load->model('Player_model');
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
         $this->load->library('upload');
@@ -218,7 +218,8 @@ class Welcome extends CI_Controller {
             $team_data['league_lowest_team_score'] = $this->Tournament_model->league_lowest_team_score($league_id);
             $team_data['league_teams'] = $this->Tournament_model->league_teams($league_id);
             $team_data['match_results'] = $this->Tournament_model->get_match_results_by_league_with_batting_order($league_id);
-
+            $team_data['points_table'] = $this->Tournament_model->get_points_table($league_id);
+         //   var_dump( $team_data['points_table']);
             $this->load->view('header');
             $this->load->view('tournament_landing', $team_data);
         } else {
@@ -226,20 +227,36 @@ class Welcome extends CI_Controller {
         }
     }
 
-    public function tournament_main($league_id) {
-        if ($this->session->userdata('logged')) {
-            $team_data['league'] = $this->Tournament_model->league_information($league_id);
-            $team_data['team_request'] = $this->Tournament_model->tournament_teams($league_id);
-            $team_data['league_teams'] = $this->Tournament_model->get_league_teams($league_id);
-            $team_data['league_schedule'] = $this->Tournament_model->get_league_schedule($league_id);
-            $team_data['league_rules'] = $this->Tournament_model->get_league_rules($league_id);
+public function tournament_main($league_id) {
+    if ($this->session->userdata('logged')) {
+        $team_data['league'] = $this->Tournament_model->league_information($league_id);
+        $team_data['team_request'] = $this->Tournament_model->tournament_teams($league_id);
+        $team_data['league_teams'] = $this->Tournament_model->get_league_teams($league_id);
+        
+        // Fetch upcoming and completed matches
+        $league_schedule = $this->Tournament_model->get_league_schedule($league_id);
+        $completed_matches = $this->Tournament_model->get_completed_matches($league_id);
+        
+        // Combine and sort matches
+        $all_matches = array_merge(
+            is_array($league_schedule) ? $league_schedule : [],
+            is_array($completed_matches) ? $completed_matches : []
+        );
+        usort($all_matches, function($a, $b) {
+            $date_cmp = strcmp($b->match_date, $a->match_date);
+            return $date_cmp !== 0 ? $date_cmp : strcmp($b->match_time, $a->match_time);
+        });
+        $team_data['all_matches'] = $all_matches;
+        
+        $team_data['team_scores'] = $this->Tournament_model->get_team_scores($league_id);
+        $team_data['league_rules'] = $this->Tournament_model->get_league_rules($league_id);
 
-            $this->load->view('header');
-            $this->load->view('tournament_main', $team_data);
-        } else {
-            $this->index();
-        }
+        $this->load->view('header');
+        $this->load->view('tournament_main', $team_data);
+    } else {
+        $this->index();
     }
+}
 
     public function team_admin($team_id) {
         if ($this->session->userdata('logged')) {
@@ -252,7 +269,7 @@ class Welcome extends CI_Controller {
             $team_data['opposition_team'] = $this->Team_model->get_match_teams($team_id);
             $team_data['team_schedule'] = $this->Team_model->get_team_schedule($team_id);
             $team_data['management_staff'] = $this->Team_model->get_team_management($team_id);
-           
+
             $this->load->view('header');
             $this->load->view('team_admin', $team_data);
         } else {
@@ -269,80 +286,72 @@ class Welcome extends CI_Controller {
         }
     }
 
-   public function update_schedule() {
-    $this->load->library('form_validation');
+    public function update_schedule() {
+        $this->load->library('form_validation');
 
-    // Set validation rules
-    $this->form_validation->set_rules('match_id', 'Match ID', 'required|numeric');
-    $this->form_validation->set_rules('team_id', 'Team ID', 'required|numeric');
-    $this->form_validation->set_rules('team_one_id', 'Team One', 'required|numeric');
-    $this->form_validation->set_rules('team_two_id', 'Team Two', 'required|numeric|differs[team_one_id]');
-    $this->form_validation->set_rules('match_date', 'Match Date', 'required|regex_match[/^\d{4}-\d{2}-\d{2}$/]');
-    $this->form_validation->set_rules('match_time', 'Match Time', 'required|regex_match[/^\d{2}:\d{2}$/]');
-    $this->form_validation->set_rules('overs', 'Overs', 'required|numeric|greater_than[0]');
-    $this->form_validation->set_rules('venue', 'Venue', 'required|trim|max_length[255]');
-    $this->form_validation->set_rules('series', 'Series', 'required|trim|max_length[255]');
-    $this->form_validation->set_rules('first_umpire', 'First Umpire', 'trim|max_length[100]');
-    $this->form_validation->set_rules('second_umpire', 'Second Umpire', 'trim|max_length[100]');
+        $this->form_validation->set_rules('match_id', 'Match ID', 'required|numeric');
+        $this->form_validation->set_rules('team_id', 'Team ID', 'required|numeric');
+        $this->form_validation->set_rules('team_one_id', 'Team One', 'required|numeric');
+        $this->form_validation->set_rules('team_two_id', 'Team Two', 'required|numeric|differs[team_one_id]');
+        $this->form_validation->set_rules('match_date', 'Match Date', 'required|regex_match[/^\d{4}-\d{2}-\d{2}$/]');
+        $this->form_validation->set_rules('match_time', 'Match Time', 'required|regex_match[/^\d{2}:\d{2}$/]');
+        $this->form_validation->set_rules('overs', 'Overs', 'required|numeric|greater_than[0]');
+        $this->form_validation->set_rules('venue', 'Venue', 'required|trim|max_length[255]');
+        $this->form_validation->set_rules('series', 'Series', 'required|trim|max_length[255]');
+        $this->form_validation->set_rules('first_umpire', 'First Umpire', 'trim|max_length[100]');
+        $this->form_validation->set_rules('second_umpire', 'Second Umpire', 'trim|max_length[100]');
 
-    // Check if validation passes
-    if ($this->form_validation->run() === FALSE) {
-        $this->session->set_flashdata('error', validation_errors());
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('Welcome/team_admin/' . $this->input->post('team_id'));
+        }
+
+        $data = [
+            'team_one_id' => $this->input->post('team_one_id'),
+            'team_two_id' => $this->input->post('team_two_id'),
+            'match_date' => $this->input->post('match_date'),
+            'match_time' => $this->input->post('match_time'),
+            'overs' => $this->input->post('overs'),
+            'series' => $this->input->post('series'),
+            'location' => $this->input->post('venue'),
+            'umpire1' => $this->input->post('first_umpire') ?: NULL,
+            'umpire2' => $this->input->post('second_umpire') ?: NULL
+        ];
+
+        if ($this->Schedule_model->edit_schedule($this->input->post('match_id'), $data)) {
+            $this->session->set_flashdata('success', 'Match schedule updated successfully');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to update match schedule');
+        }
+
         redirect('Welcome/team_admin/' . $this->input->post('team_id'));
     }
 
-    // Prepare data for update
-    $data = [
-        'team_one_id' => $this->input->post('team_one_id'),
-        'team_two_id' => $this->input->post('team_two_id'),
-        'match_date' => $this->input->post('match_date'),
-        'match_time' => $this->input->post('match_time'),
-        'overs' => $this->input->post('overs'),
-        'series' => $this->input->post('series'),
-        'location' => $this->input->post('venue'), // Maps 'venue' form input to 'location' column
-        'umpire1' => $this->input->post('first_umpire') ?: NULL, // Maps 'first_umpire' to 'umpire1'
-        'umpire2' => $this->input->post('second_umpire') ?: NULL // Maps 'second_umpire' to 'umpire2'
-    ];
-
-    // Update schedule in the database
-    if ($this->Schedule_model->edit_schedule($this->input->post('match_id'), $data)) {
-        $this->session->set_flashdata('success', 'Match schedule updated successfully');
-    } else {
-        $this->session->set_flashdata('error', 'Failed to update match schedule');
-    }
-
-    // Redirect back to team admin dashboard
-    redirect('Welcome/team_admin/' . $this->input->post('team_id'));
-}
     public function delete_schedule($match_id) {
- 
+        if (!is_numeric($match_id) || $match_id <= 0) {
+            $this->session->set_flashdata('error', 'Invalid match ID.');
+            redirect('Welcome/team_admin/' . $this->input->post('team_id'));
+        }
 
-    if (!is_numeric($match_id) || $match_id <= 0) {
-        $this->session->set_flashdata('error', 'Invalid match ID.');
-        redirect('Welcome/team_admin/' . $this->input->post('team_id'));
-    }
+        $team_id = $this->input->post('team_id');
 
-    $team_id = $this->input->post('team_id');
-    
-    if (!$team_id) {
-        $this->session->set_flashdata('error', 'Team ID is required.');
+        if (!$team_id) {
+            $this->session->set_flashdata('error', 'Team ID is required.');
+            redirect('Welcome/team_admin/' . $team_id);
+        }
+
+        if ($this->Schedule_model->check_toss_exists($match_id)) {
+            $this->session->set_flashdata('error', 'Cannot delete match because the toss has already been entered.');
+            redirect('Welcome/team_admin/' . $team_id);
+        }
+
+        $result = $this->Schedule_model->delete_schedule($match_id);
+        if ($result) {
+            $this->session->set_flashdata('success', 'Match deleted successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to delete match.');
+        }
+
         redirect('Welcome/team_admin/' . $team_id);
     }
-
-   
-
-    if ($this->Schedule_model->check_toss_exists($match_id)) {
-        $this->session->set_flashdata('error', 'Cannot delete match because the toss has already been entered.');
-        redirect('Welcome/team_admin/' . $team_id);
-    }
-
-    $result = $this->Schedule_model->delete_schedule($match_id);
-    if ($result) {
-        $this->session->set_flashdata('success', 'Match deleted successfully.');
-    } else {
-        $this->session->set_flashdata('error', 'Failed to delete match.');
-    }
-
-    redirect('Welcome/team_admin/' . $team_id);
-}
 }

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title><?php echo $league['league_name']; ?> | Cricket League</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Modern Base Styles */
         :root {
@@ -492,39 +493,203 @@
             transform: scale(0.95);
         }
 
-        /* Points Table */
-        .points-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Points Table Section Styles */
+        .points-section {
             margin-bottom: var(--section-spacing);
-            font-size: clamp(12px, 3.5vw, 13px);
+        }
+
+        .points-guide {
+            background: linear-gradient(145deg, var(--card-bg), #f9f9f9);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+            font-size: clamp(13px, 3.5vw, 14px);
+            transition: transform 0.3s ease;
+        }
+
+        .points-guide:hover {
+            transform: translateY(-3px);
+        }
+
+        .points-guide h3 {
+            font-size: clamp(15px, 4vw, 16px);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .points-guide-toggle {
+            font-size: clamp(12px, 3vw, 13px);
+            color: var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .points-guide-toggle.active {
+            transform: rotate(180deg);
+        }
+
+        .points-guide-content {
+            display: none;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        .points-guide-content.active {
+            display: block;
+        }
+
+        .points-guide ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 10px 0;
+        }
+
+        .points-guide li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .points-guide li:before {
+            content: "🏏";
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .points-guide strong {
+            color: var(--primary-color);
+        }
+
+        .points-table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             background: var(--card-bg);
             border-radius: var(--border-radius);
-            overflow: hidden;
             box-shadow: var(--box-shadow);
+            padding: 10px;
+        }
+
+        .points-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: clamp(12px, 3.5vw, 13px);
         }
 
         .points-table th {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 700;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .points-table th:first-child {
+            border-top-left-radius: var(--border-radius);
+        }
+
+        .points-table th:last-child {
+            border-top-right-radius: var(--border-radius);
         }
 
         .points-table td {
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             border-bottom: 1px solid #eee;
+            white-space: nowrap;
+            transition: background-color 0.2s ease;
+        }
+
+        .points-table tr {
+            transition: all 0.2s ease;
+        }
+
+        .points-table tr:hover {
+            background-color: #e6f0ff;
+            transform: scale(1.005);
         }
 
         .points-table tr:nth-child(even) {
-            background: #f9f9f9;
+            background: #f7f7f7;
         }
 
-        .highlight {
+        .points-table .team-cell {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        .points-table .team-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--secondary-color);
+        }
+
+        .points-table .highlight {
+            font-weight: 700;
+            color: var(--accent-color);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .points-table .points {
             font-weight: 700;
             color: var(--primary-color);
+        }
+
+        .points-table .empty-state {
+            text-align: center;
+            padding: 20px;
+            font-size: clamp(13px, 3.5vw, 14px);
+            color: var(--light-text);
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip:hover:after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: clamp(11px, 3vw, 12px);
+            white-space: nowrap;
+            z-index: 20;
+            margin-bottom: 8px;
+        }
+
+        .tooltip:hover:before {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--primary-color);
+            margin-bottom: 2px;
         }
 
         /* Teams Section */
@@ -679,6 +844,32 @@
             .result-date-time {
                 font-size: clamp(10px, 3vw, 11px);
             }
+
+            .points-guide {
+                padding: 15px;
+            }
+
+            .points-guide h3 {
+                font-size: clamp(14px, 4vw, 15px);
+            }
+
+            .points-table {
+                font-size: clamp(11px, 3vw, 12px);
+            }
+
+            .points-table th, .points-table td {
+                padding: 8px;
+            }
+
+            .points-table .team-logo {
+                width: 25px;
+                height: 25px;
+            }
+
+            .points-table .team-cell {
+                padding-left: 10px;
+                gap: 8px;
+            }
         }
 
         /* Desktop Optimizations */
@@ -743,9 +934,21 @@
                 width: auto;
                 padding: 8px 16px;
             }
+
+            .points-table-container {
+                padding: 15px;
+            }
+
+            .points-table th, .points-table td {
+                padding: 14px;
+            }
+
+            .points-table .team-logo {
+                width: 35px;
+                height: 35px;
+            }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header class="league-header">
@@ -762,6 +965,15 @@
             <span><i class="fas fa-stadium"></i> <?php echo $league['venue']; ?></span>
         </div>
     </header>
+
+    <nav class="nav-scroll">
+        <a href="#stats" class="nav-link">Stats</a>
+        <a href="#schedule" class="nav-link">Schedule</a>
+        <a href="#results" class="nav-link">Results</a>
+        <a href="#points" class="nav-link">Points Table</a>
+        <a href="#teams" class="nav-link">Teams</a>
+        <a href="#rules" class="nav-link">Rules</a>
+    </nav>
 
     <div class="container">
         <!-- Top Stats Section -->
@@ -990,50 +1202,71 @@
             <?php endif; ?>
         </div>
 
-        <!-- Points Table -->
-        <h2 class="section-title" id="points">
-            <i class="fas fa-table"></i> Points Table
-        </h2>
-        <table class="points-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Team</th>
-                    <th>P</th>
-                    <th>W</th>
-                    <th>L</th>
-                    <th>NR</th>
-                    <th>Pts</th>
-                    <th>NRR</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($points_table)): ?>
-                    <?php foreach ($points_table as $index => $team): ?>
+        <!-- Points Table Section -->
+        <div class="points-section">
+            <h2 class="section-title" id="points">
+                <i class="fas fa-table"></i> Points Table
+            </h2>
+            <div class="points-guide">
+                <h3>
+                    Understanding the Points Table
+                    <span class="points-guide-toggle"><i class="fas fa-chevron-down"></i></span>
+                </h3>
+                <div class="points-guide-content">
+                    <p>The points table ranks teams based on their performance in the league:</p>
+                    <ul>
+                        <li><strong>Points</strong>: Earn <strong>2 points</strong> for a win, <strong>1 point</strong> for a no-result match (e.g., abandoned due to rain), and <strong>0 points</strong> for a loss.</li>
+                        <li><strong>Net Run Rate (NRR)</strong>: Measures scoring efficiency. It's calculated as: <br>
+                            <code>NRR = (Total Runs Scored ÷ Total Overs Faced) - (Total Runs Conceded ÷ Total Overs Bowled)</code><br>
+                            A higher NRR means a team scores faster or concedes slower, used to break ties when points are equal.</li>
+                        <li><strong>Ranking</strong>: Teams with more points rank higher. If points are tied, NRR determines the order.</li>
+                    </ul>
+                    <p>Follow your team's progress to see if they qualify for the playoffs!</p>
+                </div>
+            </div>
+            <div class="points-table-container">
+                <table class="points-table">
+                    <thead>
                         <tr>
-                            <td class="<?php echo $index < 3 ? 'highlight' : ''; ?>"><?php echo $index + 1; ?></td>
-                            <td style="text-align: left; padding-left: 15px;">
-                                <img src="<?php echo $team->team_image; ?>" alt="<?php echo $team->team_name; ?>" style="width: 25px; height: 25px; border-radius: 50%; vertical-align: middle; margin-right: 8px;">
-                                <?php echo $team->team_name; ?>
-                            </td>
-                            <td><?php echo $team->matches_played; ?></td>
-                            <td><?php echo $team->wins; ?></td>
-                            <td><?php echo $team->losses; ?></td>
-                            <td><?php echo $team->no_results; ?></td>
-                            <td><strong><?php echo $team->points; ?></strong></td>
-                            <td><?php echo number_format($team->net_run_rate, 3); ?></td>
+                            <th class="tooltip" title="Position in the League">#</th>
+                            <th class="tooltip" title="Team Name">Team</th>
+                            <th class="tooltip" title="Matches Played">P</th>
+                            <th class="tooltip" title="Matches Won">W</th>
+                            <th class="tooltip" title="Matches Lost">L</th>
+                            <th class="tooltip" title="No Result Matches">NR</th>
+                            <th class="tooltip" title="Total Points">Pts</th>
+                            <th class="tooltip" title="Net Run Rate">NRR</th>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="8" style="text-align: center; padding: 20px;">
-                            <i class="far fa-frown" style="margin-right: 5px;"></i>
-                            No points data available
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($points_table)): ?>
+                            <?php foreach ($points_table as $index => $team): ?>
+                                <tr>
+                                    <td class="<?php echo $index < 4 ? 'highlight' : ''; ?>"><?php echo $index + 1; ?></td>
+                                    <td class="team-cell">
+                                        <img src="<?php echo $team->team_image; ?>" alt="<?php echo $team->team_name; ?>" class="team-logo">
+                                        <span><?php echo $team->team_name; ?></span>
+                                    </td>
+                                    <td><?php echo $team->matches_played; ?></td>
+                                    <td><?php echo $team->wins; ?></td>
+                                    <td><?php echo $team->losses; ?></td>
+                                    <td><?php echo $team->no_results; ?></td>
+                                    <td class="points"><?php echo $team->points; ?></td>
+                                    <td><?php echo number_format($team->net_run_rate, 3); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="8" class="empty-state">
+                                    <i class="far fa-frown" style="margin-right: 5px;"></i>
+                                    No points data available
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <!-- Teams Section -->
         <h2 class="section-title" id="teams">
@@ -1228,6 +1461,19 @@
                     card.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
                 });
             });
+
+            // Toggle Points Table Guide
+            const toggle = document.querySelector('.points-guide-toggle');
+            const content = document.querySelector('.points-guide-content');
+            if (toggle && content) {
+                toggle.addEventListener('click', function() {
+                    content.classList.toggle('active');
+                    toggle.classList.toggle('active');
+                    const icon = toggle.querySelector('i');
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                });
+            }
         });
     </script>
 </body>

@@ -506,22 +506,156 @@ public function update_extras($match_id, $batting_order, $data) {
 
 
 
-    public function edit_total_score($match_id, $batting_order, $total_runs, $t_overs,$wickets)
-    {
-        // Update the score record in the database
-        $data = array(
-            'total_runs' => $total_runs,
-            't_overs'=>$t_overs,
-            'wickets' => $wickets
-        );
-
-        // Assume you have a 'score' table with 'match_id' and 'batting_order' columns
-        $this->db->where('match_id', $match_id);
-        $this->db->where('batting_order', $batting_order);
-        $this->db->update('total_score', $data);
-
-        return $this->db->affected_rows() > 0; // Return true if row was updated
+public function edit_total_score($match_id, $batting_order, $total_runs, $t_overs, $wickets)
+{
+    // Validate input data
+    if ($total_runs < 0 || $t_overs < 0 || $wickets < 0 || $wickets > 10) {
+        return [
+            'score_updated' => false,
+            'match_result' => 'Invalid input data'
+        ];
     }
+
+    // Start a transaction to ensure atomic updates
+    $this->db->trans_start();
+
+    // Update the score record in the database
+    $data = array(
+        'total_runs' => $total_runs,
+        't_overs' => $t_overs,
+        'wickets' => $wickets
+    );
+
+    // Update the total_score table
+    $this->db->where('match_id', $match_id);
+    $this->db->where('batting_order', $batting_order);
+    $this->db->update('total_score', $data);
+
+    // Check if the update was successful
+    if ($this->db->affected_rows() > 0) {
+        // Fetch data from total_score table joined with add_team table
+        $this->db->select('ts.batting_team, at.team_name, ts.total_runs, ts.wickets, ts.batting_order');
+        $this->db->from('total_score ts');
+        $this->db->join('add_team at', 'ts.batting_team = at.team_id', 'left');
+        $this->db->where('ts.match_id', $match_id);
+        $this->db->order_by('ts.batting_order', 'asc');
+        $query = $this->db->get();
+
+        // Check if we have complete data (exactly 2 teams)
+        if ($query->num_rows() != 2) {
+            $this->db->trans_complete();
+            return [
+                'score_updated' => true,
+                'match_result' => 'Incomplete scorecard - need data for both teams'
+            ];
+        }
+
+        // Process team data
+        $teams = [];
+        foreach ($query->result() as $row) {
+            $teams[$row->batting_team] = [
+                'team_name' => $row->team_name,
+                'total_runs' => $row->total_runs,
+                'wickets' => $row->wickets,
+                'batting_order' => $row->batting_order
+            ];
+        }
+
+        // Verify we have exactly 2 teams
+        if (count($teams) != 2) {
+            $this->db->trans_complete();
+            return [
+                'score_updated' => true,
+                'match_result' => 'Scorecard must contain exactly 2 teams'
+            ];
+        }
+
+        // Get team IDs and batting orders
+        $team_ids = array_keys($teams);
+        $team1 = $teams[$team_ids[0]];
+        $team2 = $teams[$team_ids[1]];
+
+        // Check if extras exist for both innings
+        $this->db->select('batting_order')
+                 ->from('extras')
+                 ->where('match_id', $match_id)
+                 ->where_in('batting_order', [$team1['batting_order'], $team2['batting_order']])
+                 ->group_by('batting_order');
+        $extras_count = $this->db->get()->num_rows();
+
+        if ($extras_count != 2) {
+            $this->db->trans_complete();
+            return [
+                'score_updated' => true,
+                'match_result' => 'Extras data missing for one or both innings'
+            ];
+        }
+
+        // Determine the match result
+        if ($team1['total_runs'] > $team2['total_runs']) {
+            $result = [
+                'win_team' => $team_ids[0],
+                'lost_team' => $team_ids[1],
+                'result_statement' => $team1['team_name'] . ' won by ' . ($team1['total_runs'] - $team2['total_runs']) . ' runs'
+            ];
+        } elseif ($team2['total_runs'] > $team1['total_runs']) {
+            $result = [
+                'win_team' => $team_ids[1],
+                'lost_team' => $team_ids[0],
+                'result_statement' => $team2['team_name'] . ' won by ' . (10 - $team2['wickets']) . ' wickets'
+            ];
+        } else {
+            // Tie - check wickets
+            if ($team1['wickets'] < $team2['wickets']) {
+                $result = [
+                    'win_team' => $team_ids[0],
+                    'lost_team' => $team_ids[1],
+                    'result_statement' => $team1['team_name'] . ' won by ' . (10 - $team1['wickets']) . ' wickets'
+                ];
+            } elseif ($team2['wickets'] < $team1['wickets']) {
+                $result = [
+                    'win_team' => $team_ids[1],
+                    'lost_team' => $team_ids[0],
+                    'result_statement' => $team2['team_name'] . ' won by ' . (10 - $team2['wickets']) . ' wickets'
+                ];
+            } else {
+                $result = [
+                    'win_team' => null,
+                    'lost_team' => null,
+                    'result_statement' => 'Draw'
+                ];
+            }
+        }
+
+        // Add match_id to result data
+        $result_data = array_merge(['match_id' => $match_id], $result);
+
+        // Check if record exists and update/insert accordingly
+        $this->db->where('match_id', $match_id);
+        if ($this->db->get('match_result')->num_rows() > 0) {
+            $this->db->where('match_id', $match_id);
+            $this->db->update('match_result', $result_data);
+            $this->db->trans_complete();
+            return [
+                'score_updated' => true,
+                'match_result' => 'Match result updated: ' . $result['result_statement']
+            ];
+        } else {
+            $this->db->insert('match_result', $result_data);
+            $this->db->trans_complete();
+            return [
+                'score_updated' => true,
+                'match_result' => 'Match result saved: ' . $result['result_statement']
+            ];
+        }
+    } else {
+        $this->db->trans_complete();
+        return [
+            'score_updated' => false,
+            'match_result' => 'No changes made to the score'
+        ];
+    }
+}
 
     
    public function show_total_score($batting_order, $match_id) {
@@ -557,118 +691,112 @@ public function update_extras($match_id, $batting_order, $data) {
 }
 
 
-  public function calculate_match_result($match_id) {
-    // Fetch data from total_score table joined with add_team table for the given match_id
+ public function calculate_match_result($match_id) {
+    // Fetch data from total_score table joined with add_team table
     $this->db->select('ts.batting_team, at.team_name, ts.total_runs, ts.wickets, ts.batting_order');
     $this->db->from('total_score ts');
-    $this->db->join('add_team at', 'ts.batting_team = at.team_id', 'left'); // Join with add_team table to get team_name
+    $this->db->join('add_team at', 'ts.batting_team = at.team_id', 'left');
     $this->db->where('ts.match_id', $match_id);
     $this->db->order_by('ts.batting_order', 'asc');
     $query = $this->db->get();
 
-    // Check if data exists for the given match_id and has exactly 2 teams
-    if ($query->num_rows() < 2) {
-        return "Scorecard is still in progress.";
+    // Check if we have complete data (exactly 2 teams)
+    if ($query->num_rows() != 2) {
+        return "Incomplete scorecard - need data for both teams";
     }
 
+    // Process team data
     $teams = [];
     foreach ($query->result() as $row) {
-        $teams[$row->batting_team]['team_name'] = $row->team_name; // Use team_name for display
-        $teams[$row->batting_team]['total_runs'] = $row->total_runs;
-        $teams[$row->batting_team]['wickets'] = $row->wickets;
-        $teams[$row->batting_team]['batting_order'] = $row->batting_order;
+        $teams[$row->batting_team] = [
+            'team_name' => $row->team_name,
+            'total_runs' => $row->total_runs,
+            'wickets' => $row->wickets,
+            'batting_order' => $row->batting_order
+        ];
     }
 
-    // Check if $teams array has exactly 2 teams
+    // Verify we have exactly 2 teams
     if (count($teams) != 2) {
-        return "Scorecard is still in progress.";
+        return "Scorecard must contain exactly 2 teams";
     }
 
     // Get team IDs and batting orders
     $team_ids = array_keys($teams);
-    $team1_id = $team_ids[0];
-    $team2_id = $team_ids[1];
+    $team1 = $teams[$team_ids[0]];
+    $team2 = $teams[$team_ids[1]];
 
-    $team1_batting_order = $teams[$team1_id]['batting_order'];
-    $team2_batting_order = $teams[$team2_id]['batting_order'];
+    // Check if extras exist for both innings
+    $this->db->select('batting_order')
+             ->from('extras')
+             ->where('match_id', $match_id)
+             ->where_in('batting_order', [$team1['batting_order'], $team2['batting_order']])
+             ->group_by('batting_order');
+    $extras_count = $this->db->get()->num_rows();
 
-    // Check if extras exist for both batting orders (innings)
-    $this->db->select('batting_team, batting_order');
-    $this->db->from('extras');
-    $this->db->where('match_id', $match_id);
-    $this->db->where_in('batting_order', [$team1_batting_order, $team2_batting_order]);
-    $this->db->group_by('batting_team, batting_order');
-    $extras_query = $this->db->get();
-
-    $extras_exist = [];
-    foreach ($extras_query->result() as $row) {
-        $extras_exist[$row->batting_order] = true;
+    if ($extras_count != 2) {
+        return "Extras data missing for one or both innings";
     }
 
-    // If extras are missing for either batting order, return an error
-    if (!isset($extras_exist[$team1_batting_order]) || !isset($extras_exist[$team2_batting_order])) {
-        return "Extras are missing for one or both innings. Scorecard is still in progress.";
-    }
-
-    // Get runs and wickets for each team
-    $team1_runs = $teams[$team1_id]['total_runs'];
-    $team2_runs = $teams[$team2_id]['total_runs'];
-
-    $team1_wickets = $teams[$team1_id]['wickets'];
-    $team2_wickets = $teams[$team2_id]['wickets'];
-
-    $winner_id = '';
-    $loser_id = '';
-    $result_statement = '';
-
-    if ($team1_runs > $team2_runs) {
-        $winner_id = $team1_id;
-        $loser_id = $team2_id;
-        $result_statement = $teams[$team1_id]['team_name'] . ' won by ' . ($team1_runs - $team2_runs) . ' runs';
-    } elseif ($team2_runs > $team1_runs) {
-        $winner_id = $team2_id;
-        $loser_id = $team1_id;
-        $result_statement = $teams[$team2_id]['team_name'] . ' won by ' . (10 - $team2_wickets) . ' wickets';
-    } else {
-        // If runs are equal, check wickets
-        if ($team1_wickets < $team2_wickets) {
-            $winner_id = $team1_id;
-            $loser_id = $team2_id;
-            $result_statement = $teams[$team1_id]['team_name'] . ' won by ' . (10 - $team1_wickets) . ' wickets';
-        } elseif ($team2_wickets < $team1_wickets) {
-            $winner_id = $team2_id;
-            $loser_id = $team1_id;
-            $result_statement = $teams[$team2_id]['team_name'] . ' won by ' . (10 - $team2_wickets) . ' wickets';
-        } else {
-            $winner_id = null;
-            $loser_id = null;
-            $result_statement = 'Match ended in a draw';
+    // Determine the match result
+    if ($team1['total_runs'] > $team2['total_runs']) {
+        $result = [
+            'win_team' => $team_ids[0],
+            'lost_team' => $team_ids[1],
+            'result_statement' => $team1['team_name'].' won by '.($team1['total_runs'] - $team2['total_runs']).' runs'
+        ];
+    } 
+    elseif ($team2['total_runs'] > $team1['total_runs']) {
+        $result = [
+            'win_team' => $team_ids[1],
+            'lost_team' => $team_ids[0],
+            'result_statement' => $team2['team_name'].' won by '.(10 - $team2['wickets']).' wickets'
+        ];
+    } 
+    else {
+        // Tie - check wickets
+        if ($team1['wickets'] < $team2['wickets']) {
+            $result = [
+                'win_team' => $team_ids[0],
+                'lost_team' => $team_ids[1],
+                'result_statement' => $team1['team_name'].' won by '.(10 - $team1['wickets']).' wickets'
+            ];
+        } 
+        elseif ($team2['wickets'] < $team1['wickets']) {
+            $result = [
+                'win_team' => $team_ids[1],
+                'lost_team' => $team_ids[0],
+                'result_statement' => $team2['team_name'].' won by '.(10 - $team2['wickets']).' wickets'
+            ];
+        } 
+        else {
+            $result = [
+                'win_team' => null,
+                'lost_team' => null,
+                'result_statement' => 'Draw'
+            ];
         }
     }
 
-    // Prepare data to insert/update into match_result table
-    $result_data = [
-        'match_id' => $match_id,
-        'win_team' => $winner_id, // Store winning team ID
-        'lost_team' => $loser_id, // Store losing team ID
-        'result_statement' => $result_statement
-    ];
+    // Add match_id to result data
+    $result_data = array_merge(['match_id' => $match_id], $result);
 
-    // Check if a record already exists for the given match_id
+    // Check if record exists and update/insert accordingly
     $this->db->where('match_id', $match_id);
-    $existing_record = $this->db->get('match_result')->row();
-
-    if ($existing_record) {
-        // Update the existing record
+    if ($this->db->get('match_result')->num_rows() > 0) {
         $this->db->where('match_id', $match_id);
         $this->db->update('match_result', $result_data);
-    } else {
-        // Insert a new record
+        return "Match result updated: ".$result['result_statement'];
+    } 
+    else {
         $this->db->insert('match_result', $result_data);
+        return "Match result saved: ".$result['result_statement'];
     }
+
 
     return $result_statement;
 }
+
  public function get_player_of_match($match_id) {
         $this->db->select('p.player_id, p.playerName, p.image_path');
         $this->db->from('match_player mp');

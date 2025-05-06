@@ -111,28 +111,57 @@ class Tournament_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function get_league_schedule($league_id) {
-        if (!is_numeric($league_id)) {
-            return false;
-        }
-
-        $this->db->select('
-            add_schedule.*, 
-            team_one.team_name AS team_one_name, 
-            team_one.image_path AS team_one_image, 
-            team_two.team_name AS team_two_name, 
-            team_two.image_path AS team_two_image
-        ')
-        ->from('add_schedule')
-        ->join('add_team AS team_one', 'team_one.team_id = add_schedule.team_one_id', 'left')
-        ->join('add_team AS team_two', 'team_two.team_id = add_schedule.team_two_id', 'left')
-        ->where('add_schedule.league_id', $league_id)
-        ->order_by('add_schedule.match_date', 'DESC')
-        ->order_by('add_schedule.match_time', 'DESC');
-        
-        $query = $this->db->get();
-        return ($query->num_rows() > 0) ? $query->result() : false;
+    public function get_league_schedule($league_id)
+{
+    if (!is_numeric($league_id)) {
+        return false;
     }
+
+    $this->db->select('
+        add_schedule.*, 
+        team_one.team_name AS team_one_name, 
+        team_one.image_path AS team_one_image, 
+        team_two.team_name AS team_two_name, 
+        team_two.image_path AS team_two_image
+    ')
+    ->from('add_schedule')
+    ->join('add_team AS team_one', 'team_one.team_id = add_schedule.team_one_id', 'left')
+    ->join('add_team AS team_two', 'team_two.team_id = add_schedule.team_two_id', 'left')
+    ->join('match_result', 'match_result.match_id = add_schedule.match_id', 'left')
+    ->where('add_schedule.league_id', $league_id)
+    ->where('match_result.match_id IS NULL') // Only include matches without finalized results
+    ->order_by('add_schedule.match_date', 'DESC')
+    ->order_by('add_schedule.match_time', 'DESC');
+    
+    $query = $this->db->get();
+    return ($query->num_rows() > 0) ? $query->result() : false;
+}
+
+public function get_completed_matches($league_id)
+{
+    if (!is_numeric($league_id)) {
+        return false;
+    }
+
+    $this->db->select('
+        add_schedule.*, 
+        team_one.team_name AS team_one_name, 
+        team_one.image_path AS team_one_image, 
+        team_two.team_name AS team_two_name, 
+        team_two.image_path AS team_two_image,
+        match_result.result_statement
+    ')
+    ->from('add_schedule')
+    ->join('add_team AS team_one', 'team_one.team_id = add_schedule.team_one_id', 'left')
+    ->join('add_team AS team_two', 'team_two.team_id = add_schedule.team_two_id', 'left')
+    ->join('match_result', 'match_result.match_id = add_schedule.match_id', 'inner')
+    ->where('add_schedule.league_id', $league_id)
+    ->order_by('add_schedule.match_date', 'DESC')
+    ->order_by('add_schedule.match_time', 'DESC');
+    
+    $query = $this->db->get();
+    return ($query->num_rows() > 0) ? $query->result() : false;
+}
 
     public function league_rules($data) {
         if (empty($data) || !isset($data['league_id']) || !is_numeric($data['league_id'])) {
@@ -577,7 +606,7 @@ class Tournament_model extends CI_Model {
                                   ->from('batting_first bf')
                                   ->join('add_schedule s', 'bf.match_id = s.match_id')
                                   ->join('add_player ap', 'bf.player_id = ap.player_id')
-                                  ->where('s.league_id', $team_id)
+                                  ->where('s.league_id', $league_id)
                                   ->where('bf.batting_team', $team_id)
                                   ->group_by('bf.player_id, ap.playerName, ap.image_path')
                                   ->order_by('total_runs', 'DESC')
@@ -681,8 +710,6 @@ class Tournament_model extends CI_Model {
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
 
-    // Added methods to support TournamentController
-
     public function get_team($team_id) {
         if (!is_numeric($team_id)) {
             return false;
@@ -739,4 +766,113 @@ class Tournament_model extends CI_Model {
 
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
+
+public function get_points_table($league_id) {
+    if (!is_numeric($league_id)) {
+        return [];
+    }
+
+    $query = $this->db->query("
+        SELECT 
+            t.team_id,
+            t.team_name,
+            t.image_path AS team_image,
+            COUNT(DISTINCT CASE WHEN mr.match_id IS NOT NULL THEN s.match_id END) AS matches_played,
+            SUM(CASE WHEN mr.win_team = t.team_id THEN 1 ELSE 0 END) AS wins,
+            SUM(CASE WHEN mr.lost_team = t.team_id THEN 1 ELSE 0 END) AS losses,
+            SUM(CASE WHEN mr.result_statement = 'Draw' THEN 1 ELSE 0 END) AS draws,
+            SUM(CASE WHEN mr.result_statement = 'No Result' THEN 1 ELSE 0 END) AS no_results,
+            SUM(
+                CASE 
+                    WHEN mr.win_team = t.team_id THEN 2 
+                    WHEN mr.result_statement IN ('Draw', 'No Result') THEN 1 
+                    ELSE 0 
+                END
+            ) AS points,
+            COALESCE(
+                (SUM(ts.total_runs) / NULLIF(SUM(ts.t_overs), 0)) - 
+                (SUM(opp_ts.total_runs) / NULLIF(SUM(opp_ts.t_overs), 0)),
+                0
+            ) AS net_run_rate
+        FROM 
+            add_team t
+        JOIN 
+            league_teams lt ON t.team_id = lt.team_id AND lt.status = 1
+        LEFT JOIN 
+            add_schedule s ON (s.team_one_id = t.team_id OR s.team_two_id = t.team_id) AND s.league_id = ?
+        LEFT JOIN 
+            match_result mr ON s.match_id = mr.match_id AND 
+            (mr.win_team IS NOT NULL OR mr.lost_team IS NOT NULL OR mr.result_statement IN ('Draw', 'No Result'))
+        LEFT JOIN 
+            total_score ts ON ts.match_id = s.match_id AND ts.batting_team = t.team_id
+        LEFT JOIN 
+            total_score opp_ts ON opp_ts.match_id = s.match_id AND opp_ts.batting_team != t.team_id
+        WHERE 
+            lt.league_id = ?
+        GROUP BY 
+            t.team_id, t.team_name, t.image_path
+        ORDER BY 
+            points DESC,
+            net_run_rate DESC
+    ", [$league_id, $league_id]);
+
+    $result = $query->result();
+
+    // Format NRR to 3 decimal places
+    foreach ($result as &$team) {
+        $team->net_run_rate = number_format((float)$team->net_run_rate, 3);
+    }
+
+    return $result;
+}
+
+public function get_team_scores($league_id)
+{
+    if (!is_numeric($league_id)) {
+        return false;
+    }
+
+    // Initialize result array
+    $team_scores = [];
+
+    // Fetch all teams in the league via junction table
+    $this->db->select('add_team.team_id, add_team.team_name')
+             ->from('add_team')
+             ->join('league_teams', 'league_teams.team_id = add_team.team_id')
+             ->where('league_teams.league_id', $league_id);
+    $teams = $this->db->get()->result_array();
+
+    if (empty($teams)) {
+        return $team_scores;
+    }
+
+    foreach ($teams as $team) {
+        $team_id = $team['team_id'];
+        $team_name = $team['team_name'];
+
+        // Count matches played (where team is team_one or team_two and match_result exists)
+        $this->db->from('add_schedule')
+                 ->join('match_result', 'match_result.match_id = add_schedule.match_id', 'inner')
+                 ->where('add_schedule.league_id', $league_id)
+                 ->where("(add_schedule.team_one_id = $team_id OR add_schedule.team_two_id = $team_id)");
+        $matches_played = $this->db->count_all_results();
+
+        // Calculate points (2 points for each win)
+        $this->db->from('add_schedule')
+                 ->join('match_result', 'match_result.match_id = add_schedule.match_id', 'inner')
+                 ->where('add_schedule.league_id', $league_id)
+                 ->where('match_result.win_team', $team_id);
+        $wins = $this->db->count_all_results();
+        $points = $wins * 2;
+
+        $team_scores[$team_id] = [
+            'team_id' => $team_id,
+            'team_name' => $team_name,
+            'matches_played' => $matches_played,
+            'points' => $points
+        ];
+    }
+
+    return $team_scores;
+}
 }

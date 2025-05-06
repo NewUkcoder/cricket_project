@@ -51,7 +51,7 @@
             line-height: 1.5;
             background-color: #f5f5f5;
             -webkit-font-smoothing: antialiased;
-            padding-bottom: 80px; /* Increased space for fixed footer */
+            padding-bottom: 80px;
         }
 
         .tm-container {
@@ -70,7 +70,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            position: relative; /* Changed from sticky/fixed to relative */
+            position: relative;
         }
 
         .tm-header-logo {
@@ -1151,7 +1151,7 @@
                 <img src="<?php echo $data['image_path']; ?>" alt="Team Logo" class="tm-header-logo">
             </a>
             <div class="tm-header-content">
-                <form id="team-name-form" method="post" action="<?php echo site_url('TeamController/update_team_info'); ?>">
+                <form id="team-name-form" method="post" action="<?php echo site_url('TeamController/update_team_name'); ?>">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <input type="hidden" name="team_id" value="<?php echo $team_id; ?>">
                     <div style="display: flex; align-items: center; gap: 10px;">
@@ -1282,8 +1282,10 @@
                                 'team_id' => $team_id,
                                 'team_one_id' => $value->team_one_id,
                                 'team_one_name' => htmlspecialchars($value->team_one_name ?? ''),
+                                'team_one_image' => htmlspecialchars($value->team_one_image ?? ''),
                                 'team_two_id' => $value->team_two_id,
                                 'team_two_name' => htmlspecialchars($value->team_two_name ?? ''),
+                                'team_two_image' => htmlspecialchars($value->team_two_image ?? ''),
                                 'match_date' => $match_date,
                                 'match_time' => $match_time,
                                 'overs' => isset($value->overs) ? (int)$value->overs : 20,
@@ -1390,7 +1392,7 @@
         <section class="tm-section" id="tm-captains">
             <h3 class="tm-section-title">Current Captains</h3>
             <div class="tm-captain-grid">
-                <div class="tm-captain-card">
+                <div class="tm-captain-card" data-ball-type="leather_ball">
                     <h4>Leather Ball</h4>
                     <?php if ($captain['leather_ball']['status'] === 0): ?>
                         <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
@@ -1408,7 +1410,7 @@
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
-                <div class="tm-captain-card">
+                <div class="tm-captain-card" data-ball-type="tape_ball">
                     <h4>Tape Ball</h4>
                     <?php if ($captain['tape_ball']['status'] === 0): ?>
                         <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
@@ -1426,7 +1428,7 @@
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
-                <div class="tm-captain-card">
+                <div class="tm-captain-card" data-ball-type="tennis_ball">
                     <h4>Tennis Ball</h4>
                     <?php if ($captain['tennis_ball']['status'] === 0): ?>
                         <?php if ($this->session->userdata('user_id') == $data['user_id']): ?>
@@ -1479,7 +1481,7 @@
             <div class="tm-modal-content">
                 <span class="tm-modal-close" onclick="closeAddModal()">×</span>
                 <h3 class="tm-modal-title">Add New Team Management Member</h3>
-                <form method="post" action="<?php echo base_url(); ?>TeamController/insert_team_management">
+                <form id="tm-add-form" method="post" action="<?php echo base_url(); ?>TeamController/insert_team_management">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <input type="hidden" name="team_id" value="<?php echo $team_id; ?>">
                     <div class="tm-form-group">
@@ -1509,7 +1511,7 @@
             <div class="tm-modal-content">
                 <span class="tm-modal-close" onclick="closeEditModal()">×</span>
                 <h3 class="tm-modal-title">Edit Team Management Member</h3>
-                <form method="post" action="<?php echo base_url(); ?>TeamController/update_team_management">
+                <form id="tm-edit-form" method="post" action="<?php echo base_url(); ?>TeamController/update_team_management">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <input type="hidden" name="team_id" value="<?php echo $team_id; ?>">
                     <input type="hidden" name="current_role" id="tm-edit-current-role">
@@ -1540,7 +1542,7 @@
             <div class="tm-modal-content">
                 <span class="tm-modal-close" onclick="closeCaptainEditModal()">×</span>
                 <h3 class="tm-modal-title">Edit Captain</h3>
-                <form id="tm-captain-edit-form" method="post" action="<?php echo base_url(); ?>TeamController/update_captain">
+                <form id="tm-captain-edit-form" method="post">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" id="tm-captain-csrf">
                     <input type="hidden" name="team_id" id="tm-captain-team-id" value="<?php echo $team_id; ?>">
                     <input type="hidden" name="ball_type" id="tm-captain-ball-type">
@@ -1548,7 +1550,6 @@
                         <label for="tm-captain-player">Select Player</label>
                         <select id="tm-captain-player" name="player_id" required>
                             <option value="">Select a player</option>
-                            <!-- Options populated dynamically via AJAX -->
                         </select>
                         <span id="tm-captain-error" class="tm-error" style="display:none;"></span>
                     </div>
@@ -1565,27 +1566,23 @@
             <div class="tm-modal-content">
                 <span class="tm-modal-close" onclick="closeScheduleEditModal()">×</span>
                 <h3 class="tm-modal-title">Edit Match Schedule</h3>
-                <form id="tm-schedule-edit-form" method="post" action="<?php echo base_url(); ?>Welcome/update_schedule">
-                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                <form id="tm-schedule-edit-form" method="post">
+                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" id="tm-schedule-csrf">
                     <input type="hidden" name="match_id" id="tm-schedule-match-id">
                     <input type="hidden" name="team_id" id="tm-schedule-team-id">
                     <div class="tm-form-group">
                         <label for="tm-schedule-team-one">Team One</label>
                         <select id="tm-schedule-team-one" name="team_one_id" required>
-                            <!-- Options populated dynamically -->
+                            <option value="">Select Team One</option>
                         </select>
-                        <?php if (form_error('team_one_id')): ?>
-                            <span class="tm-error"><?php echo form_error('team_one_id'); ?></span>
-                        <?php endif; ?>
+                        <span id="tm-schedule-team-one-error" class="tm-error" style="display:none;"></span>
                     </div>
                     <div class="tm-form-group">
                         <label for="tm-schedule-team-two">Team Two</label>
                         <select id="tm-schedule-team-two" name="team_two_id" required>
-                            <!-- Options populated dynamically -->
+                            <option value="">Select Team Two</option>
                         </select>
-                        <?php if (form_error('team_two_id')): ?>
-                            <span class="tm-error"><?php echo form_error('team_two_id'); ?></span>
-                        <?php endif; ?>
+                        <span id="tm-schedule-team-two-error" class="tm-error" style="display:none;"></span>
                     </div>
                     <div class="tm-form-group">
                         <label for="tm-schedule-date">Match Date</label>
@@ -1660,7 +1657,7 @@
     <!-- Mobile Footer -->
     <footer class="tm-footer">
         <div class="tm-footer-nav">
-             <a href="<?php echo base_url(); ?>Welcome/landing_page" class="<?php echo current_url() == base_url('Welcome/landing_page') ? 'active' : ''; ?>">
+            <a href="<?php echo base_url(); ?>Welcome/landing_page" class="<?php echo current_url() == base_url('Welcome/landing_page') ? 'active' : ''; ?>">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </a>
@@ -1680,353 +1677,618 @@
     </footer>
 
     <script>
-        // Show Toast and Auto-Hide
-        document.addEventListener('DOMContentLoaded', () => {
-            const toasts = document.querySelectorAll('.tm-toast');
-            toasts.forEach(toast => {
-                setTimeout(() => {
-                    toast.style.animation = 'tmToastFadeOut 0.3s ease forwards';
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
-            });
-        });
+// Base URL for API requests (replace with actual base URL or configure dynamically)
+    const BASE_URL = window.location.origin + '/'; // Adjust based on your CodeIgniter base_url
 
-        // Define the animation for fading out
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes tmToastFadeOut {
-                from { opacity: 1; transform: translateX(0); }
-                to { opacity: 0; transform: translateX(20px); }
-            }
-        `;
-        document.head.appendChild(style);
+    // Get CSRF token from meta tag or hidden input
+    const getCsrfToken = () => {
+        const meta = document.querySelector('meta[name="csrf-token"]') || document.querySelector('input[name="csrf_token_name"]');
+        return meta ? { name: meta.getAttribute('name') || 'csrf_token_name', value: meta.getAttribute('content') || meta.value } : { name: 'csrf_token_name', value: '' };
+    };
 
-        // Team Name Edit Functions
-        function toggleTeamNameEdit() {
-            document.getElementById('tm-team-name-display').style.display = 'none';
-            document.getElementById('tm-team-name-edit').style.display = 'inline-block';
-            document.getElementById('tm-team-name-save').style.display = 'inline-flex';
-            document.getElementById('tm-team-name-cancel').style.display = 'inline-flex';
-            document.getElementById('tm-team-name-edit').focus();
-        }
-
-        function cancelTeamNameEdit() {
-            document.getElementById('tm-team-name-display').style.display = 'block';
-            document.getElementById('tm-team-name-edit').style.display = 'none';
-            document.getElementById('tm-team-name-save').style.display = 'none';
-            document.getElementById('tm-team-name-cancel').style.display = 'none';
-            document.getElementById('tm-team-name-edit').value = document.getElementById('tm-team-name-display').textContent;
-        }
-
-        // Handle team name form submission via AJAX
-        document.getElementById('team-name-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const form = this;
-            const formData = new FormData(form);
-            const teamNameInput = document.getElementById('tm-team-name-edit').value.trim();
-
-            if (!teamNameInput) {
-                showToast('Team name cannot be empty', 'error');
-                return;
-            }
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.getElementById('tm-team-name-display').textContent = teamNameInput;
-                    document.getElementById('tm-footer-team-name').textContent = teamNameInput;
-                    cancelTeamNameEdit();
-                    showToast(data.message || 'Team name updated successfully', 'success');
-                } else {
-                    showToast(data.message || 'Failed to update team name', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error updating team name:', error);
-                showToast('An error occurred while updating the team name', 'error');
-            });
-        });
-
-        // Team Info Form Submission
-        document.getElementById('team-info-form').addEventListener('submit', () => {
-            document.getElementById('scroll-position').value = window.pageYOffset;
-        });
-
-        // Window Onload for Scroll Restoration
-        window.onload = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('scroll')) {
-                setTimeout(() => {
-                    window.scrollTo(0, parseInt(urlParams.get('scroll')));
-                }, 100);
-            }
-            <?php if ($this->input->get('edit_field')): ?>
-                toggleEdit('<?php echo $this->input->get('edit_field'); ?>');
-            <?php endif; ?>
-        };
-
-        // Toggle Edit for Team Info Fields
-        function toggleEdit(field) {
-            document.querySelectorAll('.tm-edit-input').forEach(input => input.style.display = 'none');
-            document.querySelectorAll('[id$="-display"]').forEach(span => span.style.display = 'inline');
-            document.getElementById(`tm-${field}-edit`).style.display = 'inline-block';
-            document.getElementById(`tm-${field}-display`).style.display = 'none';
-            document.getElementById('edit-controls').style.display = 'block';
-            document.getElementById(`tm-${field}-edit`).focus();
-        }
-
-        // Cancel Edit for Team Info
-        function cancelEdit() {
-            document.querySelectorAll('.tm-edit-input').forEach(input => input.style.display = 'none');
-            document.querySelectorAll('[id$="-display"]').forEach(span => span.style.display = 'inline');
-            document.getElementById('edit-controls').style.display = 'none';
-        }
-
-        // Show Toast Notification
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `tm-toast ${type}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
+    // Show Toast and Auto-Hide
+    document.addEventListener('DOMContentLoaded', () => {
+        const toasts = document.querySelectorAll('.tm-toast');
+        toasts.forEach(toast => {
             setTimeout(() => {
                 toast.style.animation = 'tmToastFadeOut 0.3s ease forwards';
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
+        });
+    });
+
+    // Define the animation for fading out
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes tmToastFadeOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(20px); }
         }
+    `;
+    document.head.appendChild(style);
 
-        // Confirm Delete Modal for Match Schedule
-        function openConfirmModal(matchId, teamId) {
-            const modal = document.getElementById('tm-confirm-modal');
-            const deleteBtn = document.getElementById('tm-confirm-delete');
-            deleteBtn.onclick = () => {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `<?php echo base_url(); ?>Welcome/delete_schedule/${matchId}`;
-                const csrfInput = document.createElement('input');
-                csrfInput.type = 'hidden';
-                csrfInput.name = '<?php echo $this->security->get_csrf_token_name(); ?>';
-                csrfInput.value = '<?php echo $this->security->get_csrf_hash(); ?>';
-                form.appendChild(csrfInput);
-                const teamIdInput = document.createElement('input');
-                teamIdInput.type = 'hidden';
-                teamIdInput.name = 'team_id';
-                teamIdInput.value = teamId;
-                form.appendChild(teamIdInput);
-                document.body.appendChild(form);
-                form.submit();
-            };
-            modal.style.display = 'flex';
-        }
+    // Team Name Form Submission
+    document.getElementById('team-name-form')?.addEventListener('submit', (e) => {
+        const formData = new FormData(e.target);
+        const csrf = getCsrfToken();
+        formData.append(csrf.name, csrf.value);
 
-        function closeConfirmModal() {
-            document.getElementById('tm-confirm-modal').style.display = 'none';
-        }
-
-        // Add Team Management Modal
-        function openAddModal() {
-            document.getElementById('tm-add-modal').style.display = 'flex';
-            document.getElementById('tm-add-name').focus();
-        }
-
-        function closeAddModal() {
-            document.getElementById('tm-add-modal').style.display = 'none';
-            document.getElementById('tm-add-name').value = '';
-            document.getElementById('tm-add-designation').value = '';
-        }
-
-        // Edit Team Management Modal
-        function openEditModal(name, role) {
-            document.getElementById('tm-edit-modal').style.display = 'flex';
-            document.getElementById('tm-edit-name').value = name;
-            document.getElementById('tm-edit-designation').value = role;
-            document.getElementById('tm-edit-current-role').value = role;
-            document.getElementById('tm-edit-name').focus();
-        }
-
-        function closeEditModal() {
-            document.getElementById('tm-edit-modal').style.display = 'none';
-        }
-
-        // Edit Captain Modal
-        function openCaptainEditModal(ballType, teamId, currentPlayerId, currentPlayerName) {
-            const modal = document.getElementById('tm-captain-edit-modal');
-            const form = document.getElementById('tm-captain-edit-form');
-            const ballTypeInput = document.getElementById('tm-captain-ball-type');
-            const playerSelect = document.getElementById('tm-captain-player');
-            const errorSpan = document.getElementById('tm-captain-error');
-            const submitBtn = document.getElementById('tm-captain-submit');
-
-            ballTypeInput.value = ballType;
-
-            // Fetch players for the team
-            fetch(`<?php echo base_url(); ?>TeamController/get_team_players/${teamId}`, {
-                method: 'GET',
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success' && data.players) {
-                    playerSelect.innerHTML = '<option value="">Select a player</option>';
-                    data.players.forEach(player => {
-                        const option = document.createElement('option');
-                        option.value = player.player_id;
-                        option.textContent = player.playerName;
-                        if (player.player_id === currentPlayerId) {
-                            option.selected = true;
-                        }
-                        playerSelect.appendChild(option);
-                    });
-                    errorSpan.style.display = 'none';
-                    submitBtn.disabled = false;
-                } else {
-                    errorSpan.textContent = data.message || 'No players available';
-                    errorSpan.style.display = 'block';
-                    playerSelect.innerHTML = '<option value="">No players available</option>';
-                    submitBtn.disabled = true;
+        fetch(BASE_URL + 'TeamController/update_team_name', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success') {
+                showToast(result.message || 'Team name updated successfully', 'success');
+                document.getElementById('tm-team-name-display').textContent = formData.get('team_name');
+                document.getElementById('tm-footer-team-name').textContent = formData.get('team_name');
+                cancelTeamNameEdit();
+                if (result.csrfName && result.csrfHash) {
+                    updateCsrfToken(result.csrfName, result.csrfHash);
                 }
-            })
-            .catch(error => {
-                console.error('Error fetching players:', error);
-                errorSpan.textContent = 'Failed to load players';
-                errorSpan.style.display = 'block';
-                playerSelect.innerHTML = '<option value="">No players available</option>';
-                submitBtn.disabled = true;
-            });
-
-            modal.style.display = 'flex';
-            playerSelect.focus();
-        }
-
-        function closeCaptainEditModal() {
-            document.getElementById('tm-captain-edit-modal').style.display = 'none';
-            document.getElementById('tm-captain-player').innerHTML = '<option value="">Select a player</option>';
-            document.getElementById('tm-captain-error').style.display = 'none';
-        }
-
-        // Edit Schedule Modal
-        function openScheduleEditModal(scheduleJson) {
-            try {
-                const schedule = JSON.parse(scheduleJson);
-                if (!schedule.match_id || !schedule.team_one_id || !schedule.team_two_id) {
-                    console.error('Invalid schedule data:', schedule);
-                    showToast('Invalid schedule data', 'error');
-                    return;
-                }
-
-                const modal = document.getElementById('tm-schedule-edit-modal');
-                const form = document.getElementById('tm-schedule-edit-form');
-                const matchIdInput = document.getElementById('tm-schedule-match-id');
-                const teamIdInput = document.getElementById('tm-schedule-team-id');
-                const dateInput = document.getElementById('tm-schedule-date');
-                const timeInput = document.getElementById('tm-schedule-time');
-                const oversInput = document.getElementById('tm-schedule-overs');
-                const venueInput = document.getElementById('tm-schedule-venue');
-                const seriesInput = document.getElementById('tm-schedule-series');
-                const firstUmpireInput = document.getElementById('tm-schedule-first-umpire');
-                const secondUmpireInput = document.getElementById('tm-schedule-second-umpire');
-                const teamOneSelect = document.getElementById('tm-schedule-team-one');
-                const teamTwoSelect = document.getElementById('tm-schedule-team-two');
-
-                if (!modal || !form || !matchIdInput || !teamIdInput || !dateInput || !timeInput || 
-                    !oversInput || !venueInput || !seriesInput || !firstUmpireInput || 
-                    !secondUmpireInput || !teamOneSelect || !teamTwoSelect) {
-                    console.error('Required elements not found');
-                    showToast('Form elements not found', 'error');
-                    return;
-                }
-
-                // Populate form fields
-                matchIdInput.value = schedule.match_id || '';
-                teamIdInput.value = schedule.team_id || '';
-                dateInput.value = schedule.match_date || '';
-                timeInput.value = schedule.match_time || '';
-                oversInput.value = schedule.overs || '20';
-                venueInput.value = schedule.venue || '';
-                seriesInput.value = schedule.series || '';
-                firstUmpireInput.value = schedule.first_umpire || '';
-                secondUmpireInput.value = schedule.second_umpire || '';
-
-                // Populate team selects
-                teamOneSelect.innerHTML = `<option value="${schedule.team_one_id}">${schedule.team_one_name}</option>`;
-                teamTwoSelect.innerHTML = `<option value="${schedule.team_two_id}">${schedule.team_two_name}</option>`;
-
-                // Fetch available teams for dropdowns
-                fetch('<?php echo base_url(); ?>Welcome/get_teams', {
-                    method: 'GET',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success' && data.teams) {
-                        teamOneSelect.innerHTML = '<option value="">Select Team One</option>';
-                        teamTwoSelect.innerHTML = '<option value="">Select Team Two</option>';
-                        data.teams.forEach(team => {
-                            const option1 = document.createElement('option');
-                            option1.value = team.team_id;
-                            option1.textContent = team.team_name;
-                            if (team.team_id === schedule.team_one_id) option1.selected = true;
-                            teamOneSelect.appendChild(option1);
-
-                            const option2 = document.createElement('option');
-                            option2.value = team.team_id;
-                            option2.textContent = team.team_name;
-                            if (team.team_id === schedule.team_two_id) option2.selected = true;
-                            teamTwoSelect.appendChild(option2);
-                        });
-                    } else {
-                        showToast(data.message || 'Failed to load teams', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching teams:', error);
-                    showToast('Failed to load teams', 'error');
-                });
-
-                modal.style.display = 'flex';
-                dateInput.focus();
-            } catch (error) {
-                console.error('Error parsing schedule JSON:', error);
-                showToast('Error loading schedule data', 'error');
+            } else {
+                showToast(result.message || 'Failed to update team name', 'error');
             }
-        }
+        })
+        .catch(error => {
+            console.error('Error updating team name:', error);
+            showToast('Failed to update team name', 'error');
+        });
+    });
 
-        function closeScheduleEditModal() {
-            document.getElementById('tm-schedule-edit-modal').style.display = 'none';
-            const form = document.getElementById('tm-schedule-edit-form');
-            form.reset();
-            document.getElementById('tm-schedule-team-one').innerHTML = '<option value="">Select Team One</option>';
-            document.getElementById('tm-schedule-team-two').innerHTML = '<option value="">Select Team Two</option>';
-        }
+    // Team Info Form Submission
+    document.getElementById('team-info-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        document.getElementById('scroll-position').value = window.pageYOffset;
+        const formData = new FormData(e.target);
+        const csrf = getCsrfToken();
+        formData.append(csrf.name, csrf.value);
 
-        // Handle Schedule Form Submission
-        document.getElementById('tm-schedule-edit-form').addEventListener('submit', function(e) {
+        fetch(BASE_URL + 'TeamController/update_team_info', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success') {
+                showToast(result.message || 'Team info updated successfully', 'success');
+                ['city', 'country', 'ground', 'phone'].forEach(field => {
+                    const value = formData.get(field === 'ground' ? 'home_ground' : field === 'phone' ? 'phone_number' : field);
+                    document.getElementById(`tm-${field}-display`).textContent = value;
+                    document.getElementById(`tm-${field}-edit`).value = value;
+                });
+                cancelEdit();
+                if (result.csrfName && result.csrfHash) {
+                    updateCsrfToken(result.csrfName, result.csrfHash);
+                }
+            } else {
+                showToast(result.message || 'Failed to update team info', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating team info:', error);
+            showToast('Failed to update team info', 'error');
+        });
+    });
+
+    // Window Onload for Scroll Restoration
+    window.onload = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('scroll')) {
+            setTimeout(() => {
+                window.scrollTo(0, parseInt(urlParams.get('scroll')));
+            }, 100);
+        }
+        if (urlParams.has('edit_field')) {
+            toggleEdit(urlParams.get('edit_field'));
+        }
+    };
+
+    // Toggle Edit for Team Name
+    function toggleTeamNameEdit() {
+        document.getElementById('tm-team-name-display').style.display = 'none';
+        document.getElementById('tm-team-name-edit').style.display = 'inline-block';
+        document.getElementById('tm-team-name-save').style.display = 'inline-flex';
+        document.getElementById('tm-team-name-cancel').style.display = 'inline-flex';
+        document.querySelector('.tm-btn-warning.tm-btn-xs').style.display = 'none';
+        document.getElementById('tm-team-name-edit').focus();
+    }
+
+    // Cancel Edit for Team Name
+    function cancelTeamNameEdit() {
+        document.getElementById('tm-team-name-display').style.display = 'block';
+        document.getElementById('tm-team-name-edit').style.display = 'none';
+        document.getElementById('tm-team-name-save').style.display = 'none';
+        document.getElementById('tm-team-name-cancel').style.display = 'none';
+        document.querySelector('.tm-btn-warning.tm-btn-xs').style.display = 'inline-flex';
+        document.getElementById('tm-team-name-edit').value = document.getElementById('tm-team-name-display').textContent;
+    }
+
+    // Toggle Edit for Team Info Fields
+    function toggleEdit(field) {
+        document.querySelectorAll('.tm-edit-input').forEach(input => input.style.display = 'none');
+        document.querySelectorAll('[id$="-display"]').forEach(span => span.style.display = 'inline');
+        document.getElementById(`tm-${field}-edit`).style.display = 'inline-block';
+        document.getElementById(`tm-${field}-display`).style.display = 'none';
+        document.getElementById('edit-controls').style.display = 'block';
+        document.getElementById(`tm-${field}-edit`).focus();
+    }
+
+    // Cancel Edit for Team Info
+    function cancelEdit() {
+        document.querySelectorAll('.tm-edit-input').forEach(input => input.style.display = 'none');
+        document.querySelectorAll('[id$="-display"]').forEach(span => span.style.display = 'inline');
+        document.getElementById('edit-controls').style.display = 'none';
+    }
+
+    // Show Toast Notification
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `tm-toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = 'tmToastFadeOut 0.3s ease forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // Update CSRF Token
+    function updateCsrfToken(csrfName, csrfHash) {
+        document.querySelectorAll(`input[name="${csrfName}"]`).forEach(input => {
+            input.value = csrfHash;
+        });
+        const meta = document.querySelector('meta[name="csrf-token"]');
+        if (meta) meta.setAttribute('content', csrfHash);
+    }
+
+    // Open Add Team Management Modal
+    function openAddModal() {
+        const modal = document.getElementById('tm-add-modal');
+        modal.style.display = 'flex';
+        document.getElementById('tm-add-name').focus();
+    }
+
+    // Close Add Team Management Modal
+    function closeAddModal() {
+        const modal = document.getElementById('tm-add-modal');
+        modal.style.display = 'none';
+        document.getElementById('tm-add-form').reset();
+        document.querySelectorAll('#tm-add-modal .tm-error').forEach(error => error.style.display = 'none');
+    }
+
+    // Handle Add Team Management Form Submission
+    document.getElementById('tm-add-form')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const csrf = getCsrfToken();
+        formData.append(csrf.name, csrf.value);
+
+        fetch(BASE_URL + 'TeamController/insert_team_management', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success') {
+                showToast(result.message || 'Team management member added successfully', 'success');
+                closeAddModal();
+                const container = document.querySelector('.team-container');
+                if (container.querySelector('.tm-empty-state')) {
+                    container.innerHTML = '';
+                }
+                const newRow = document.createElement('div');
+                newRow.className = 'team-row';
+                newRow.id = `staff-${formData.get('designation').replace(/\s+/g, '-')}`;
+                newRow.innerHTML = `
+                    <div class="team-info">
+                        <h3>${formData.get('name')}</h3>
+                        <p>${formData.get('designation')}</p>
+                    </div>
+                    <button type="button" class="tm-btn tm-btn-warning tm-btn-sm" onclick="openEditModal('${formData.get('name')}', '${formData.get('designation')}')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                `;
+                container.appendChild(newRow);
+                if (result.csrfName && result.csrfHash) {
+                    updateCsrfToken(result.csrfName, result.csrfHash);
+                }
+            } else {
+                showToast(result.message || 'Failed to add member', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error adding team management member:', error);
+            showToast('Failed to add member', 'error');
+        });
+    });
+
+    // Open Edit Team Management Modal
+    function openEditModal(name, role) {
+        const modal = document.getElementById('tm-edit-modal');
+        document.getElementById('tm-edit-name').value = name;
+        document.getElementById('tm-edit-designation').value = role;
+        document.getElementById('tm-edit-current-role').value = role;
+        modal.style.display = 'flex';
+        document.getElementById('tm-edit-name').focus();
+    }
+
+    // Close Edit Team Management Modal
+    function closeEditModal() {
+        const modal = document.getElementById('tm-edit-modal');
+        modal.style.display = 'none';
+        document.getElementById('tm-edit-form').reset();
+        document.querySelectorAll('#tm-edit-modal .tm-error').forEach(error => error.style.display = 'none');
+    }
+
+    // Handle Edit Team Management Form Submission
+    document.getElementById('tm-edit-form')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const csrf = getCsrfToken();
+        formData.append(csrf.name, csrf.value);
+        const currentRole = formData.get('current_role');
+        const newName = formData.get('name');
+        const newDesignation = formData.get('designation');
+
+        fetch(BASE_URL + 'TeamController/update_team_management', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success') {
+                showToast(result.message || 'Team management member updated successfully', 'success');
+                closeEditModal();
+                const row = document.getElementById(`staff-${currentRole.replace(/\s+/g, '-')}`);
+                if (row) {
+                    row.id = `staff-${newDesignation.replace(/\s+/g, '-')}`;
+                    row.querySelector('h3').textContent = newName;
+                    row.querySelector('p').textContent = newDesignation;
+                    row.querySelector('button').setAttribute('onclick', `openEditModal('${newName}', '${newDesignation}')`);
+                }
+                if (result.csrfName && result.csrfHash) {
+                    updateCsrfToken(result.csrfName, result.csrfHash);
+                }
+            } else {
+                showToast(result.message || 'Failed to update member', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating team management member:', error);
+            showToast('Failed to update member', 'error');
+        });
+    });
+
+    // Open Captain Edit Modal
+    function openCaptainEditModal(ballType, teamId, currentPlayerId, currentPlayerName) {
+        const modal = document.getElementById('tm-captain-edit-modal');
+        const form = document.getElementById('tm-captain-edit-form');
+        const playerSelect = document.getElementById('tm-captain-player');
+        const submitBtn = document.getElementById('tm-captain-submit');
+        const errorSpan = document.getElementById('tm-captain-error');
+
+        document.getElementById('tm-captain-ball-type').value = ballType;
+        document.getElementById('tm-captain-team-id').value = teamId;
+        playerSelect.innerHTML = '<option value="">Select a player</option>';
+        errorSpan.style.display = 'none';
+        submitBtn.disabled = true;
+
+        fetch(BASE_URL + `TeamController/get_team_players/${teamId}`, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success' && result.players?.length > 0) {
+                result.players.forEach(player => {
+                    const option = document.createElement('option');
+                    option.value = player.player_id;
+                    option.textContent = player.playerName;
+                    if (player.player_id === currentPlayerId) {
+                        option.selected = true;
+                    }
+                    playerSelect.appendChild(option);
+                });
+                submitBtn.disabled = false;
+            } else {
+                errorSpan.textContent = result.message || 'No players available';
+                errorSpan.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching players:', error);
+            errorSpan.textContent = 'Failed to load players';
+            errorSpan.style.display = 'block';
+        });
+
+        form.action = BASE_URL + `TeamController/update_captain_${ballType.replace('_ball', '')}/${teamId}`;
+        modal.style.display = 'flex';
+        playerSelect.focus();
+
+        form.onsubmit = function(e) {
             e.preventDefault();
-            const form = this;
-            const formData = new FormData(form);
+            const formData = new FormData(this);
+            const csrf = getCsrfToken();
+            formData.append(csrf.name, csrf.value);
 
-            fetch(form.action, {
+            fetch(this.action, {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    showToast(data.message || 'Schedule updated successfully', 'success');
-                    closeScheduleEditModal();
-                    setTimeout(() => location.reload(), 1000); // Reload to reflect changes
+            .then(result => {
+                if (result.status === 'success') {
+                    showToast(result.message || 'Captain updated successfully', 'success');
+                    closeCaptainEditModal();
+                    const captainCard = document.querySelector(`.tm-captain-card[data-ball-type="${ballType}"]`);
+                    const newPlayerId = formData.get('player_id');
+                    const newPlayerName = playerSelect.options[playerSelect.selectedIndex].text;
+                    fetch(BASE_URL + `TeamController/get_player_info/${newPlayerId}`)
+                    .then(res => res.json())
+                    .then(playerInfo => {
+                        if (playerInfo.status === 'success') {
+                            captainCard.innerHTML = `
+                                <h4>${ballType.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</h4>
+                                <img src="${playerInfo.image_path}" alt="Captain" class="tm-captain-img">
+                                <p>${newPlayerName}</p>
+                                <button onclick="openCaptainEditModal('${ballType}', '${teamId}', '${newPlayerId}', '${newPlayerName}')" class="tm-btn tm-btn-warning tm-btn-sm">Edit</button>
+                            `;
+                        }
+                    });
+                    if (result.csrfName && result.csrfHash) {
+                        updateCsrfToken(result.csrfName, result.csrfHash);
+                    }
                 } else {
-                    showToast(data.message || 'Failed to update schedule', 'error');
+                    errorSpan.textContent = result.message || 'Failed to update captain';
+                    errorSpan.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error updating captain:', error);
+                errorSpan.textContent = 'Failed to update captain';
+                errorSpan.style.display = 'block';
+            });
+        };
+    }
+
+    // Close Captain Edit Modal
+    function closeCaptainEditModal() {
+        const modal = document.getElementById('tm-captain-edit-modal');
+        modal.style.display = 'none';
+        document.getElementById('tm-captain-edit-form').reset();
+        document.getElementById('tm-captain-error').style.display = 'none';
+    }
+
+    // Open Schedule Edit Modal
+    function openScheduleEditModal(scheduleData) {
+        const data = JSON.parse(scheduleData);
+        const modal = document.getElementById('tm-schedule-edit-modal');
+        const form = document.getElementById('tm-schedule-edit-form');
+        const teamOneSelect = document.getElementById('tm-schedule-team-one');
+        const teamTwoSelect = document.getElementById('tm-schedule-team-two');
+        const matchIdInput = document.getElementById('tm-schedule-match-id');
+        const teamIdInput = document.getElementById('tm-schedule-team-id');
+        const dateInput = document.getElementById('tm-schedule-date');
+        const timeInput = document.getElementById('tm-schedule-time');
+        const oversInput = document.getElementById('tm-schedule-overs');
+        const venueInput = document.getElementById('tm-schedule-venue');
+        const seriesInput = document.getElementById('tm-schedule-series');
+        const firstUmpireInput = document.getElementById('tm-schedule-first-umpire');
+        const secondUmpireInput = document.getElementById('tm-schedule-second-umpire');
+        const teamOneError = document.getElementById('tm-schedule-team-one-error');
+        const teamTwoError = document.getElementById('tm-schedule-team-two-error');
+
+        form.reset();
+        teamOneError.style.display = 'none';
+        teamTwoError.style.display = 'none';
+
+        matchIdInput.value = data.match_id;
+        teamIdInput.value = data.team_id;
+        dateInput.value = data.match_date;
+        timeInput.value = data.match_time;
+        oversInput.value = data.overs;
+        venueInput.value = data.venue;
+        seriesInput.value = data.series;
+        firstUmpireInput.value = data.first_umpire;
+        secondUmpireInput.value = data.second_umpire;
+
+        teamOneSelect.innerHTML = '<option value="">Select Team One</option>';
+        teamTwoSelect.innerHTML = '<option value="">Select Team Two</option>';
+
+        const teamOneOption = document.createElement('option');
+        teamOneOption.value = data.team_one_id;
+        teamOneOption.textContent = data.team_one_name;
+        teamOneOption.selected = true;
+        teamOneSelect.appendChild(teamOneOption);
+
+        const teamTwoOption = document.createElement('option');
+        teamTwoOption.value = data.team_two_id;
+        teamTwoOption.textContent = data.team_two_name;
+        teamTwoOption.selected = true;
+        teamTwoSelect.appendChild(teamTwoOption);
+
+        fetch(BASE_URL + `TeamController/get_available_teams/${data.team_id}`)
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success' && result.teams) {
+                result.teams.forEach(team => {
+                    if (team.team_id !== data.team_one_id) {
+                        const option = document.createElement('option');
+                        option.value = team.team_id;
+                        option.textContent = team.team_name;
+                        teamOneSelect.appendChild(option);
+                    }
+                    if (team.team_id !== data.team_two_id) {
+                        const option = document.createElement('option');
+                        option.value = team.team_id;
+                        option.textContent = team.team_name;
+                        teamTwoSelect.appendChild(option);
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching teams:', error);
+            teamOneError.textContent = 'Failed to load teams';
+            teamOneError.style.display = 'block';
+        });
+
+        form.action = BASE_URL + `TeamController/update_match_schedule/${data.match_id}/${data.team_id}`;
+
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const csrf = getCsrfToken();
+            formData.append(csrf.name, csrf.value);
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    showToast(result.message || 'Schedule updated successfully', 'success');
+                    closeScheduleEditModal();
+                    const scheduleCard = document.querySelector(`.tm-schedule-card[data-schedule='${scheduleData.replace(/'/g, "\\'")}']`);
+                    if (scheduleCard) {
+                        const newData = {
+                            match_id: data.match_id,
+                            team_id: data.team_id,
+                            team_one_id: formData.get('team_one_id'),
+                            team_one_name: teamOneSelect.options[teamOneSelect.selectedIndex].text,
+                            team_one_image: data.team_one_id === formData.get('team_one_id') ? data.team_one_image : '',
+                            team_two_id: formData.get('team_two_id'),
+                            team_two_name: teamTwoSelect.options[teamTwoSelect.selectedIndex].text,
+                            team_two_image: data.team_two_id === formData.get('team_two_id') ? data.team_two_image : '',
+                            match_date: formData.get('match_date'),
+                            match_time: formData.get('match_time'),
+                            overs: formData.get('overs'),
+                            venue: formData.get('venue'),
+                            series: formData.get('series'),
+                            first_umpire: formData.get('first_umpire'),
+                            second_umpire: formData.get('second_umpire')
+                        };
+                        Promise.all([
+                            newData.team_one_image ? Promise.resolve({ image_path: newData.team_one_image }) : fetch(BASE_URL + `TeamController/get_team_info/${newData.team_one_id}`).then(res => res.json()),
+                            newData.team_two_image ? Promise.resolve({ image_path: newData.team_two_image }) : fetch(BASE_URL + `TeamController/get_team_info/${newData.team_two_id}`).then(res => res.json())
+                        ])
+                        .then(([teamOneInfo, teamTwoInfo]) => {
+                            newData.team_one_image = teamOneInfo.image_path;
+                            newData.team_two_image = teamTwoInfo.image_path;
+                            const formattedDate = new Date(newData.match_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            const formattedTime = new Date(`1970-01-01T${newData.match_time}:00`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                            scheduleCard.dataset.schedule = JSON.stringify(newData);
+                            scheduleCard.innerHTML = `
+                                <div class="tm-schedule-header">
+                                    <div class="tm-schedule-teams">
+                                        <div class="tm-schedule-team ${newData.team_one_id == newData.team_id ? 'your-team' : ''}">
+                                            <img src="${newData.team_one_image}" alt="Team Logo">
+                                            <span>${newData.team_one_name.toUpperCase().substring(0, 3)}</span>
+                                            ${newData.team_one_id == newData.team_id ? '<span class="tm-team-you">(You)</span>' : ''}
+                                        </div>
+                                        <span class="tm-schedule-vs">vs</span>
+                                        <div class="tm-schedule-team ${newData.team_two_id == newData.team_id ? 'your-team' : ''}">
+                                            <img src="${newData.team_two_image}" alt="Team Logo">
+                                            <span>${newData.team_two_name.toUpperCase().substring(0, 3)}</span>
+                                            ${newData.team_two_id == newData.team_id ? '<span class="tm-team-you">(You)</span>' : ''}
+                                        </div>
+                                    </div>
+                                    <div class="tm-schedule-meta">
+                                        <span class="tm-schedule-date">${formattedDate}</span>
+                                        <span class="tm-schedule-time">${formattedTime}</span>
+                                    </div>
+                                </div>
+                                <div class="tm-schedule-actions">
+                                    <a href="${BASE_URL}Welcome/toss/${newData.team_one_id}/${newData.team_two_id}/${newData.match_id}" class="tm-btn tm-btn-vibrant tm-btn-score">
+                                        <i class="fas fa-tachometer-alt"></i> Score
+                                    </a>
+                                    <button onclick="openScheduleEditModal(this.closest('.tm-schedule-card').dataset.schedule)" class="tm-btn tm-btn-vibrant tm-btn-edit">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button onclick="openConfirmModal('${newData.match_id}', '${newData.team_id}')" class="tm-btn tm-btn-vibrant tm-btn-delete">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                    <a href="${BASE_URL}Welcome/scorecard/${newData.team_one_id}/${newData.team_two_id}/${newData.match_id}" class="tm-btn tm-btn-vibrant tm-btn-view">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </div>
+                            `;
+                        });
+                    }
+                    if (result.csrfName && result.csrfHash) {
+                        updateCsrfToken(result.csrfName, result.csrfHash);
+                    }
+                } else {
+                    teamOneError.textContent = result.message || 'Failed to update schedule';
+                    teamOneError.style.display = 'block';
                 }
             })
             .catch(error => {
                 console.error('Error updating schedule:', error);
-                showToast('An error occurred while updating the schedule', 'error');
+                teamOneError.textContent = 'Failed to update schedule';
+                teamOneError.style.display = 'block';
             });
-        });
-    </script>
-</body>
-</html>
+        };
+
+        modal.style.display = 'flex';
+        teamOneSelect.focus();
+    }
+
+    // Close Schedule Edit Modal
+    function closeScheduleEditModal() {
+        const modal = document.getElementById('tm-schedule-edit-modal');
+        modal.style.display = 'none';
+        document.getElementById('tm-schedule-edit-form').reset();
+        document.querySelectorAll('#tm-schedule-edit-modal .tm-error').forEach(error => error.style.display = 'none');
+    }
+
+    // Open Confirm Delete Modal
+    function openConfirmModal(matchId, teamId) {
+        const modal = document.getElementById('tm-confirm-modal');
+        const deleteBtn = document.getElementById('tm-confirm-delete');
+        deleteBtn.onclick = function() {
+            const csrf = getCsrfToken();
+            fetch(BASE_URL + `TeamController/delete_match/${matchId}/${teamId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ [csrf.name]: csrf.value })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    showToast(result.message || 'Match deleted successfully', 'success');
+                    closeConfirmModal();
+                    const scheduleCard = document.querySelector(`.tm-schedule-card[data-schedule*='"match_id":"${matchId}"']`);
+                    if (scheduleCard) {
+                        scheduleCard.remove();
+                    }
+                    const scheduleContainer = document.querySelector('.tm-schedule-container');
+                    if (!scheduleContainer.querySelector('.tm-schedule-card')) {
+                        scheduleContainer.innerHTML = '<p class="tm-empty-state">No match is added yet</p>';
+                    }
+                    if (result.csrfName && result.csrfHash) {
+                        updateCsrfToken(result.csrfName, result.csrfHash);
+                    }
+                } else {
+                    showToast(result.message || 'Failed to delete match', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting match:', error);
+                showToast('Failed to delete match', 'error');
+            });
+        };
+        modal.style.display = 'flex';
+    }
+
+    // Close Confirm Delete Modal
+    function closeConfirmModal() {
+        const modal = document.getElementById('tm-confirm-modal');
+        modal.style.display = 'none';
+    }
+
+</script>
+</body></html>
