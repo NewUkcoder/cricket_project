@@ -22,6 +22,10 @@
             --league-radius: 8px;
             --league-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --league-transition: all 0.3s ease-in-out;
+            --league-score: #16a34a; /* Vibrant green for scores */
+            --league-score-win: #22c55e; /* Brighter green for winning team */
+            --league-vs-bg: #fef08a; /* Soft yellow for VS background */
+            --league-match-finalized: linear-gradient(135deg, #e5e7eb, #d1d5db); /* Gradient for finalized matches */
         }
 
         body {
@@ -41,6 +45,7 @@
             padding: 12px 0;
             box-shadow: var(--league-shadow);
             margin-bottom: 15px;
+            z-index: 1020;
         }
 
         .league-header-content {
@@ -79,7 +84,7 @@
             background: var(--league-light);
             position: sticky;
             top: 0;
-            z-index: 1020;
+            z-index: 1010;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             overflow-x: auto;
         }
@@ -292,17 +297,18 @@
             background: var(--league-light);
             border-radius: var(--league-radius);
             box-shadow: var(--league-shadow);
-            padding: 8px;
+            padding: 6px;
             display: grid;
             grid-template-areas: 
-                "team1 vs team2 actions"
-                "details details details details";
-            grid-template-columns: 1fr auto 1fr auto;
-            grid-template-rows: auto auto;
+                "team1 vs team2"
+                "details details details"
+                "results results results";
+            grid-template-columns: 1fr auto 1fr;
+            grid-template-rows: auto auto auto;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             transition: var(--league-transition);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .league-match-card:hover {
@@ -312,83 +318,125 @@
         }
 
         .league-match-card-concrete {
-            background: #e5e7eb;
+            background: var(--league-match-finalized);
             border: 1px solid #6b7280;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
         }
 
         .league-match-card-concrete:hover {
-            background: #edf2f7;
+            background: linear-gradient(135deg, #edf2f7, #d1d5db);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         .league-match-team-info:nth-child(1) {
             grid-area: team1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
         }
 
         .league-vs-text {
             grid-area: vs;
             font-weight: 700;
-            color: var(--league-accent);
+            color: var(--league-dark);
             font-size: 0.9rem;
+            background: var(--league-vs-bg);
+            border-radius: var(--league-radius);
+            padding: 2px 8px;
+            align-self: center;
         }
 
         .league-match-team-info:nth-child(3) {
             grid-area: team2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
+        }
+
+        .league-team-logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--league-accent);
+            margin-bottom: 3px;
+        }
+
+        .league-match-team-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--league-primary);
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+
+        .league-match-team-score {
+            font-size: 0.75rem;
+            color: var(--league-score);
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .league-match-team-score.winner {
+            color: var(--league-score-win);
+            font-weight: 700;
         }
 
         .league-match-details {
             grid-area: details;
             display: flex;
-            flex-direction: row;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 4px;
+            justify-content: space-between;
             font-size: 0.75rem;
-        }
-
-        .league-team-logo {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid var(--league-accent);
-            margin: 0 auto;
-        }
-
-        .league-match-team-name {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--league-primary);
-            margin-top: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100px;
+            color: var(--league-dark-gray);
         }
 
         .league-match-info {
             display: flex;
             align-items: center;
-            color: var(--league-dark-gray);
             flex: 0 0 48%;
         }
 
         .league-match-info i {
             color: var(--league-primary);
-            margin-right: 5px;
-            width: 14px;
-            font-size: 0.8rem;
+            margin-right: 4px;
+            width: 12px;
+            font-size: 0.75rem;
+        }
+
+        .league-match-results {
+            grid-area: results;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .league-match-info.result-status {
+            flex: 0 0 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .league-match-info.result-status.pending {
+            color: var(--league-accent);
+            font-weight: 500;
+        }
+
+        .league-match-info.result-status.finalized {
+            color: var(--league-success);
+            font-weight: 600;
         }
 
         .league-match-actions {
-            grid-area: actions;
             display: flex;
-            flex-direction: row;
+            flex-wrap: wrap;
             gap: 4px;
-            align-items: center;
             justify-content: flex-end;
+            align-items: center;
         }
 
         .league-match-action {
@@ -396,7 +444,7 @@
             color: var(--league-primary);
             text-decoration: none;
             font-weight: 500;
-            padding: 3px 6px;
+            padding: 2px 5px;
             border-radius: var(--league-radius);
             transition: var(--league-transition);
             display: flex;
@@ -426,24 +474,6 @@
         .league-section-concrete .league-section-header {
             background: linear-gradient(135deg, #6b7280, #4b5563);
             color: white;
-        }
-
-        /* Result styling */
-        .league-match-info.result-status {
-            max-width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .league-match-info.result-status.pending {
-            color: var(--league-accent);
-            font-weight: 500;
-        }
-
-        .league-match-info.result-status.finalized {
-            color: var(--league-success);
-            font-weight: 600;
         }
 
         /* Team Requests Table, Forms, Rules, Empty State, Modals, Flash Messages */
@@ -647,9 +677,29 @@
             .league-nav {
                 display: block;
             }
+
+            .league-match-team-name {
+                font-size: 0.9rem;
+            }
         }
 
         @media (max-width: 767px) {
+            .league-header {
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                margin-bottom: 10px;
+                padding: 10px 0;
+            }
+
+            .league-title {
+                font-size: 1.2rem;
+            }
+
+            .league-meta {
+                font-size: 0.8rem;
+            }
+
             .league-nav {
                 display: none;
             }
@@ -671,23 +721,30 @@
             }
 
             .league-match-card {
-                grid-template-areas: 
-                    "team1 vs team2"
-                    "details details details"
-                    "actions actions actions";
-                grid-template-columns: 1fr auto 1fr;
-                grid-template-rows: auto auto auto;
-                padding: 6px;
+                padding: 5px;
             }
 
             .league-match-team-name {
                 font-size: 0.75rem;
-                max-width: 90px;
+            }
+
+            .league-match-team-score {
+                font-size: 0.7rem;
+            }
+
+            .league-team-logo {
+                width: 24px;
+                height: 24px;
+            }
+
+            .league-vs-text {
+                font-size: 0.8rem;
+                padding: 1px 6px;
             }
 
             .league-match-details {
                 flex-direction: column;
-                gap: 5px;
+                gap: 3px;
             }
 
             .league-match-info {
@@ -696,19 +753,26 @@
             }
 
             .league-match-info i {
-                width: 12px;
-                font-size: 0.75rem;
+                width: 10px;
+                font-size: 0.7rem;
             }
 
             .league-match-actions {
                 justify-content: center;
-                flex-wrap: wrap;
-                padding-top: 6px;
+                padding-top: 4px;
             }
 
             .league-match-action {
-                padding: 2px 5px;
+                padding: 1px 4px;
                 font-size: 0.65rem;
+            }
+
+            .league-match-action i {
+                font-size: 0.9rem;
+            }
+
+            .league-match-action span {
+                display: none;
             }
 
             .league-table th,
@@ -904,64 +968,69 @@
                             <div class="league-match-card <?php echo !empty($match->result_statement) ? 'league-match-card-concrete' : ''; ?>">
                                 <div class="league-match-team-info">
                                     <img src="<?php echo $match->team_one_image; ?>" alt="<?php echo $match->team_one_name; ?>" class="league-team-logo">
-                                    <div class="league-match-team-name"><?php echo $match->team_one_name; ?></div>
+                                    <div class="league-match-team-name"><?php echo htmlspecialchars($match->team_one_name); ?></div>
+                                    <?php if (!empty($match->result_statement) && isset($match->team_one_score) && isset($match->team_one_wickets) && isset($match->team_one_overs)) { ?>
+                                        <div class="league-match-team-score <?php echo strpos($match->result_statement, $match->team_one_name) !== false ? 'winner' : ''; ?>">
+                                            <?php echo $match->team_one_score . '/' . $match->team_one_wickets . ' in ' . number_format($match->team_one_overs, 1); ?>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                                 <span class="league-vs-text">VS</span>
                                 <div class="league-match-team-info">
                                     <img src="<?php echo $match->team_two_image; ?>" alt="<?php echo $match->team_two_name; ?>" class="league-team-logo">
-                                    <div class="league-match-team-name"><?php echo $match->team_two_name; ?></div>
+                                    <div class="league-match-team-name"><?php echo htmlspecialchars($match->team_two_name); ?></div>
+                                    <?php if (!empty($match->result_statement) && isset($match->team_two_score) && isset($match->team_two_wickets) && isset($match->team_two_overs)) { ?>
+                                        <div class="league-match-team-score <?php echo strpos($match->result_statement, $match->team_two_name) !== false ? 'winner' : ''; ?>">
+                                            <?php echo $match->team_two_score . '/' . $match->team_two_wickets . ' in ' . number_format($match->team_two_overs, 1); ?>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                                 <div class="league-match-details">
                                     <span class="league-match-info">
-                                        <i class="far fa-calendar-alt" aria-label="Match date"></i> <?php echo date("d M Y", strtotime($match->match_date)); ?>
+                                        <i class="far fa-calendar-alt" aria-label="Match date"></i> <?php echo date("d M Y", strtotime($match->match_date)); ?> ! <i class="far fa-clock" aria-label="Match time"></i> <?php echo substr($match->match_time, 0, 5); ?> |   <i class="fas fa-map-marker-alt" aria-label="Venue"></i> <?php echo htmlspecialchars($match->location); ?> | <i class="fas fa-baseball-ball" aria-label="Overs"></i> <?php echo $match->overs; ?> Overs |  <i class="fas fa-baseball-ball" aria-label=""></i> <?php echo $match->umpire1; ?> | <i class="fas fa-baseball-ball" aria-label="Overs"></i> <?php echo $match->umpire2; ?>
                                     </span>
-                                    <span class="league-match-info">
-                                        <i class="far fa-clock" aria-label="Match time"></i> <?php echo substr($match->match_time, 0, 5); ?>
-                                    </span>
-                                    <span class="league-match-info">
-                                        <i class="fas fa-map-marker-alt" aria-label="Venue"></i> <?php echo $match->location; ?>
-                                    </span>
-                                    <span class="league-match-info">
-                                        <i class="fas fa-baseball-ball" aria-label="Overs"></i> <?php echo $match->overs; ?> Overs
-                                    </span>
+                                
+                                  
+                                </div>
+                                <div class="league-match-results">
                                     <span class="league-match-info result-status <?php echo !empty($match->result_statement) ? 'finalized' : 'pending'; ?>">
                                         <i class="fas fa-flag-checkered" aria-label="Match result status"></i> 
                                         <?php echo !empty($match->result_statement) ? htmlspecialchars($match->result_statement) : 'Pending Result'; ?>
                                     </span>
-                                </div>
-                                <div class="league-match-actions">
-                                    <?php if (empty($match->result_statement)) { ?>
-                                        <a href="#" class="league-match-action edit-schedule" data-bs-toggle="modal" data-bs-target="#leagueEditScheduleModal"
-                                           data-schedule-id="<?php echo $match->match_id; ?>" 
-                                           data-team1="<?php echo $match->team_one_id; ?>" 
-                                           data-team2="<?php echo $match->team_two_id; ?>" 
-                                           data-match-date="<?php echo $match->match_date; ?>" 
-                                           data-match-time="<?php echo $match->match_time; ?>" 
-                                           data-location="<?php echo $match->location; ?>"
-                                           data-overs="<?php echo $match->overs; ?>"
-                                           data-umpire1="<?php echo $match->umpire1; ?>"
-                                           data-umpire2="<?php echo $match->umpire2; ?>"
-                                           title="Edit match schedule">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                        <a href="<?php echo base_url();?>Welcome/toss/<?php echo $match->team_one_id;?>/<?php echo $match->team_two_id;?>/<?php echo $match->match_id;?>" 
-                                           class="league-match-action" title="View or edit scorecard">
-                                            <i class="fas fa-clipboard-list"></i> Score
-                                        </a>
-                                        <a href="<?php echo base_url(); ?>ScheduleController/delete_schedule/<?php echo $match->match_id; ?>/<?php echo $league['league_id']; ?>" 
-                                           class="league-match-action text-danger" onclick="return confirm('Delete this match?');" title="Delete match">
-                                            <i class="fas fa-trash-alt"></i> Delete
-                                        </a>
-                                    <?php } else { ?>
-                                        <a href="<?php echo base_url();?>Welcome/toss/<?php echo $match->team_one_id;?>/<?php echo $match->team_two_id;?>/<?php echo $match->match_id;?>" 
-                                           class="league-match-action" title="Edit scorecard" onclick="return confirm('This match is finalized. Edit scorecard?');">
-                                            <i class="fas fa-edit"></i> Edit Scorecard
-                                        </a>
-                                        <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $match->team_one_id;?>/<?php echo $match->team_two_id;?>/<?php echo $match->match_id;?>" 
-                                           class="league-match-action" title="View scorecard">
-                                            <i class="fas fa-eye"></i> View Scorecard
-                                        </a>
-                                    <?php } ?>
+                                    <div class="league-match-actions">
+                                        <?php if (empty($match->result_statement)) { ?>
+                                            <a href="#" class="league-match-action edit-schedule" data-bs-toggle="modal" data-bs-target="#leagueEditScheduleModal"
+                                               data-schedule-id="<?php echo $match->match_id; ?>" 
+                                               data-team1="<?php echo $match->team_one_id; ?>" 
+                                               data-team2="<?php echo $match->team_two_id; ?>" 
+                                               data-match-date="<?php echo $match->match_date; ?>" 
+                                               data-match-time="<?php echo $match->match_time; ?>" 
+                                               data-location="<?php echo $match->location; ?>"
+                                               data-overs="<?php echo $match->overs; ?>"
+                                               data-umpire1="<?php echo $match->umpire1; ?>"
+                                               data-umpire2="<?php echo $match->umpire2; ?>"
+                                               title="Edit match schedule">
+                                                <i class="fas fa-edit"></i> <span>Edit</span>
+                                            </a>
+                                            <a href="<?php echo base_url();?>Welcome/toss/<?php echo $match->team_one_id;?>/<?php echo $match->team_two_id;?>/<?php echo $match->match_id;?>" 
+                                               class="league-match-action" title="add, View or edit scorecard">
+                                                <i class="fas fa-clipboard-list"></i> <span>Score</span>
+                                            </a>
+                                            <a href="<?php echo base_url(); ?>ScheduleController/delete_schedule/<?php echo $match->match_id; ?>/<?php echo $league['league_id']; ?>" 
+                                               class="league-match-action text-danger" onclick="return confirm('Delete this match?');" title="Delete match">
+                                                <i class="fas fa-trash-alt"></i> <span>Delete</span>
+                                            </a>
+                                        <?php } else { ?>
+                                            <a href="<?php echo base_url();?>Welcome/toss/<?php echo $match->team_one_id;?>/<?php echo $match->team_two_id;?>/<?php echo $match->match_id;?>" 
+                                               class="league-match-action" title="Edit scorecard" onclick="return confirm('This match is finalized. Edit scorecard?');">
+                                                <i class="fas fa-edit"></i> <span>Edit Scorecard</span>
+                                            </a>
+                                            <a href="<?php echo base_url();?>Welcome/scorecard/<?php echo $match->team_one_id;?>/<?php echo $match->team_two_id;?>/<?php echo $match->match_id;?>" 
+                                               class="league-match-action" title="View scorecard">
+                                                <i class="fas fa-eye"></i> <span>View Scorecard</span>
+                                            </a>
+                                        <?php } ?>
+                                    </div>
                                 </div>
                             </div>
                         <?php } ?>
@@ -1030,7 +1099,7 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="league-modal-body">
-                        <form action="<?php echo base_url(); ?>ScheduleController/add_schedule" method="POST">
+                        <form action="<?php echo base_url(); ?>ScheduleController/add_league_schedule" method="POST">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="series" class="league-form-label">League</label>

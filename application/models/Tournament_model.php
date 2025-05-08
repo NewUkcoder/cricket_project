@@ -136,7 +136,6 @@ class Tournament_model extends CI_Model {
     $query = $this->db->get();
     return ($query->num_rows() > 0) ? $query->result() : false;
 }
-
 public function get_completed_matches($league_id)
 {
     if (!is_numeric($league_id)) {
@@ -149,12 +148,20 @@ public function get_completed_matches($league_id)
         team_one.image_path AS team_one_image, 
         team_two.team_name AS team_two_name, 
         team_two.image_path AS team_two_image,
-        match_result.result_statement
+        match_result.result_statement,
+        ts1.total_runs AS team_one_score,
+        ts1.t_overs AS team_one_overs,
+        ts1.wickets AS team_one_wickets,
+        ts2.total_runs AS team_two_score,
+        ts2.t_overs AS team_two_overs,
+        ts2.wickets AS team_two_wickets
     ')
     ->from('add_schedule')
     ->join('add_team AS team_one', 'team_one.team_id = add_schedule.team_one_id', 'left')
     ->join('add_team AS team_two', 'team_two.team_id = add_schedule.team_two_id', 'left')
     ->join('match_result', 'match_result.match_id = add_schedule.match_id', 'inner')
+    ->join('total_score AS ts1', 'ts1.match_id = add_schedule.match_id AND ts1.batting_team = add_schedule.team_one_id', 'left')
+    ->join('total_score AS ts2', 'ts2.match_id = add_schedule.match_id AND ts2.batting_team = add_schedule.team_two_id', 'left')
     ->where('add_schedule.league_id', $league_id)
     ->order_by('add_schedule.match_date', 'DESC')
     ->order_by('add_schedule.match_time', 'DESC');
@@ -790,8 +797,13 @@ public function get_points_table($league_id) {
                 END
             ) AS points,
             COALESCE(
-                (SUM(ts.total_runs) / NULLIF(SUM(ts.t_overs), 0)) - 
-                (SUM(opp_ts.total_runs) / NULLIF(SUM(opp_ts.t_overs), 0)),
+                (
+                    (SUM(CASE WHEN mr.result_statement NOT IN ('No Result') THEN ts.total_runs ELSE 0 END) / 
+                     NULLIF(SUM(CASE WHEN mr.result_statement NOT IN ('No Result') THEN ts.t_overs ELSE 0 END), 0))
+                    -
+                    (SUM(CASE WHEN mr.result_statement NOT IN ('No Result') THEN opp_ts.total_runs ELSE 0 END) / 
+                     NULLIF(SUM(CASE WHEN mr.result_statement NOT IN ('No Result') THEN opp_ts.t_overs ELSE 0 END), 0))
+                ),
                 0
             ) AS net_run_rate
         FROM 
@@ -801,8 +813,7 @@ public function get_points_table($league_id) {
         LEFT JOIN 
             add_schedule s ON (s.team_one_id = t.team_id OR s.team_two_id = t.team_id) AND s.league_id = ?
         LEFT JOIN 
-            match_result mr ON s.match_id = mr.match_id AND 
-            (mr.win_team IS NOT NULL OR mr.lost_team IS NOT NULL OR mr.result_statement IN ('Draw', 'No Result'))
+            match_result mr ON s.match_id = mr.match_id
         LEFT JOIN 
             total_score ts ON ts.match_id = s.match_id AND ts.batting_team = t.team_id
         LEFT JOIN 
@@ -820,12 +831,11 @@ public function get_points_table($league_id) {
 
     // Format NRR to 3 decimal places
     foreach ($result as &$team) {
-        $team->net_run_rate = number_format((float)$team->net_run_rate, 3);
+        $team->net_run_rate = number_format((float)$team->net_run_rate, 3, '.', '');
     }
 
     return $result;
 }
-
 public function get_team_scores($league_id)
 {
     if (!is_numeric($league_id)) {

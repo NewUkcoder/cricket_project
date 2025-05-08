@@ -267,53 +267,50 @@ $result = $query->result();
 
     }
 
-    public function get_scorecard($match_id)
-    { //echo $match_id;
-$this->db->select('
-    add_schedule.*,  
-    team1.team_name as team_one_name,
-    team1.image_path as team_one_image,
-    team2.team_name as team_two_name,
-    team2.image_path as team_two_image,
-    toss.toss_winner,
-    toss.decision,
-    toss_winner.team_name as toss_winner_name, 
-    toss_winner.image_path as toss_winner_image
-');
+public function get_scorecard($match_id) {
+        $this->db->select('
+            s.match_date,
+            s.match_time,
+            s.match_type,
+            s.overs AS match_overs,
+            s.location,
+            s.series,
+            s.umpire1,
+            s.umpire2,
+            s.league_id,
+            t.toss_winner,
+            tw.team_name AS toss_winner_name,
+            t.decision AS decision,
+            t.bat_first,
+            t.bowl_first,
+            t1.team_name AS team_one_name,
+            t1.image_path AS team_one_image,
+            ts1.total_runs AS team_one_runs,
+            ts1.t_overs AS team_one_overs,
+            ts1.wickets AS team_one_wickets,
+            t2.team_name AS team_two_name,
+            t2.image_path AS team_two_image,
+            ts2.total_runs AS team_two_runs,
+            ts2.t_overs AS team_two_overs,
+            ts2.wickets AS team_two_wickets
+        ');
+        $this->db->from('add_schedule s');
+        $this->db->join('toss t', 's.match_id = t.match_id', 'left');
+        $this->db->join('add_team tw', 't.toss_winner = tw.team_id', 'left'); // Fetch toss_winner_name
+        $this->db->join('add_team t1', 't.bat_first = t1.team_id', 'left'); // team_one is bat_first
+        $this->db->join('add_team t2', 't.bowl_first = t2.team_id', 'left'); // team_two is bowl_first
+        $this->db->join('total_score ts1', 's.match_id = ts1.match_id AND ts1.batting_team = t.bat_first AND ts1.batting_order = 1', 'left');
+        $this->db->join('total_score ts2', 's.match_id = ts2.match_id AND ts2.batting_team = t.bowl_first AND ts2.batting_order = 2', 'left');
+        $this->db->where('s.match_id', $match_id);
 
-// Select from add_schedule table
-$this->db->from('add_schedule');
+        $query = $this->db->get();
 
-// Join with add_team for team_one_id
-$this->db->join('add_team as team1', 'team1.team_id = add_schedule.team_one_id', 'left');
-
-// Join with add_team for team_two_id
-$this->db->join('add_team as team2', 'team2.team_id = add_schedule.team_two_id', 'left');
-
-// Join with toss table
-$this->db->join('toss', 'toss.match_id = add_schedule.match_id', 'left');
-
-// Join with add_team for toss_winner team to get toss winner's details
-$this->db->join('add_team as toss_winner', 'toss_winner.team_id = toss.toss_winner', 'left');
-
-// Add where clause to filter by specific match_id (optional, if you want data for a specific match)
-$this->db->where('add_schedule.match_id', $match_id);
-
-// Execute the query
-$query = $this->db->get();
-//var_dump($query->result());
-// Check if the query returned any results
-if ($query->num_rows() > 0) {
-    // Return the results as an array
-    return $query->row_array();
-} else {
-    // Return false if no results found
-    return false;
-}
-
-// Join with ad
-}
-
+        if ($query->num_rows() > 0) {
+            return $query->row_array(); // Return single row as array
+        } else {
+            return FALSE; // No data found
+        }
+    }
  public function get_batting_first_details($match_id) {
         // Select all columns from the batting_first table along with team_name and player_name
         $this->db->select('

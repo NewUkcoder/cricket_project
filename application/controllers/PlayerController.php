@@ -83,9 +83,13 @@ class PlayerController extends CI_Controller {
     } else {
         $player_id = $player_info['player_id'];
         $player_data['team_names'] = $this->Player_model->get_active_teams($player_id);
+         $player_data['career_stats'] = $this->Player_model->calculate_career_stats($player_id);
+
+     //    var_dump(  $player_data['career_stats']);
         $player_data['player_stats'] = $this->Player_model->calculate_player_stats($player_id);
         $player_data['bowling_stats'] = $this->Player_model->calculate_player_bowling_stats($player_id);
-        $player_data['leagues'] = $this->Player_model->get_player_leagues($player_id); // New line
+        $player_data['leagues'] = $this->Player_model->get_player_leagues($player_id);
+      $player_data['recent_performance'] = $this->Player_model->get_recent_performance($player_id); 
      //   var_dump( $player_data['leagues'] );
         $this->load->view('header');
         $this->load->view('profile_player', $player_data);
@@ -100,7 +104,7 @@ class PlayerController extends CI_Controller {
                 
               $player_data['data']=$this->Player_model->get_player(array('player_id'=>$player_id),'add_player');
              // var_dump($player_data);
-
+ $player_data['career_stats'] = $this->Player_model->calculate_career_stats($player_id);
                  $player_data['team_names'] = $this->Player_model->get_active_teams($player_id);
                  $player_data['player_stats'] = $this->Player_model->calculate_player_stats($player_id);
                   $player_data['bowling_stats'] = $this->Player_model->calculate_player_bowling_stats($player_id);
@@ -111,7 +115,8 @@ class PlayerController extends CI_Controller {
                 echo 'please register as a player first, go back please';
               }
               else
-              {*/
+              {*/  $player_data['recent_performance'] = $this->Player_model->get_recent_performance($player_id);  
+            //  var_dump($data['recent_performance']);
                     $this->load->view('header');
                 $this->load->view('profile_player',$player_data);
            // }

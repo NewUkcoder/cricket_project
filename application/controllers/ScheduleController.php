@@ -53,6 +53,41 @@ class ScheduleController extends CI_Controller {
         }
     }
 
+      public function add_league_schedule() {
+        $team1 = $this->input->post('team1');
+         $league_id = $this->input->post('league_id');
+        $team2 = $this->input->post('team2');
+        $match_time = ucwords($this->input->post('match_time'));
+        $match_date = ucwords($this->input->post('match_date'));
+        
+        if ($team1 == '' || $team2 == '' || $team1 == $team2) {
+            $this->session->set_flashdata('error', 'Please Select Your team Correctly.');
+            redirect('Welcome/enter_schedule');
+        } else {
+            $record = array(
+                'team_one_id' => $team1,
+                'team_two_id' => $team2,
+                'user_id' => $this->session->userdata('user_id'),
+                'match_time' => $match_time,
+                'match_date' => $match_date,
+                'match_type' => ucwords($this->input->post('match_type')),
+                'overs' => ucwords($this->input->post('overs')),
+                'league_id' => $league_id,
+                'location' => ucwords($this->input->post('location')),
+                'series' => ucwords($this->input->post('series')),
+                'umpire1' => ucwords($this->input->post('umpire1')),
+                'umpire2' => ucwords($this->input->post('umpire2'))
+            );
+            $success = $this->Schedule_model->save_schedule($record, $team1, $team2, $match_date, $match_time);
+            if ($success) {
+                $this->session->set_flashdata('success', 'Match is added into Schedule List.');
+            } else {
+                $this->session->set_flashdata('error', 'A match with these teams already exists on the selected date and time.');
+            }
+            redirect('Welcome/tournament_main/' . $league_id);
+        }
+    }
+
     public function edit_schedule() {
         $schedule_id = $this->input->post('schedule_id');
         $team1 = $this->input->post('team1');

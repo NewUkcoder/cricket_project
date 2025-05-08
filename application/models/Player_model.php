@@ -182,6 +182,141 @@ return $result;
         }
     }
 
+// In your Player_model.php
+
+public function calculate_career_stats($player_id) {
+    $career_stats = array();
+    
+    // Batting stats
+    $this->db->select('MAX(runs) as highest_score, 
+                      SUM(CASE WHEN runs >= 100 THEN 1 ELSE 0 END) as centuries,
+                      SUM(runs) as total_runs');
+    $this->db->from('batting_first'); // Or whatever your batting table is called
+    $this->db->where('player_id', $player_id);
+    $batting_query = $this->db->get();
+    $batting_stats = $batting_query->row_array();
+ //   var_dump($batting_stats);
+    // Bowling stats
+    $this->db->select('SUM(wickets) as total_wickets,
+                      MAX(wickets) as max_wickets,
+                      MIN(given_runs) as min_runs_for_max_wickets');
+    $this->db->from('bowling_first');
+    $this->db->where('player_id', $player_id);
+    $bowling_query = $this->db->get();
+    $bowling_stats = $bowling_query->row_array();
+    
+    // Combine stats
+    $career_stats['highest_score'] = $batting_stats['highest_score'] ?? 0;
+    $career_stats['centuries'] = $batting_stats['centuries'] ?? 0;
+    $career_stats['total_wickets'] = $bowling_stats['total_wickets'] ?? 0;
+    
+    // Calculate best bowling figures
+    if (!empty($bowling_stats['max_wickets'])) {
+        $this->db->select('given_runs, wickets');
+        $this->db->from('bowling_first');
+        $this->db->where('player_id', $player_id);
+        $this->db->where('wickets', $bowling_stats['max_wickets']);
+        $this->db->order_by('given_runs', 'asc');
+        $this->db->limit(1);
+        $best_bowling_query = $this->db->get();
+        $best_bowling = $best_bowling_query->row_array();
+        
+        if ($best_bowling) {
+            $career_stats['best_bowling'] = $best_bowling['wickets'].'/'.$best_bowling['given_runs'];
+        } else {
+            $career_stats['best_bowling'] = 'N/A';
+        }
+    } else {
+        $career_stats['best_bowling'] = 'N/A';
+    }
+    
+    return $career_stats;
+}
+
+// In application/models/Player_model.php
+
+public function get_recent_performance($player_id) {
+    if (empty($player_id) || !is_numeric($player_id)) {
+        return array();
+    }
+
+    $this->db->select('
+        s.match_id,
+        s.match_date,
+        s.match_time,
+        s.match_type,
+        s.location,
+        s.series,
+        s.overs AS match_overs,
+        mr.win_team,
+        mr.lost_team,
+        mr.result_statement,
+        bf.bowling_team AS opposition,
+        bf.runs,
+        bf.balls,
+        bf.fours,
+        bf.sixes,
+        bf.batting_team,
+        bf.batting_order,
+        bf.dismissal,
+        IFNULL(bw.given_runs, 0) AS bowling_runs_conceded,
+        IFNULL(bw.wickets, 0) AS bowling_wickets,
+        IFNULL(bw.overs, 0) AS bowling_overs,
+        t1.team_name AS team_one_name,
+        t2.team_name AS team_two_name
+    ');
+    
+    $this->db->from('batting_first bf');
+    $this->db->join('bowling_first bw', 'bf.match_id = bw.match_id AND bf.player_id = bw.player_id', 'left');
+    $this->db->join('match_result mr', 'bf.match_id = mr.match_id');
+    $this->db->join('add_schedule s', 'bf.match_id = s.match_id');
+    $this->db->join('add_team t1', 's.team_one_id = t1.team_id');
+    $this->db->join('add_team t2', 's.team_two_id = t2.team_id');
+    $this->db->where('bf.player_id', $player_id);
+    $this->db->order_by('s.match_date', 'DESC');
+    $this->db->limit(5);
+    
+    $query = $this->db->get();
+  
+    if ($query->num_rows() > 0) {
+        $performances = $query->result_array();
+        
+        foreach ($performances as &$performance) {
+            // Batting calculations
+            $performance['strike_rate'] = ($performance['balls'] > 0) ? 
+                round(($performance['runs'] / $performance['balls']) * 100, 2) : 0;
+            
+            // Match result determination
+            $performance['result'] = $this->determine_match_result(
+                $performance['win_team'],
+                $performance['lost_team'],
+                $performance['batting_team']
+            );
+            
+            // Format match date and time
+            $performance['formatted_date'] = date('M j, Y', strtotime($performance['match_date']));
+            $performance['formatted_time'] = date('g:i A', strtotime($performance['match_time']));
+            
+            // Determine if player was on team one or two
+            $performance['player_team'] = ($performance['batting_team'] == $performance['team_one_name']) ? 
+                'team_one' : 'team_two';
+        }
+        
+        return $performances;
+    }
+    
+    return array();
+}
+private function determine_match_result($win_team, $lost_team, $batting_team) {
+    if ($win_team == $batting_team) {
+        return 'won';
+    } elseif ($lost_team == $batting_team) {
+        return 'lost';
+    } elseif (!empty($win_team) || !empty($lost_team)) {
+        return 'draw';
+    }
+    return 'no result';
+}
 
    public function calculate_player_stats($player_id)
 {
@@ -281,51 +416,62 @@ return $result;
 }
 
 public function calculate_player_bowling_stats($player_id) {
-    $match_types = ['Leather Ball', 'Tape Ball', 'Tennis Ball', 'Others'];
+     $match_types = ['Leather Ball', 'Tape Ball', 'Tennis Ball'];
+    $bowling_stats = [];
 
-    $stats = [];
-
-    foreach ($match_types as $match_type) {
-        $this->db->select('
-            COUNT(*) as total_matches,
+    foreach ($match_types as $type) {
+        // Main bowling stats query
+        $this->db->select("
+            COUNT(DISTINCT bf.match_id) as total_matches,
             SUM(bf.wickets) as total_wickets,
             SUM(bf.given_runs) as total_runs,
-            AVG(bf.given_runs / bf.overs) as economy_rate,
-            MAX(bf.wickets) as best_wickets,
-            MIN(bf.given_runs) as best_runs
+            SUM(bf.overs) as overs,
+            SUM(CASE WHEN bf.wickets >= 4 AND bf.wickets < 5 THEN 1 ELSE 0 END) as four_wickets,
+            SUM(CASE WHEN bf.wickets >= 5 THEN 1 ELSE 0 END) as five_wickets
+        ");
+        $this->db->from('bowling_first bf');
+        $this->db->join('add_schedule s', 'bf.match_id = s.match_id');
+        $this->db->where('bf.player_id', $player_id);
+        $this->db->where('s.match_type', $type);
+        $main_stats = $this->db->get()->row_array();
+
+        // Best bowling figures query
+        $this->db->select('
+            bf.wickets, 
+            bf.given_runs,
+            CONCAT(bf.wickets, "/", bf.given_runs) as best_bowling
         ');
         $this->db->from('bowling_first bf');
-        $this->db->join('add_schedule asch', 'bf.match_id = asch.match_id');
+        $this->db->join('add_schedule s', 'bf.match_id = s.match_id');
         $this->db->where('bf.player_id', $player_id);
+        $this->db->where('s.match_type', $type);
+        $this->db->where('bf.wickets >', 0);
+        $this->db->order_by('bf.wickets', 'DESC');
+        $this->db->order_by('bf.given_runs', 'ASC');
+        $this->db->limit(1);
+        $best_figures = $this->db->get()->row_array();
 
-        if ($match_type != 'Others') {
-            $this->db->where('asch.match_type', $match_type); // Filter by specific match type
-        } else {
-            // For 'Others', get all match types that are not 'Leather Ball', 'Tape Ball', or 'Tennis Ball'
-            $this->db->where_not_in('asch.match_type', ['Leather Ball', 'Tape Ball', 'Tennis Ball']);
-        }
+        // Calculate derived stats
+        $wickets = $main_stats['total_wickets'] ?? 0;
+        $runs = $main_stats['total_runs'] ?? 0;
+        $balls = $main_stats['total_balls'] ?? 0;
 
-        $query = $this->db->get();
-        $result = $query->row();
-
-        // Calculate best bowling figure: wickets/runs in the best match
-        $best_bowling = '';
-        if ($result->best_wickets > 0 && $result->best_runs > 0) {
-            $best_bowling = $result->best_wickets . '/' . $result->best_runs;
-        }
-
-        // Store the stats for each match type
-        $stats[$match_type] = [
-            'total_matches' => $result->total_matches,
-            'total_wickets' => $result->total_wickets,
-            'total_runs' => $result->total_runs,
-            'economy_rate' => round($result->economy_rate ?? 0, 2), // Round economy rate to 2 decimal places, defaulting to 0 if null
-
-            'best_bowling' => $best_bowling,
+        $bowling_stats[$type] = [
+            'total_matches' => $main_stats['total_matches'] ?? 0,
+            'total_wickets' => $wickets,
+            'total_runs' => $runs,
+            'total_balls' => $balls,
+            'best_bowling' => $best_figures['best_bowling'] ?? 'N/A',
+            'four_wickets' => $main_stats['four_wickets'] ?? 0,
+            'five_wickets' => $main_stats['five_wickets'] ?? 0,
+            // These will be calculated in the view
+            'bowling_avg' => ($wickets > 0) ? round($runs / $wickets, 2) : 0,
+            'economy' => ($balls > 0) ? round(($runs / $balls) * 6, 2) : 0,
+            'bowling_sr' => ($wickets > 0) ? round($balls / $wickets, 2) : 0
         ];
     }
 
-    return $stats;
+    return $bowling_stats;
 }
 
 
@@ -333,6 +479,7 @@ public function calculate_player_bowling_stats($player_id) {
         // Fetch team names where status is 1
         $this->db->select('t.team_name');
         $this->db->select('t.team_id');
+         $this->db->select('t.image_path');
         $this->db->from('player_team pt');
         $this->db->join('add_team t', 'pt.team_id = t.team_id');
         $this->db->join('add_player p', 'pt.player_id = p.player_id');

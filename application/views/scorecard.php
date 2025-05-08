@@ -751,29 +751,29 @@
     <div class="match-header">
         <div class="teams-container">
             <div class="teams-display">
-                <div class="team-card">
-                    <img src="<?php echo $information['team_one_image'];?>" alt="Team Flag" class="team-flag">
-                    <div class="team-name"><?php echo $information['team_one_name'];?></div>
-                    <?php if(isset($batting_first_score) && is_array($batting_first_score) && !empty($batting_first_score)) { 
-                        foreach($batting_first_score as $t_score) { ?>
-                        <div class="team-score"><?php echo $t_score->total_runs; ?>/<?php echo $t_score->wickets;?></div>
-                    <?php } } else { ?>
-                        <div class="team-score pending-message">In Progress</div>
-                    <?php } ?>
-                </div>
-                
-                <div class="vs-badge">VS</div>
-                
-                <div class="team-card">
-                    <img src="<?php echo $information['team_two_image'];?>" alt="Team Flag" class="team-flag">
-                    <div class="team-name"><?php echo $information['team_two_name'];?></div>
-                    <?php if(isset($batting_second_score) && is_array($batting_second_score) && !empty($batting_second_score)) { 
-                        foreach($batting_second_score as $t_score) { ?>
-                        <div class="team-score"><?php echo $t_score->total_runs; ?>/<?php echo $t_score->wickets;?></div>
-                    <?php } } else { ?>
-                        <div class="team-score pending-message">In Progress</div>
-                    <?php } ?>
-                </div>
+               <div class="team-card">
+    <img src="<?php echo $information['team_one_image'];?>" alt="Team Flag" class="team-flag">
+    <div class="team-name"><?php echo $information['team_one_name'];?> (Batting First)</div>
+    <?php if(isset($batting_first_score) && is_array($batting_first_score) && !empty($batting_first_score)) { 
+        foreach($batting_first_score as $t_score) { ?>
+        <div class="team-score"><?php echo $t_score->total_runs; ?>/<?php echo $t_score->wickets;?></div>
+    <?php } } else { ?>
+        <div class="team-score pending-message">In Progress</div>
+    <?php } ?>
+</div>
+
+<div class="vs-badge">VS</div>
+
+<div class="team-card">
+    <img src="<?php echo $information['team_two_image'];?>" alt="Team Flag" class="team-flag">
+    <div class="team-name"><?php echo $information['team_two_name'];?> (Batting Second)</div>
+    <?php if(isset($batting_second_score) && is_array($batting_second_score) && !empty($batting_second_score)) { 
+        foreach($batting_second_score as $t_score) { ?>
+        <div class="team-score"><?php echo $t_score->total_runs; ?>/<?php echo $t_score->wickets;?></div>
+    <?php } } else { ?>
+        <div class="team-score pending-message">In Progress</div>
+    <?php } ?>
+</div>
             </div>
         </div>
     </div>

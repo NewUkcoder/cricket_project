@@ -67,7 +67,8 @@ class Welcome extends CI_Controller {
                 $data['second_inning'] = $this->Scorecard_model->get_batting_second_details($match_id);
                 $data['second_bowling_inning'] = $this->Scorecard_model->get_bowling_second_details($match_id);
                 $data['player_of_match'] = $this->Scorecard_model->get_player_of_match($match_id);
-
+              //  var_dump(  $data['information']);
+                
                 $this->load->view('header');
                 $this->load->view('scorecard', $data);
             } else {
@@ -247,6 +248,8 @@ public function tournament_main($league_id) {
             return $date_cmp !== 0 ? $date_cmp : strcmp($b->match_time, $a->match_time);
         });
         $team_data['all_matches'] = $all_matches;
+    //    var_dump( $team_data['all_matches']);
+
         
         $team_data['team_scores'] = $this->Tournament_model->get_team_scores($league_id);
         $team_data['league_rules'] = $this->Tournament_model->get_league_rules($league_id);
