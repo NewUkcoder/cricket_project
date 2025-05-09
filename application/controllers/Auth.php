@@ -16,6 +16,14 @@ class Auth extends CI_Controller {
         log_message('debug', 'Loading view: sign_up');
         $this->load->view('sign_up');
     }
+    public function terms()
+    {
+          $this->load->view('terms');
+    }
+     public function privacy()
+    {
+          $this->load->view('privacy');
+    }
 
     public function sign_in() {
         log_message('debug', 'Loading view: sign_in');

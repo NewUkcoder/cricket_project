@@ -37,7 +37,8 @@ class PlayerController extends CI_Controller {
                 'player_role'=>ucwords($this->input->post('playerRole')),
                 'additional_info'=>$this->input->post('additional_info'),
                 'image_path'=>"",
-                'user_id'=>$user_id
+                'user_id'=>$user_id,
+                'created_at'=>date('Y-m-d')
                 
                 
                 );
@@ -259,9 +260,8 @@ class PlayerController extends CI_Controller {
         // Configure upload parameters
         $config['upload_path'] = './Uploads/';
         $config['allowed_types'] = 'jpg|jpeg|png';
-        $config['max_size'] = 2048; // 2 MB
-        $config['max_width'] = 1920; // Max upload width
-        $config['max_height'] = 1920; // Max upload height
+        $config['max_size'] = 10000; // 
+      
         $config['file_name'] = 'profile_' . $player_id . '_' . time();
 
         $this->upload->initialize($config);

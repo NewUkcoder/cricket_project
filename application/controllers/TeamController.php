@@ -22,7 +22,7 @@ class TeamController extends CI_Controller {
     public function add_team() {
         $config['upload_path'] = './Uploads/';
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
-        $config['max_size'] = 1000000;
+        $config['max_size'] = 10000;
         $config['file_name'] = time();
 
         $this->upload->initialize($config);
