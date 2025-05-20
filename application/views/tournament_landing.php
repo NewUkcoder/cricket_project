@@ -11,7 +11,7 @@
             --primary-color: #005f8d;
             --secondary-color: #007bb5;
             --accent-color: #ff6b35;
-            --success-color: #d81b60; /* Pink for result statement */
+            --success-color: #d81b60;
             --text-color: #333;
             --light-text: #777;
             --bg-color: #f5f5f5;
@@ -19,7 +19,6 @@
             --border-radius: 8px;
             --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             --section-spacing: 20px;
-            /* Vibrant Colors for Circular Stats */
             --color-runs: #ff4d4d;
             --color-wickets: #4CAF50;
             --color-high-score: #ff9800;
@@ -27,7 +26,7 @@
             --color-team-high: #9c27b0;
             --color-team-low: #e91e63;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -368,7 +367,7 @@
             font-weight: 600;
         }
 
-        /* Results Section - Two Matches Per Row */
+        /* Results Section */
         .results-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -673,7 +672,7 @@
             transform: translateX(-50%);
             background: var(--primary-color);
             color: white;
-            padding: 6px 12px;
+            padding: 6 golpx 12px;
             border-radius: 4px;
             font-size: clamp(11px, 3vw, 12px);
             white-space: nowrap;
@@ -799,12 +798,48 @@
         /* Mobile Optimizations */
         @media (max-width: 767px) {
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
 
             .stat-card {
-                padding: 12px;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+                min-height: 220px;
+            }
+
+            .stat-img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .stat-title {
+                font-size: clamp(11px, 3vw, 12px);
+                margin-bottom: 8px;
+            }
+
+            .stat-value {
+                font-size: clamp(10px, 2.8vw, 11px);
+            }
+
+            .stat-team {
+                font-size: clamp(9px, 2.5vw, 10px);
+            }
+
+            .see-more {
+                font-size: clamp(9px, 2.5vw, 10px);
+            }
+
+            .stat-circle-container {
+                width: 80px;
+                height: 80px;
+            }
+
+            .stat-circle-text {
+                font-size: clamp(12px, 3.5vw, 13px);
             }
 
             .result-card {
@@ -877,17 +912,17 @@
             body {
                 padding-bottom: 0;
             }
-            
+
             .footer {
                 display: none;
             }
-            
+
             .nav-scroll {
                 display: block;
                 top: 160px;
                 padding: 12px 20px;
             }
-            
+
             .container {
                 max-width: 1000px;
                 margin: 0 auto;
@@ -1136,14 +1171,11 @@
                     <div class="match-details">
                         <div class="match-detail">
                             <strong><i class="far fa-calendar"></i> Date:</strong> <?php echo date("d M Y", strtotime($schedule->match_date)); ?>
-                        </div>
-                        <div class="match-detail">
+                       |
                             <strong><i class="far fa-clock"></i> Time:</strong> <?php echo $schedule->match_time; ?>
-                        </div>
-                        <div class="match-detail">
+                      |
                             <strong><i class="fas fa-map-marker-alt"></i> Venue:</strong> <?php echo $schedule->location; ?>
-                        </div>
-                        <div class="match-detail">
+                        |
                             <strong><i class="fas fa-baseball-ball"></i> Overs:</strong> <?php echo $league['overs']; ?>
                         </div>
                     </div>
@@ -1167,12 +1199,13 @@
                         <div class="result-header">
                             <div class="result-league-info">
                                 <?php echo $league['league_name']; ?>
-                                <span class="result-match-type"><?php echo $league['match_type']; ?></span>
-                            </div>
-                            <div class="result-date-time">
-                                <i class="far fa-calendar-alt"></i> <?php echo date("d M Y", strtotime($match->match_date)); ?>
+                                <span class="result-match-type"><?php echo $league['match_type']; ?> |
+                             
+                                <i class="far fa-calendar-alt"></i> <?php echo date("d M Y", strtotime($match->match_date)); ?> |
                                 <i class="far fa-clock"></i> <?php echo $match->match_time; ?>
                             </div>
+                       
+                           
                         </div>
                         <div class="result-teams-scores">
                             <div class="result-team-score">

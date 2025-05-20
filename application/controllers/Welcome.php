@@ -89,19 +89,20 @@ class Welcome extends CI_Controller {
         }
     }
 
-    public function landing_page() {
-        if ($this->session->userdata('logged')) {
-            $user_id = $this->session->userdata('user_id');
-            $team_data['team'] = $this->Team_model->team_information(['user_id' => $user_id], 'add_team') ?: 0;
-            $team_data['data'] = $this->Player_model->get_player(['user_id' => $user_id], 'add_player') ?: 0;
-            $team_data['tournament'] = $this->Tournament_model->get_league($user_id) ?: 0;
+   public function landing_page() {
+    if ($this->session->userdata('logged')) {
+        $user_id = $this->session->userdata('user_id');
+        // Ensure arrays are returned, default to empty array if null/false
+        $team_data['team'] = $this->Team_model->team_information(['user_id' => $user_id], 'add_team') ?: [];
+        $team_data['data'] = $this->Player_model->get_player(['user_id' => $user_id], 'add_player') ?: [];
+        $team_data['tournament'] = $this->Tournament_model->get_league($user_id) ?: [];
 
-            $this->load->view('header');
-            $this->load->view('landing_page', $team_data);
-        } else {
-            $this->index();
-        }
+        $this->load->view('header');
+        $this->load->view('landing_page', $team_data);
+    } else {
+        $this->index();
     }
+}
 
     public function match_summary() {
         if ($this->session->userdata('logged')) {

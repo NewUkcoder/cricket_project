@@ -555,16 +555,16 @@
                     <h3 class="card-title"><i class="fas fa-users"></i> Current Teams</h3>
                     <div class="scrollable-section">
                         <?php if (!empty($team_names)): ?>
-                            <?php foreach ($team_names as $team): ?>
+                            <?php  foreach ($team_names as $team): ?>
                                 <div class="team-card">
-                                    <img src="<?php echo $team->image_path ?: 'https://via.placeholder.com/100'; ?>" alt="<?php echo html_escape($team->team_name); ?>" class="team-logo" loading="lazy">
+                                   <a href="<?php echo base_url(); ?>TeamController/team_profile/<?php echo $team->team_id; ?>">  <img src="<?php echo $team->image_path ?: 'https://via.placeholder.com/100'; ?>" alt="<?php echo html_escape($team->team_name); ?>" class="team-logo" loading="lazy">
                                     <div class="team-info">
                                         <div class="team-name">
-                                            <a href="<?php echo base_url(); ?>TeamController/view_team/<?php echo $team->team_id; ?>">
+                                           
                                                 <?php echo html_escape($team->team_name); ?>
                                             </a>
                                         </div>
-                                        <div class="team-league"><?php echo html_escape($team->league_name ?? 'Local League'); ?></div>
+                                        <div class="team-league"><?php echo html_escape($team->city ?? 'Local League'); ?></div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

@@ -187,6 +187,7 @@
       background: var(--primary-color);
       color: white;
       border: none;
+      display: inline-block; /* Ensure visibility */
     }
 
     .btn-primary:hover {
@@ -260,6 +261,11 @@
       position: relative;
       cursor: pointer;
       white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .tab-btn:hover {
+      color: var(--primary-color);
     }
 
     .tab-btn.active {
@@ -487,6 +493,22 @@
       border-radius: var(--border-radius);
     }
 
+    /* Section Display */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* Ensure Create Team button is visible */
+    .btn-create-team {
+      display: inline-block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
     /* Responsive Adjustments */
     @media (max-width: 992px) {
       .container-fluid {
@@ -629,7 +651,7 @@
   <div class="container-fluid">
     <!-- Player Profile Sidebar -->
     <div class="player-profile">
-      <?php if ($data == 0) { ?>
+      <?php if (empty($data) || $data == 0) { ?>
         <div class="empty-state">
           <i class="fas fa-user-plus"></i>
           <p>Not a player yet.</p>
@@ -652,7 +674,7 @@
           </div>
         <?php endif; ?>
 
-        <?php echo form_open_multipart('PlayerController/update_player_picture/' . $data['player_id'], ['id' => 'profilePictureForm']); ?>
+        <?php echo form_open_multipart('PlayerController/update_player_picture/' . htmlspecialchars($data['player_id']), ['id' => 'profilePictureForm']); ?>
           <div class="profile-image-container">
             <?php if (!empty($data['image_path'])) { ?>
               <img src="<?php echo htmlspecialchars($data['image_path']); ?>" alt="User Photo" id="currentImage" loading="lazy">
@@ -674,15 +696,16 @@
 
         <div class="profile-header">
           <div class="player-info">
-            <h2 class="player-name"><?php echo htmlspecialchars($data['playerName']); ?></h2>
+            <h2 class="player-name">
+              <a href="<?php echo base_url(); ?>PlayerController/profile_player/<?php echo htmlspecialchars($data['player_id']); ?>">
+                <?php echo htmlspecialchars($data['playerName']); ?>
+              </a>
+            </h2>
             <div class="player-meta">
               <span><?php echo htmlspecialchars($data['player_role']); ?></span> • 
               <span><?php echo htmlspecialchars($data['city']); ?></span>
             </div>
             <div class="profile-actions mobile-only">
-              <a href="<?php echo base_url(); ?>PlayerController/profile_player/<?php echo htmlspecialchars($data['player_id']); ?>" class="btn-profile btn-primary btn-sm">
-                <i class="fas fa-eye mr-2"></i> View
-              </a>
               <a href="<?php echo base_url(); ?>PlayerController/update_player/<?php echo htmlspecialchars($data['player_id']); ?>" class="btn-profile btn-outline btn-sm">
                 <i class="fas fa-edit mr-2"></i> Edit
               </a>
@@ -691,30 +714,12 @@
         </div>
         <div class="player-stats">
           <div class="stat-item">
-            <div class="stat-value"><?php echo count($team); ?></div>
+            <div class="stat-value"><?php echo !empty($team) ? count($team) : 0; ?></div>
             <div class="stat-label">Teams</div>
           </div>
           <div class="stat-item">
-            <div class="stat-value"><?php echo count($tournament); ?></div>
+            <div class="stat-value"><?php echo !empty($tournament) ? count($tournament) : 0; ?></div>
             <div class="stat-label">Tournaments</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value">12</div>
-            <div class="stat-label">Matches</div>
-          </div>
-        </div>
-        <div class="player-details">
-          <div class="detail-item">
-            <span class="detail-label">Rating</span>
-            <span class="detail-value">4.8 <i class="fas fa-star text-warning"></i></span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Member Since</span>
-            <span class="detail-value">2023</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Last Active</span>
-            <span class="detail-value">Today</span>
           </div>
         </div>
       <?php } ?>
@@ -724,9 +729,12 @@
       <div class="content-header">
         <h1 class="content-title">Dashboard</h1>
         <div>
-          <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">
+          <button class="btn btn-primary btn-create-team" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">
             <i class="fas fa-plus mr-2"></i> New Team
           </button>
+           <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/add_tournament'">
+              <i class="fas fa-plus mr-2"></i> Create Tournament
+            </button>
         </div>
       </div>
       <div class="content-tabs">
@@ -736,23 +744,19 @@
         <button class="tab-btn" data-section="tournaments">
           <i class="fas fa-trophy mr-2"></i> Tournaments
         </button>
-        <button class="tab-btn" data-section="matches">
-          <i class="fas fa-calendar-alt mr-2"></i> Upcoming Matches
-        </button>
-        <button class="tab-btn" data-section="messages">
-          <i class="fas fa-envelope mr-2"></i> Messages
-        </button>
+      
       </div>
       <!-- Teams Section -->
       <div id="teams-section" class="section active">
-        <?php if ($team == 0): ?>
+        <?php if (empty($team) || count($team) === 0): ?>
           <div class="empty-state">
             <i class="fas fa-users"></i>
             <h4>No Teams Yet</h4>
             <p>You haven't joined any teams yet. Create or join a team to get started!</p>
-            <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">
+            <button class="btn btn-primary btn-create-team" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">
               <i class="fas fa-plus mr-2"></i> Create Team
             </button>
+
           </div>
         <?php else: ?>
           <div class="cards-grid">
@@ -830,27 +834,7 @@
         <?php endif; ?>
       </div>
       <!-- Matches Section -->
-      <div id="matches-section" class="section">
-        <div class="empty-state">
-          <i class="fas fa-calendar-alt"></i>
-          <h4>No Upcoming Matches</h4>
-          <p>You don't have any matches scheduled yet. Join a tournament or organize a friendly match!</p>
-          <button class="btn btn-primary">
-            <i class="fas fa-plus mr-2"></i> Schedule Match
-          </button>
-        </div>
-      </div>
-      <!-- Messages Section -->
-      <div id="messages-section" class="section">
-        <div class="empty-state">
-          <i class="fas fa-envelope"></i>
-          <h4>No New Messages</h4>
-          <p>You don't have any unread messages. Connect with other players and teams!</p>
-          <button class="btn btn-primary">
-            <i class="fas fa-search mr-2"></i> Find Players
-          </button>
-        </div>
-      </div>
+    
     </div>
   </div>
 
@@ -859,7 +843,31 @@
     document.addEventListener('DOMContentLoaded', function() {
       const tabButtons = document.querySelectorAll('.tab-btn');
       const sections = document.querySelectorAll('.section');
-      
+
+      // Function to show a specific section
+      function showSection(sectionId, button) {
+        // Hide all sections
+        sections.forEach(section => {
+          section.style.display = 'none';
+          section.classList.remove('active');
+        });
+
+        // Show the selected section
+        const targetSection = document.getElementById(`${sectionId}-section`);
+        if (targetSection) {
+          targetSection.style.display = 'block';
+          targetSection.classList.add('active');
+        }
+
+        // Update active tab button
+        tabButtons.forEach(btn => {
+          btn.classList.remove('active');
+        });
+        if (button) {
+          button.classList.add('active');
+        }
+      }
+
       // Initialize first tab as active
       if (tabButtons.length > 0) {
         const firstTab = document.querySelector('.tab-btn[data-section="teams"]');
@@ -867,7 +875,7 @@
           showSection(firstTab.getAttribute('data-section'), firstTab);
         }
       }
-      
+
       // Add click event to all tab buttons
       tabButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -875,35 +883,13 @@
           showSection(sectionId, this);
         });
       });
-      
+
       // Profile image preview functionality
       const profileImageInput = document.getElementById('profile_image');
       if (profileImageInput) {
         profileImageInput.addEventListener('change', previewImage);
       }
     });
-
-    function showSection(sectionId, button) {
-      // Hide all sections
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-      });
-      
-      // Show selected section
-      const targetSection = document.getElementById(`${sectionId}-section`);
-      if (targetSection) {
-        targetSection.classList.add('active');
-      }
-      
-      // Update active tab
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      
-      if (button) {
-        button.classList.add('active');
-      }
-    }
 
     function previewImage(event) {
       const file = event.target.files[0];

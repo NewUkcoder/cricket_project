@@ -146,6 +146,7 @@ return $result;
         // Build the query
         $this->db->select('
             add_team.team_name, 
+            add_team.city,
             add_team.team_id,
             add_team.image_path as team_image_path, 
             add_player.playerName, 
@@ -479,6 +480,7 @@ public function calculate_player_bowling_stats($player_id) {
         // Fetch team names where status is 1
         $this->db->select('t.team_name');
         $this->db->select('t.team_id');
+         $this->db->select('t.city');
          $this->db->select('t.image_path');
         $this->db->from('player_team pt');
         $this->db->join('add_team t', 'pt.team_id = t.team_id');

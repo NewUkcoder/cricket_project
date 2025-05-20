@@ -503,7 +503,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo base_url();?>/ScorecardController/edit_score" method="POST" id="editScorecardForm">
+                    <form action="<?php echo base_url();?>/ScorecardController/edit_score" method="POST" id="editScorecardForm" onsubmit="return validateEditScorecard()">
                         <input type="hidden" id="edit-match-id" name="match_id">
                         <input type="hidden" id="edit-player-id" name="player_id">
                         <input type="hidden" value="1" name="batting_order">
@@ -643,18 +643,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Bowler section visibility
+        // Toggle bowler section visibility based on dismissal selection
         function toggleBowlerSection(selectId, sectionId) {
-            document.getElementById(selectId).addEventListener('change', function() {
-                const value = this.value;
-                const section = document.getElementById(sectionId);
+            const select = document.getElementById(selectId);
+            const section = document.getElementById(sectionId);
+            const bowlerSelect = section.querySelector('select');
+            
+            function updateBowlerVisibility() {
+                const value = select.value;
                 section.style.display = (value === 'Not Out' || value === 'Run Out') ? 'none' : 'block';
-            });
+                bowlerSelect.required = !(value === 'Not Out' || value === 'Run Out');
+            }
+            
+            // Initialize visibility on load
+            updateBowlerVisibility();
+            // Update visibility on change
+            select.addEventListener('change', updateBowlerVisibility);
         }
-        toggleBowlerSection('dismissal', 'bowler-section');
-        toggleBowlerSection('edit-dismissal', 'edit-bowler-section');
 
-        // Form validation
+        // Initialize toggles for both modals
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleBowlerSection('dismissal', 'bowler-section');
+            toggleBowlerSection('edit-dismissal', 'edit-bowler-section');
+        });
+
+        // Form validation for Add Player Score
         function validateScorecard() {
             const runs = parseInt(document.getElementById('runs').value) || 0;
             const balls = parseInt(document.getElementById('balls').value) || 0;
@@ -665,7 +678,32 @@
 
             const boundaryRuns = (fours * 4) + (sixes * 6);
             if (boundaryRuns > runs) {
-                alert('Boundary runs exceed total runs');
+                alert('Boundary runs (4s and 6s) cannot exceed total runs');
+                return false;
+            }
+            if (runs > 0 && balls === 0) {
+                alert('Balls cannot be zero when runs are scored');
+                return false;
+            }
+            if (dismissal !== 'Not Out' && dismissal !== 'Run Out' && !bowler.value) {
+                alert('Please select a bowler for this dismissal');
+                return false;
+            }
+            return true;
+        }
+
+        // Form validation for Edit Player Score
+        function validateEditScorecard() {
+            const runs = parseInt(document.getElementById('edit-runs').value) || 0;
+            const balls = parseInt(document.getElementById('edit-balls').value) || 0;
+            const fours = parseInt(document.getElementById('edit-fours').value) || 0;
+            const sixes = parseInt(document.getElementById('edit-sixes').value) || 0;
+            const dismissal = document.getElementById('edit-dismissal').value;
+            const bowler = document.getElementById('edit-bowler-name');
+
+            const boundaryRuns = (fours * 4) + (sixes * 6);
+            if (boundaryRuns > runs) {
+                alert('Boundary runs (4s and 6s) cannot exceed total runs');
                 return false;
             }
             if (runs > 0 && balls === 0) {
@@ -695,44 +733,65 @@
                     'bowler-id': 'bowler_id'
                 };
                 Object.entries(fields).forEach(([id, attr]) => {
-                    document.getElementById(`edit-${id}`).value = button.getAttribute(`data-${attr}`) || '';
+                    const value = button.getAttribute(`data-${attr}`) || '';
+                    const element = document.getElementById(`edit-${id}`);
+                    if (element.tagName === 'SELECT') {
+                        element.value = value;
+                    } else {
+                        element.value = value || '0';
+                    }
                 });
-                document.getElementById('edit-dismissal').dispatchEvent(new Event('change'));
+                // Trigger change event to update bowler section visibility
+                const dismissalSelect = document.getElementById('edit-dismissal');
+                dismissalSelect.dispatchEvent(new Event('change'));
             });
 
             // Edit Extras Modal
             document.getElementById('editExtrasModal').addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
-                document.getElementById('edit-extras-match-id').value = button.getAttribute('data-match-id');
-                document.getElementById('edit-wides').value = button.getAttribute('data-wides');
-                document.getElementById('edit-no-balls').value = button.getAttribute('data-no-balls');
-                document.getElementById('edit-byes').value = button.getAttribute('data-byes');
-                document.getElementById('edit-leg-byes').value = button.getAttribute('data-leg-byes');
+                const fields = {
+                    'extras-match-id': 'match-id',
+                    'wides': 'wides',
+                    'no-balls': 'no-balls',
+                    'byes': 'byes',
+                    'leg-byes': 'leg-byes'
+                };
+                Object.entries(fields).forEach(([id, attr]) => {
+                    document.getElementById(`edit-${id}`).value = button.getAttribute(`data-${attr}`) || '0';
+                });
             });
 
             // Edit Total Score Modal
             document.getElementById('editTotalScoreModal').addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
-                document.getElementById('edit-total-match-id').value = button.getAttribute('data-match-id');
-                document.getElementById('edit-total-runs').value = button.getAttribute('data-total-runs');
-                document.getElementById('edit-wickets').value = button.getAttribute('data-wickets');
-                document.getElementById('edit-t-overs').value = button.getAttribute('data-t-overs');
-            });
-        });
-
-        // Real-time input validation
-        ['runs', 'balls', 'fours', 'sixes', 'edit-runs', 'edit-balls', 'edit-fours', 'edit-sixes'].forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.addEventListener('input', function() {
-                    this.classList.remove('is-invalid', 'is-valid');
-                    if (parseInt(this.value) < 0) {
-                        this.classList.add('is-invalid');
-                    } else {
-                        this.classList.add('is-valid');
-                    }
+                const fields = {
+                    'total-match-id': 'match-id',
+                    'total-runs': 'total-runs',
+                    'wickets': 'wickets',
+                    't-overs': 't-overs'
+                };
+                Object.entries(fields).forEach(([id, attr]) => {
+                    document.getElementById(`edit-${id}`).value = button.getAttribute(`data-${attr}`) || '0';
                 });
-            }
+            });
+
+            // Real-time input validation
+            ['runs', 'balls', 'fours', 'sixes', 'edit-runs', 'edit-balls', 'edit-fours', 'edit-sixes', 
+             'wides', 'no-balls', 'byes', 'leg-byes', 'edit-wides', 'edit-no-balls', 'edit-byes', 'edit-leg-byes',
+             'total-runs', 't-overs', 'wickets', 'edit-total-runs', 'edit-t-overs', 'edit-wickets'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', function() {
+                        this.classList.remove('is-invalid', 'is-valid');
+                        const value = parseFloat(this.value) || 0;
+                        if (value < 0 || (id === 'wickets' && value > 10) || (id === 'edit-wickets' && value > 10)) {
+                            this.classList.add('is-invalid');
+                        } else {
+                            this.classList.add('is-valid');
+                        }
+                    });
+                }
+            });
         });
     </script>
 </body>

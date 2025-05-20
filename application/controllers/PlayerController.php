@@ -38,7 +38,7 @@ class PlayerController extends CI_Controller {
                 'additional_info'=>$this->input->post('additional_info'),
                 'image_path'=>"",
                 'user_id'=>$user_id,
-                'created_at'=>date('Y-m-d')
+                'created_on'=>date('Y-m-d')
                 
                 
                 );

@@ -107,7 +107,7 @@ class ScorecardController extends CI_Controller {
 
                 $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
                 
-
+                $data['match_id']=$match_id;
                 $team1=$data['team_one_id'];
                 $team2=$data['team_two_id'];
                 $win_team=$data['toss_winner'];
@@ -512,7 +512,7 @@ public function edit_score() {
             if($batting_order==1)
             {
  $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-                
+                var_dump($data, $match_id); 
 
                 
                 $team1=$data['team_one_id'];
