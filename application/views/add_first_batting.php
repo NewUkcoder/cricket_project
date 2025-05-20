@@ -472,6 +472,7 @@
                                 <option value="Stumped">Stumped</option>
                                 <option value="Hit Wicket">Hit Wicket</option>
                             </select>
+                            </select>
                         </div>
                         <div class="mb-3" id="bowler-section">
                             <label for="bowler-name" class="form-label required-field">Bowler Name</label>
@@ -504,7 +505,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="<?php echo base_url();?>/ScorecardController/edit_score" method="POST" id="editScorecardForm" onsubmit="return validateEditScorecard()">
-                        <input type="hidden" id="edit-match-id" name="match_id">
+                        <input type="hidden" id="edit-match-id" name="match_id" value="">
                         <input type="hidden" id="edit-player-id" name="player_id">
                         <input type="hidden" value="1" name="batting_order">
                         <div class="row">
@@ -675,7 +676,12 @@
             const sixes = parseInt(document.getElementById('sixes').value) || 0;
             const dismissal = document.getElementById('dismissal').value;
             const bowler = document.getElementById('bowler-name');
+            const matchId = document.querySelector('#scorecardForm input[name="match_id"]').value;
 
+            if (!matchId) {
+                alert('Match ID is missing. Please try again.');
+                return false;
+            }
             const boundaryRuns = (fours * 4) + (sixes * 6);
             if (boundaryRuns > runs) {
                 alert('Boundary runs (4s and 6s) cannot exceed total runs');
@@ -700,7 +706,13 @@
             const sixes = parseInt(document.getElementById('edit-sixes').value) || 0;
             const dismissal = document.getElementById('edit-dismissal').value;
             const bowler = document.getElementById('edit-bowler-name');
+            const matchId = document.getElementById('edit-match-id').value;
 
+            if (!matchId) {
+                alert('Match ID is missing. Please try again.');
+                console.error('Match ID not found in editScorecardForm');
+                return false;
+            }
             const boundaryRuns = (fours * 4) + (sixes * 6);
             if (boundaryRuns > runs) {
                 alert('Boundary runs (4s and 6s) cannot exceed total runs');
@@ -722,6 +734,7 @@
             // Edit Scorecard Modal
             document.getElementById('editScorecardModal').addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
+                const matchId = button.getAttribute('data-match-id') || '';
                 const fields = {
                     'match-id': 'match_id',
                     'player-id': 'player_id',
@@ -732,13 +745,21 @@
                     'dismissal': 'dismissal',
                     'bowler-id': 'bowler_id'
                 };
+                // Explicitly set match_id
+                const matchIdInput = document.getElementById('edit-match-id');
+                matchIdInput.value = matchId;
+                if (!matchId) {
+                    console.error('Match ID is missing or empty in editScorecardModal');
+                }
                 Object.entries(fields).forEach(([id, attr]) => {
-                    const value = button.getAttribute(`data-${attr}`) || '';
-                    const element = document.getElementById(`edit-${id}`);
-                    if (element.tagName === 'SELECT') {
-                        element.value = value;
-                    } else {
-                        element.value = value || '0';
+                    if (id !== 'match-id') { // Skip match-id as it's handled separately
+                        const value = button.getAttribute(`data-${attr}`) || '';
+                        const element = document.getElementById(`edit-${id}`);
+                        if (element.tagName === 'SELECT') {
+                            element.value = value;
+                        } else {
+                            element.value = value || '0';
+                        }
                     }
                 });
                 // Trigger change event to update bowler section visibility

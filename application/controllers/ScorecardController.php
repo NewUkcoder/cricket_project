@@ -486,7 +486,9 @@ public function edit_score() {
      
      $user_id=$this->session->userdata('user_id');
             $match_id = $this->input->post('match_id');
+
             $player_id = $this->input->post('player_id');
+         //   echo $player_id;
             $batting_order = $this->input->post('batting_order');
             $runs = $this->input->post('runs');
             $balls = $this->input->post('balls');
