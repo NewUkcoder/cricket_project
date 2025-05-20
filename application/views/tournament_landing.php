@@ -5,26 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title><?php echo $league['league_name']; ?> | Cricket League</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Modern Base Styles */
+        /* Professional Base Styles */
         :root {
-            --primary-color: #005f8d;
-            --secondary-color: #007bb5;
-            --accent-color: #ff6b35;
-            --success-color: #d81b60;
-            --text-color: #333;
-            --light-text: #777;
-            --bg-color: #f5f5f5;
-            --card-bg: #ffffff;
+            --primary-color: #1a3c5e; /* Navy Blue */
+            --secondary-color: #c89b2f; /* Gold */
+            --accent-color: #2b847c; /* Teal */
+            --text-color: #333333; /* Dark Gray */
+            --light-text: #666666; /* Medium Gray */
+            --bg-color: #ffffff; /* White */
+            --card-bg: #f5f5f5; /* Light Gray */
             --border-radius: 8px;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             --section-spacing: 20px;
-            --color-runs: #ff4d4d;
-            --color-wickets: #4CAF50;
+            --color-runs: #e57373;
+            --color-wickets: #4caf50;
             --color-high-score: #ff9800;
-            --color-best-bowling: #2196F3;
-            --color-team-high: #9c27b0;
-            --color-team-low: #e91e63;
+            --color-best-bowling: #2196f3;
+            --color-team-high: #ab47bc;
+            --color-team-low: #f06292;
         }
 
         * {
@@ -35,81 +35,83 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
             font-size: clamp(14px, 4vw, 16px);
-            padding-bottom: 60px;
+            padding-bottom: 70px;
         }
 
         /* Header Styles */
         .league-header {
-            background: linear-gradient(135deg, var(--primary-color), #003d5c);
-            color: white;
-            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-color), #0e2742);
+            color: #ffffff;
+            padding: 12px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: var(--box-shadow);
         }
 
         .back-btn {
             display: inline-flex;
             align-items: center;
-            color: white;
+            color: #ffffff;
             text-decoration: none;
-            margin-bottom: 10px;
-            font-size: clamp(13px, 3vw, 14px);
+            margin-bottom: 8px;
+            font-size: clamp(12px, 3vw, 13px);
             padding: 5px 10px;
-            border-radius: 4px;
-            background-color: rgba(255,255,255,0.15);
-            transition: background-color 0.2s;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.15);
+            transition: background-color 0.3s;
         }
 
         .back-btn:hover {
-            background-color: rgba(255,255,255,0.25);
+            background-color: rgba(255, 255, 255, 0.25);
         }
 
         .league-title {
-            font-size: clamp(1.3rem, 5vw, 1.8rem);
+            font-size: clamp(1.1rem, 4.5vw, 1.3rem);
             font-weight: 700;
-            margin-bottom: 5px;
-            word-break: break-word;
-            line-height: 1.3;
+            margin-bottom: 6px;
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
         }
 
         .league-meta {
-            font-size: clamp(11px, 3vw, 12px);
-            opacity: 0.9;
-            margin-bottom: 5px;
-            line-height: 1.4;
+            font-size: clamp(10px, 2.8vw, 11px);
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
+            justify-content: flex-start;
         }
 
         .league-meta span {
             display: inline-flex;
             align-items: center;
             gap: 4px;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 3px 6px;
+            border-radius: 3px;
         }
 
         .league-meta i {
-            font-size: 14px;
+            font-size: 12px;
+            color: var(--secondary-color);
         }
 
         /* Navigation */
         .nav-scroll {
             background: var(--card-bg);
-            padding: 12px 15px;
+            padding: 10px 12px;
             overflow-x: auto;
             white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
             position: sticky;
-            top: 140px;
+            top: 0;
             z-index: 90;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: var(--box-shadow);
             display: none;
         }
 
@@ -119,20 +121,20 @@
 
         .nav-link {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 7px 14px;
             margin: 0 5px;
-            background: #f0f0f0;
+            background: #e0e0e0;
             color: var(--primary-color);
-            border-radius: 20px;
-            font-size: clamp(12px, 3vw, 13px);
+            border-radius: 18px;
+            font-size: clamp(11px, 3vw, 12px);
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .nav-link.active, .nav-link:hover {
             background: var(--primary-color);
-            color: white;
+            color: #ffffff;
         }
 
         /* Footer Styles */
@@ -144,8 +146,8 @@
             background: var(--card-bg);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
             z-index: 100;
         }
 
@@ -155,81 +157,78 @@
             align-items: center;
             text-decoration: none;
             color: var(--light-text);
-            font-size: clamp(10px, 3vw, 11px);
-            padding: 8px;
+            font-size: clamp(9px, 2.8vw, 10px);
+            padding: 6px;
             flex: 1;
-            transition: color 0.2s ease;
+            transition: color 0.3s;
         }
 
-        .footer__link.active,
-        .footer__link:hover,
-        .footer__link:focus {
+        .footer__link.active, .footer__link:hover {
             color: var(--primary-color);
         }
 
         .footer__icon {
-            font-size: clamp(18px, 5vw, 20px);
-            margin-bottom: 4px;
+            font-size: clamp(16px, 4.5vw, 18px);
+            margin-bottom: 3px;
         }
 
         /* Main Content */
         .container {
             max-width: 100%;
-            padding: 15px;
+            padding: 12px;
+            background: var(--bg-color);
         }
 
         .section-title {
             font-size: clamp(1.1rem, 4vw, 1.3rem);
             color: var(--primary-color);
-            margin: var(--section-spacing) 0 15px;
-            padding-bottom: 8px;
+            margin: var(--section-spacing) 0 12px;
+            padding-bottom: 6px;
             border-bottom: 2px solid var(--secondary-color);
-            font-weight: 700;
+            font-weight: 600;
             position: sticky;
-            top: 140px;
+            top: 0;
             background: var(--bg-color);
             z-index: 50;
-            padding-top: 5px;
         }
 
-        /* Stats Cards with Circular Progress */
+        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: var(--section-spacing);
         }
 
         .stat-card {
             background: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 15px;
+            padding: 12px;
             box-shadow: var(--box-shadow);
             text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
         }
 
         .stat-img {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--secondary-color);
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             margin: 0 auto 8px;
         }
 
         .stat-title {
-            font-size: clamp(12px, 3.5vw, 14px);
-            font-weight: 700;
+            font-size: clamp(12px, 3.5vw, 13px);
+            font-weight: 600;
             color: var(--primary-color);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -238,80 +237,54 @@
 
         .stat-value {
             font-size: clamp(11px, 3vw, 12px);
+            font-weight: 700;
             color: var(--text-color);
-            margin-bottom: 5px;
-            font-weight: 500;
+            margin-bottom: 6px;
+            background: rgba(43, 132, 124, 0.1);
+            padding: 3px 6px;
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .stat-value::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25%;
+            height: 2px;
+            background: var(--secondary-color);
         }
 
         .stat-team {
-            font-size: clamp(10px, 3vw, 11px);
-            color: var(--secondary-color);
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-size: clamp(10px, 2.8vw, 11px);
+            color: var(--light-text);
+            font-weight: 500;
         }
 
         .see-more {
-            font-size: clamp(10px, 3vw, 11px);
+            font-size: clamp(10px, 2.8vw, 11px);
             color: var(--primary-color);
             text-decoration: none;
             display: inline-block;
-            margin-top: 8px;
+            margin-top: 6px;
             font-weight: 600;
-            transition: color 0.2s ease;
+            transition: color 0.3s;
         }
 
         .see-more:hover {
-            color: var(--accent-color);
-        }
-
-        /* Circular Progress Styles */
-        .stat-circle-container {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 10px auto;
-        }
-
-        .stat-circle {
-            width: 100%;
-            height: 100%;
-        }
-
-        .stat-circle-svg {
-            transform: rotate(-90deg);
-        }
-
-        .stat-circle-bg {
-            fill: none;
-            stroke: #e0e0e0;
-            stroke-width: 8;
-        }
-
-        .stat-circle-progress {
-            fill: none;
-            stroke-width: 8;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.5s ease;
-        }
-
-        .stat-circle-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(14px, 4vw, 16px);
-            font-weight: 700;
-            color: var(--text-color);
+            color: var(--secondary-color);
         }
 
         /* Match Cards */
         .match-card {
             background: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 15px;
-            margin-bottom: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
             box-shadow: var(--box-shadow);
-            transition: transform 0.2s;
+            transition: transform 0.3s;
         }
 
         .match-card:hover {
@@ -322,8 +295,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
+            gap: 12px;
+            margin-bottom: 8px;
         }
 
         .team-img {
@@ -331,39 +304,42 @@
             height: 45px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--secondary-color);
+            border: 2px solid var(--accent-color);
         }
 
         .vs-text {
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary-color);
-            font-size: clamp(13px, 3.5vw, 14px);
+            font-size: clamp(12px, 3.5vw, 13px);
         }
 
         .match-title {
-            font-size: clamp(13px, 3.5vw, 14px);
-            font-weight: 700;
+            font-size: clamp(12px, 3.5vw, 13px);
+            font-weight: 600;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: var(--text-color);
         }
 
         .match-details {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 8px;
-            font-size: clamp(12px, 3.5vw, 13px);
+            gap: 6px;
+            font-size: clamp(11px, 3vw, 12px);
         }
 
         .match-detail {
             display: flex;
             align-items: center;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
         }
 
         .match-detail strong {
-            margin-right: 8px;
+            margin-right: 6px;
             color: var(--primary-color);
-            min-width: 60px;
+            min-width: 55px;
             font-weight: 600;
         }
 
@@ -371,20 +347,20 @@
         .results-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: var(--section-spacing);
         }
 
         .result-card {
             background: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 12px;
+            padding: 10px;
             box-shadow: var(--box-shadow);
-            border-left: 4px solid var(--accent-color);
-            transition: transform 0.2s;
+            border-left: 3px solid var(--secondary-color);
+            transition: transform 0.3s;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .result-card:hover {
@@ -395,39 +371,39 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            font-size: clamp(11px, 3vw, 12px);
+            font-size: clamp(10px, 3vw, 11px);
             color: var(--light-text);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .result-league-info {
-            font-size: clamp(13px, 3.5vw, 14px);
-            font-weight: 700;
+            font-size: clamp(12px, 3.5vw, 13px);
+            font-weight: 600;
             color: var(--primary-color);
             display: flex;
             align-items: center;
         }
 
         .result-match-type {
-            font-size: clamp(11px, 3vw, 12px);
+            font-size: clamp(10px, 3vw, 11px);
             color: var(--light-text);
-            margin-left: 8px;
+            margin-left: 6px;
         }
 
         .result-date-time {
-            font-size: clamp(11px, 3vw, 12px);
+            font-size: clamp(10px, 3vw, 11px);
             color: var(--light-text);
-            margin-top: 4px;
+            margin-top: 3px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .result-teams-scores {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            font-size: clamp(12px, 3.5vw, 13px);
+            gap: 3px;
+            font-size: clamp(11px, 3.5vw, 12px);
             font-weight: 600;
             color: var(--text-color);
         }
@@ -435,21 +411,24 @@
         .result-team-score {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
         }
 
         .result-team-logo {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--secondary-color);
+            border: 2px solid var(--accent-color);
         }
 
         .result-team-name {
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary-color);
-            min-width: 100px;
+            min-width: 90px;
         }
 
         .result-score {
@@ -457,11 +436,11 @@
         }
 
         .result-outcome {
-            font-size: clamp(12px, 3.5vw, 13px);
-            font-weight: 700;
-            color: var(--success-color);
+            font-size: clamp(11px, 3.5vw, 12px);
+            font-weight: 600;
+            color: var(--accent-color);
             text-align: left;
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
         .view-scorecard {
@@ -469,42 +448,38 @@
             align-items: center;
             justify-content: center;
             background: var(--primary-color);
-            color: white;
+            color: #ffffff;
             border: none;
-            border-radius: 4px;
-            padding: 8px 12px;
-            font-size: clamp(11px, 3vw, 12px);
+            border-radius: 5px;
+            padding: 7px 10px;
+            font-size: clamp(10px, 3vw, 11px);
             text-decoration: none;
             font-weight: 600;
-            transition: background-color 0.2s, transform 0.2s;
+            transition: background-color 0.3s, transform 0.2s;
             cursor: pointer;
             width: 100%;
-            max-width: 180px;
-            margin: 8px auto 0;
+            max-width: 160px;
+            margin: 6px auto 0;
         }
 
         .view-scorecard:hover {
             background: var(--secondary-color);
-            transform: scale(1.05);
+            transform: translateY(-2px);
         }
 
-        .view-scorecard:active {
-            transform: scale(0.95);
-        }
-
-        /* Points Table Section Styles */
+        /* Points Table Section */
         .points-section {
             margin-bottom: var(--section-spacing);
         }
 
         .points-guide {
-            background: linear-gradient(145deg, var(--card-bg), #f9f9f9);
+            background: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 20px;
+            padding: 15px;
             box-shadow: var(--box-shadow);
-            margin-bottom: 20px;
-            font-size: clamp(13px, 3.5vw, 14px);
-            transition: transform 0.3s ease;
+            margin-bottom: 15px;
+            font-size: clamp(12px, 3.5vw, 13px);
+            transition: transform 0.3s;
         }
 
         .points-guide:hover {
@@ -512,10 +487,10 @@
         }
 
         .points-guide h3 {
-            font-size: clamp(15px, 4vw, 16px);
-            font-weight: 700;
+            font-size: clamp(14px, 4vw, 15px);
+            font-weight: 600;
             color: var(--primary-color);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -523,9 +498,9 @@
         }
 
         .points-guide-toggle {
-            font-size: clamp(12px, 3vw, 13px);
-            color: var(--secondary-color);
-            transition: transform 0.3s ease;
+            font-size: clamp(11px, 3vw, 12px);
+            color: var(--accent-color);
+            transition: transform 0.3s;
         }
 
         .points-guide-toggle.active {
@@ -534,7 +509,7 @@
 
         .points-guide-content {
             display: none;
-            line-height: 1.6;
+            line-height: 1.5;
             color: var(--text-color);
         }
 
@@ -545,12 +520,12 @@
         .points-guide ul {
             list-style: none;
             padding-left: 0;
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .points-guide li {
-            margin-bottom: 10px;
-            padding-left: 25px;
+            margin-bottom: 8px;
+            padding-left: 20px;
             position: relative;
         }
 
@@ -558,7 +533,7 @@
             content: "🏏";
             position: absolute;
             left: 0;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 1;
         }
 
@@ -568,26 +543,25 @@
 
         .points-table-container {
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
             background: var(--card-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            padding: 10px;
+            padding: 8px;
         }
 
         .points-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            font-size: clamp(12px, 3.5vw, 13px);
+            font-size: clamp(11px, 3vw, 12px);
         }
 
         .points-table th {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 12px;
+            background: var(--primary-color);
+            color: #ffffff;
+            padding: 10px;
             text-align: center;
-            font-weight: 700;
+            font-weight: 600;
             white-space: nowrap;
             position: sticky;
             top: 0;
@@ -603,58 +577,53 @@
         }
 
         .points-table td {
-            padding: 12px;
+            padding: 10px;
             text-align: center;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #e0e0e0;
             white-space: nowrap;
-            transition: background-color 0.2s ease;
-        }
-
-        .points-table tr {
-            transition: all 0.2s ease;
+            transition: background-color 0.3s;
         }
 
         .points-table tr:hover {
-            background-color: #e6f0ff;
-            transform: scale(1.005);
+            background-color: rgba(43, 132, 124, 0.05);
         }
 
         .points-table tr:nth-child(even) {
-            background: #f7f7f7;
+            background: #fafafa;
         }
 
         .points-table .team-cell {
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            gap: 10px;
+            gap: 8px;
             text-align: left;
-            padding-left: 15px;
+            padding-left: 12px;
         }
 
         .points-table .team-logo {
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--secondary-color);
+            border: 2px solid var(--accent-color);
         }
 
         .points-table .highlight {
-            font-weight: 700;
-            color: var(--accent-color);
-            background: rgba(255, 107, 53, 0.1);
+            font-weight: 600;
+            color: var(--secondary-color);
+            background: rgba(200, 155, 47, 0.1);
         }
 
         .points-table .points {
-            font-weight: 700;
-            color: var(--primary-color);
+            font-weight: 600;
+            color: var(--accent-color);
         }
 
         .points-table .empty-state {
             text-align: center;
-            padding: 20px;
-            font-size: clamp(13px, 3.5vw, 14px);
+            padding: 15px;
+            font-size: clamp(12px, 3.5vw, 13px);
             color: var(--light-text);
         }
 
@@ -671,13 +640,13 @@
             left: 50%;
             transform: translateX(-50%);
             background: var(--primary-color);
-            color: white;
-            padding: 6 golpx 12px;
-            border-radius: 4px;
-            font-size: clamp(11px, 3vw, 12px);
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: clamp(10px, 3vw, 11px);
             white-space: nowrap;
             z-index: 20;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .tooltip:hover:before {
@@ -686,19 +655,19 @@
             bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
-            border: 6px solid transparent;
+            border: 5px solid transparent;
             border-top-color: var(--primary-color);
-            margin-bottom: 2px;
+            margin-bottom: 1px;
         }
 
         /* Teams Section */
         .team-card {
             background: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 15px;
-            margin-bottom: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
             box-shadow: var(--box-shadow);
-            transition: transform 0.2s;
+            transition: transform 0.3s;
         }
 
         .team-card:hover {
@@ -708,89 +677,136 @@
         .team-header {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .team-logo {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--secondary-color);
-            margin-right: 12px;
+            border: 2px solid var(--accent-color);
+            margin-right: 10px;
         }
 
         .team-name {
-            font-size: clamp(14px, 4vw, 15px);
-            font-weight: 700;
+            font-size: clamp(13px, 4vw, 14px);
+            font-weight: 600;
             color: var(--primary-color);
+        }
+
+        .team-name a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .team-name a:hover {
+            color: var(--secondary-color);
         }
 
         .player-stats {
             display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .player-stat-row {
+            display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
         .player-stat {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
             text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .player-stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
         }
 
         .player-stat-img {
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--secondary-color);
-            margin: 0 auto 5px;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin: 0 auto 8px;
         }
 
         .player-stat-title {
             font-size: clamp(11px, 3vw, 12px);
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary-color);
-            margin-bottom: 3px;
+            margin-bottom: 6px;
         }
 
         .player-stat-value {
             font-size: clamp(11px, 3vw, 12px);
+            font-weight: 700;
             color: var(--text-color);
-            font-weight: 500;
+            background: rgba(43, 132, 124, 0.1);
+            padding: 3px 6px;
+            border-radius: 3px;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .player-stat-value::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25%;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+
+        .player-stat-value strong {
+            color: var(--accent-color);
         }
 
         /* Rules Section */
         .rules-list {
             background: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 15px;
+            padding: 12px;
             box-shadow: var(--box-shadow);
-            font-size: clamp(13px, 3.5vw, 14px);
+            font-size: clamp(12px, 3.5vw, 13px);
         }
 
         .rules-list li {
-            margin-bottom: 10px;
-            padding-left: 18px;
+            margin-bottom: 8px;
+            padding-left: 16px;
             position: relative;
             line-height: 1.5;
         }
 
         .rules-list li:before {
             content: "•";
-            color: var(--accent-color);
+            color: var(--secondary-color);
             position: absolute;
-            left: 5px;
-            font-size: 18px;
+            left: 0;
+            font-size: 16px;
             line-height: 1;
         }
 
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             background: var(--card-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            font-size: clamp(13px, 3.5vw, 14px);
+            font-size: clamp(12px, 3.5vw, 13px);
             color: var(--light-text);
             margin-bottom: var(--section-spacing);
         }
@@ -799,26 +815,21 @@
         @media (max-width: 767px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+                gap: 8px;
             }
 
             .stat-card {
                 padding: 10px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: space-between;
-                min-height: 220px;
+                min-height: 200px;
             }
 
             .stat-img {
-                width: 40px;
-                height: 40px;
+                width: 55px;
+                height: 55px;
             }
 
             .stat-title {
                 font-size: clamp(11px, 3vw, 12px);
-                margin-bottom: 8px;
             }
 
             .stat-value {
@@ -833,17 +844,8 @@
                 font-size: clamp(9px, 2.5vw, 10px);
             }
 
-            .stat-circle-container {
-                width: 80px;
-                height: 80px;
-            }
-
-            .stat-circle-text {
-                font-size: clamp(12px, 3.5vw, 13px);
-            }
-
             .result-card {
-                padding: 10px;
+                padding: 8px;
             }
 
             .result-team-logo {
@@ -855,8 +857,14 @@
                 min-width: 80px;
             }
 
-            .player-stats {
-                grid-template-columns: 1fr;
+            .player-stat-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .player-stat-img {
+                width: 55px;
+                height: 55px;
             }
 
             .match-details {
@@ -864,46 +872,46 @@
             }
 
             .view-scorecard {
-                padding: 10px;
-                font-size: clamp(10px, 3vw, 11px);
+                padding: 6px;
+                font-size: clamp(9px, 2.8vw, 10px);
             }
 
             .result-league-info {
-                font-size: clamp(12px, 3.5vw, 13px);
+                font-size: clamp(11px, 3.5vw, 12px);
             }
 
             .result-match-type {
-                font-size: clamp(10px, 3vw, 11px);
+                font-size: clamp(9px, 2.8vw, 10px);
             }
 
             .result-date-time {
-                font-size: clamp(10px, 3vw, 11px);
+                font-size: clamp(9px, 2.8vw, 10px);
             }
 
             .points-guide {
-                padding: 15px;
+                padding: 12px;
             }
 
             .points-guide h3 {
-                font-size: clamp(14px, 4vw, 15px);
+                font-size: clamp(13px, 4vw, 14px);
             }
 
             .points-table {
-                font-size: clamp(11px, 3vw, 12px);
+                font-size: clamp(10px, 3vw, 11px);
             }
 
             .points-table th, .points-table td {
-                padding: 8px;
+                padding: 6px;
             }
 
             .points-table .team-logo {
-                width: 25px;
-                height: 25px;
+                width: 22px;
+                height: 22px;
             }
 
             .points-table .team-cell {
-                padding-left: 10px;
-                gap: 8px;
+                padding-left: 8px;
+                gap: 6px;
             }
         }
 
@@ -919,68 +927,79 @@
 
             .nav-scroll {
                 display: block;
-                top: 160px;
-                padding: 12px 20px;
+                top: 0;
+                padding: 10px 15px;
             }
 
             .container {
                 max-width: 1000px;
                 margin: 0 auto;
-                padding: 20px;
+                padding: 15px;
             }
 
             .league-header {
-                padding: 20px 25px 15px;
+                padding: 15px 20px;
+            }
+
+            .league-title {
+                font-size: clamp(1.5rem, 3vw, 1.7rem);
+            }
+
+            .league-meta {
+                font-size: clamp(11px, 2.5vw, 12px);
+            }
+
+            .league-meta span {
+                padding: 4px 8px;
             }
 
             .stats-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 15px;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 12px;
             }
 
             .results-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 15px;
+                gap: 12px;
             }
 
             .section-title {
-                top: 160px;
                 font-size: clamp(1.2rem, 3vw, 1.4rem);
             }
 
             .player-stats {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: 1fr;
+            }
+
+            .player-stat-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .player-stat-img {
+                width: 70px;
+                height: 70px;
             }
 
             .match-details {
                 grid-template-columns: 1fr 1fr;
             }
 
-            .stat-circle-container {
-                width: 120px;
-                height: 120px;
-            }
-
-            .stat-circle-text {
-                font-size: clamp(16px, 3vw, 18px);
-            }
-
             .view-scorecard {
                 width: auto;
-                padding: 8px 16px;
+                padding: 7px 14px;
             }
 
             .points-table-container {
-                padding: 15px;
+                padding: 12px;
             }
 
             .points-table th, .points-table td {
-                padding: 14px;
+                padding: 12px;
             }
 
             .points-table .team-logo {
-                width: 35px;
-                height: 35px;
+                width: 30px;
+                height: 30px;
             }
         }
     </style>
@@ -1022,14 +1041,7 @@
                     <h3 class="stat-title"><i class="fas fa-bat"></i> Top Batsman</h3>
                     <img src="<?php echo $league_top_scorer->player_image; ?>" alt="<?php echo $league_top_scorer->playerName; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_top_scorer->playerName; ?></p>
-                    <div class="stat-circle-container">
-                        <svg class="stat-circle" viewBox="0 0 36 36">
-                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
-                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-runs)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_top_scorer->total_runs / 500) * 100, 100); ?>"></circle>
-                        </svg>
-                        <span class="stat-circle-text"><?php echo $league_top_scorer->total_runs; ?> Runs</span>
-                    </div>
-                    <p class="stat-team"><?php echo $league_top_scorer->team_name; ?></p>
+                    <p class="stat-team"><?php echo $league_top_scorer->total_runs; ?> Runs | <?php echo $league_top_scorer->team_name; ?></p>
                     <a href="<?php echo base_url();?>TournamentController/league_top_ten_scorer/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
                     </a>
@@ -1045,14 +1057,7 @@
                     <h3 class="stat-title"><i class="fas fa-bowling-ball"></i> Top Bowler</h3>
                     <img src="<?php echo $league_top_bowler->player_image; ?>" alt="<?php echo $league_top_bowler->playerName; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_top_bowler->playerName; ?></p>
-                    <div class="stat-circle-container">
-                        <svg class="stat-circle" viewBox="0 0 36 36">
-                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
-                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-wickets)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_top_bowler->total_wickets / 20) * 100, 100); ?>"></circle>
-                        </svg>
-                        <span class="stat-circle-text"><?php echo $league_top_bowler->total_wickets; ?> Wickets</span>
-                    </div>
-                    <p class="stat-team"><?php echo $league_top_bowler->team_name; ?></p>
+                    <p class="stat-team"><?php echo $league_top_bowler->total_wickets; ?> Wickets | <?php echo $league_top_bowler->team_name; ?></p>
                     <a href="<?php echo base_url();?>TournamentController/league_top_ten_bowler/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
                     </a>
@@ -1068,14 +1073,7 @@
                     <h3 class="stat-title"><i class="fas fa-star"></i> Highest Score</h3>
                     <img src="<?php echo $league_highest_individual_score->player_image; ?>" alt="<?php echo $league_highest_individual_score->playerName; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_highest_individual_score->playerName; ?></p>
-                    <div class="stat-circle-container">
-                        <svg class="stat-circle" viewBox="0 0 36 36">
-                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
-                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-high-score)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_highest_individual_score->highest_score / 200) * 100, 100); ?>"></circle>
-                        </svg>
-                        <span class="stat-circle-text"><?php echo $league_highest_individual_score->highest_score; ?> Runs</span>
-                    </div>
-                    <p class="stat-team"><?php echo $league_highest_individual_score->team_name; ?></p>
+                    <p class="stat-team"><?php echo $league_highest_individual_score->highest_score; ?> Runs | <?php echo $league_highest_individual_score->team_name; ?></p>
                     <a href="<?php echo base_url();?>TournamentController/league_ten_individual_scorer/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
                     </a>
@@ -1091,14 +1089,7 @@
                     <h3 class="stat-title"><i class="fas fa-trophy"></i> Best Bowling</h3>
                     <img src="<?php echo $league_highest_wicket_taker->player_image; ?>" alt="<?php echo $league_highest_wicket_taker->playerName; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_highest_wicket_taker->playerName; ?></p>
-                    <div class="stat-circle-container">
-                        <svg class="stat-circle" viewBox="0 0 36 36">
-                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
-                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-best-bowling)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_highest_wicket_taker->wickets / 7) * 100, 100); ?>"></circle>
-                        </svg>
-                        <span class="stat-circle-text"><?php echo $league_highest_wicket_taker->wickets; ?>/<?php echo $league_highest_wicket_taker->given_runs; ?></span>
-                    </div>
-                    <p class="stat-team"><?php echo $league_highest_wicket_taker->team_name; ?></p>
+                    <p class="stat-team"><?php echo $league_highest_wicket_taker->wickets; ?>/<?php echo $league_highest_wicket_taker->given_runs; ?> | <?php echo $league_highest_wicket_taker->team_name; ?></p>
                     <a href="<?php echo base_url();?>TournamentController/league_top_ten_bowler_of_match/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
                     </a>
@@ -1114,14 +1105,7 @@
                     <h3 class="stat-title"><i class="fas fa-users"></i> Highest Team Score</h3>
                     <img src="<?php echo $league_highest_team_score->team_image; ?>" alt="<?php echo $league_highest_team_score->team_name; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_highest_team_score->team_name; ?></p>
-                    <div class="stat-circle-container">
-                        <svg class="stat-circle" viewBox="0 0 36 36">
-                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
-                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-team-high)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min(($league_highest_team_score->highest_team_score / 400) * 100, 100); ?>"></circle>
-                        </svg>
-                        <span class="stat-circle-text"><?php echo $league_highest_team_score->highest_team_score; ?>/<?php echo $league_highest_team_score->wickets; ?></span>
-                    </div>
-                    <p class="stat-team"><?php echo $league_highest_team_score->t_overs; ?> overs</p>
+                    <p class="stat-team"><?php echo $league_highest_team_score->highest_team_score; ?>/<?php echo $league_highest_team_score->wickets; ?> (<?php echo $league_highest_team_score->t_overs; ?> overs)</p>
                     <a href="<?php echo base_url();?>TournamentController/league_top_five_team_score/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
                     </a>
@@ -1137,14 +1121,7 @@
                     <h3 class="stat-title"><i class="fas fa-users"></i> Lowest Team Score</h3>
                     <img src="<?php echo $league_lowest_team_score->team_image; ?>" alt="<?php echo $league_lowest_team_score->team_name; ?>" class="stat-img">
                     <p class="stat-value"><?php echo $league_lowest_team_score->team_name; ?></p>
-                    <div class="stat-circle-container">
-                        <svg class="stat-circle" viewBox="0 0 36 36">
-                            <circle class="stat-circle-bg" cx="18" cy="18" r="16"></circle>
-                            <circle class="stat-circle-progress" cx="18" cy="18" r="16" stroke="var(--color-team-low)" stroke-dasharray="100" stroke-dashoffset="<?php echo 100 - min((100 - ($league_lowest_team_score->highest_team_score / 400) * 100), 100); ?>"></circle>
-                        </svg>
-                        <span class="stat-circle-text"><?php echo $league_lowest_team_score->highest_team_score; ?>/<?php echo $league_lowest_team_score->wickets; ?></span>
-                    </div>
-                    <p class="stat-team"><?php echo $league_lowest_team_score->t_overs; ?> overs</p>
+                    <p class="stat-team"><?php echo $league_lowest_team_score->highest_team_score; ?>/<?php echo $league_lowest_team_score->wickets; ?> (<?php echo $league_lowest_team_score->t_overs; ?> overs)</p>
                     <a href="<?php echo base_url();?>TournamentController/league_lowest_five_score/<?php echo $league['league_id'];?>" class="see-more">
                         <i class="fas fa-arrow-right"></i> See more
                     </a>
@@ -1170,12 +1147,9 @@
                     <h3 class="match-title"><?php echo $schedule->team_one_name; ?> vs <?php echo $schedule->team_two_name; ?></h3>
                     <div class="match-details">
                         <div class="match-detail">
-                            <strong><i class="far fa-calendar"></i> Date:</strong> <?php echo date("d M Y", strtotime($schedule->match_date)); ?>
-                       |
-                            <strong><i class="far fa-clock"></i> Time:</strong> <?php echo $schedule->match_time; ?>
-                      |
-                            <strong><i class="fas fa-map-marker-alt"></i> Venue:</strong> <?php echo $schedule->location; ?>
-                        |
+                            <strong><i class="far fa-calendar"></i> Date:</strong> <?php echo date("d M Y", strtotime($schedule->match_date)); ?> |
+                            <strong><i class="far fa-clock"></i> Time:</strong> <?php echo $schedule->match_time; ?> |
+                            <strong><i class="fas fa-map-marker-alt"></i> Venue:</strong> <?php echo $schedule->location; ?> |
                             <strong><i class="fas fa-baseball-ball"></i> Overs:</strong> <?php echo $league['overs']; ?>
                         </div>
                     </div>
@@ -1200,12 +1174,9 @@
                             <div class="result-league-info">
                                 <?php echo $league['league_name']; ?>
                                 <span class="result-match-type"><?php echo $league['match_type']; ?> |
-                             
                                 <i class="far fa-calendar-alt"></i> <?php echo date("d M Y", strtotime($match->match_date)); ?> |
                                 <i class="far fa-clock"></i> <?php echo $match->match_time; ?>
                             </div>
-                       
-                           
                         </div>
                         <div class="result-teams-scores">
                             <div class="result-team-score">
@@ -1323,53 +1294,59 @@
                             </h3>
                         </div>
                         <div class="player-stats">
-                            <!-- Top Batsman -->
-                            <div class="player-stat">
-                                <h4 class="player-stat-title">Top Batsman</h4>
-                                <?php if (isset($team['top_scorer']) && !empty($team['top_scorer'])): ?>
-                                    <?php $batsman_image = isset($team['top_scorer']['player_image']) ? $team['top_scorer']['player_image'] : base_url('assets/images/default-player.png'); ?>
-                                    <img src="<?php echo $batsman_image; ?>" alt="Top Batsman" class="player-stat-img">
-                                    <p class="player-stat-value"><?php echo $team['top_scorer']['player_name'] ?? 'N/A'; ?></p>
-                                    <p class="player-stat-value"><strong><?php echo $team['top_scorer']['total_runs'] ?? '0'; ?> runs</strong></p>
-                                <?php else: ?>
-                                    <p class="stat-value">No data available</p>
-                                <?php endif; ?>
+                            <!-- Row 1: Top Batsman and Highest Score -->
+                            <div class="player-stat-row">
+                                <!-- Top Batsman -->
+                                <div class="player-stat">
+                                    <h4 class="player-stat-title">Top Batsman</h4>
+                                    <?php if (isset($team['top_scorer']) && !empty($team['top_scorer'])): ?>
+                                        <?php $batsman_image = isset($team['top_scorer']['player_image']) ? $team['top_scorer']['player_image'] : base_url('assets/images/default-player.png'); ?>
+                                        <img src="<?php echo $batsman_image; ?>" alt="Top Batsman" class="player-stat-img">
+                                        <p class="player-stat-value"><?php echo $team['top_scorer']['player_name'] ?? 'N/A'; ?></p>
+                                        <p class="player-stat-value"><strong><?php echo $team['top_scorer']['total_runs'] ?? '0'; ?> runs</strong></p>
+                                    <?php else: ?>
+                                        <p class="stat-value">No data available</p>
+                                    <?php endif; ?>
+                                </div>
+                                <!-- Highest Score -->
+                                <div class="player-stat">
+                                    <h4 class="player-stat-title">Highest Score</h4>
+                                    <?php if (isset($team['highest_individual_score']) && !empty($team['highest_individual_score'])): ?>
+                                        <?php $hs_image = isset($team['highest_individual_score']['player_image']) ? $team['highest_individual_score']['player_image'] : base_url('assets/images/default-player.png'); ?>
+                                        <img src="<?php echo $hs_image; ?>" alt="Highest Score" class="player-stat-img">
+                                        <p class="player-stat-value"><?php echo $team['highest_individual_score']['player_name'] ?? 'N/A'; ?></p>
+                                        <p class="player-stat-value"><strong><?php echo $team['highest_individual_score']['runs'] ?? '0'; ?> runs</strong></p>
+                                    <?php else: ?>
+                                        <p class="stat-value">No data available</p>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                            <!-- Highest Score -->
-                            <div class="player-stat">
-                                <h4 class="player-stat-title">Highest Score</h4>
-                                <?php if (isset($team['highest_individual_score']) && !empty($team['highest_individual_score'])): ?>
-                                    <?php $hs_image = isset($team['highest_individual_score']['player_image']) ? $team['highest_individual_score']['player_image'] : base_url('assets/images/default-player.png'); ?>
-                                    <img src="<?php echo $hs_image; ?>" alt="Highest Score" class="player-stat-img">
-                                    <p class="player-stat-value"><?php echo $team['highest_individual_score']['player_name'] ?? 'N/A'; ?></p>
-                                    <p class="player-stat-value"><strong><?php echo $team['highest_individual_score']['runs'] ?? '0'; ?> runs</strong></p>
-                                <?php else: ?>
-                                    <p class="stat-value">No data available</p>
-                                <?php endif; ?>
-                            </div>
-                            <!-- Top Bowler -->
-                            <div class="player-stat">
-                                <h4 class="player-stat-title">Top Bowler</h4>
-                                <?php if (isset($team['top_bowler']) && !empty($team['top_bowler'])): ?>
-                                    <?php $bowler_image = isset($team['top_bowler_image']) ? $team['top_bowler_image'] : base_url('assets/images/default-player.png'); ?>
-                                    <img src="<?php echo $bowler_image; ?>" alt="Top Bowler" class="player-stat-img">
-                                    <p class="player-stat-value"><?php echo $team['top_bowler'] ?? 'N/A'; ?></p>
-                                    <p class="player-stat-value"><strong><?php echo $team['top_bowler_wickets'] ?? '0'; ?> wickets</strong></p>
-                                <?php else: ?>
-                                    <p class="stat-value">No data available</p>
-                                <?php endif; ?>
-                            </div>
-                            <!-- Best Bowling -->
-                            <div class="player-stat">
-                                <h4 class="player-stat-title">Best Bowling</h4>
-                                <?php if (isset($team['best_bowler']) && !empty($team['best_bowler'])): ?>
-                                    <?php $best_bowler_image = isset($team['best_bowling_image']) ? $team['best_bowling_image'] : base_url('assets/images/default-player.png'); ?>
-                                    <img src="<?php echo $best_bowler_image; ?>" alt="Best Bowling" class="player-stat-img">
-                                    <p class="player-stat-value"><?php echo $team['best_bowler'] ?? 'N/A'; ?></p>
-                                    <p class="player-stat-value"><strong><?php echo $team['best_bowling_figures'] ?? 'N/A'; ?></strong></p>
-                                <?php else: ?>
-                                    <p class="stat-value">No data available</p>
-                                <?php endif; ?>
+                            <!-- Row 2: Top Bowler and Best Bowling -->
+                            <div class="player-stat-row">
+                                <!-- Top Bowler -->
+                                <div class="player-stat">
+                                    <h4 class="player-stat-title">Top Bowler</h4>
+                                    <?php if (isset($team['top_bowler']) && !empty($team['top_bowler'])): ?>
+                                        <?php $bowler_image = isset($team['top_bowler_image']) ? $team['top_bowler_image'] : base_url('assets/images/default-player.png'); ?>
+                                        <img src="<?php echo $bowler_image; ?>" alt="Top Bowler" class="player-stat-img">
+                                        <p class="player-stat-value"><?php echo $team['top_bowler'] ?? 'N/A'; ?></p>
+                                        <p class="player-stat-value"><strong><?php echo $team['top_bowler_wickets'] ?? '0'; ?> wickets</strong></p>
+                                    <?php else: ?>
+                                        <p class="stat-value">No data available</p>
+                                    <?php endif; ?>
+                                </div>
+                                <!-- Best Bowling -->
+                                <div class="player-stat">
+                                    <h4 class="player-stat-title">Best Bowling</h4>
+                                    <?php if (isset($team['best_bowler']) && !empty($team['best_bowler'])): ?>
+                                        <?php $best_bowler_image = isset($team['best_bowling_image']) ? $team['best_bowling_image'] : base_url('assets/images/default-player.png'); ?>
+                                        <img src="<?php echo $best_bowler_image; ?>" alt="Best Bowling" class="player-stat-img">
+                                        <p class="player-stat-value"><?php echo $team['best_bowler'] ?? 'N/A'; ?></p>
+                                        <p class="player-stat-value"><strong><?php echo $team['best_bowling_figures'] ?? 'N/A'; ?></strong></p>
+                                    <?php else: ?>
+                                        <p class="stat-value">No data available</p>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1423,7 +1400,6 @@
     </footer>
 
     <script>
-        // Enhanced JavaScript for better interactivity
         document.addEventListener('DOMContentLoaded', function() {
             // Navigation handling
             const navItems = document.querySelectorAll('.footer__link, .nav-link');
@@ -1433,7 +1409,7 @@
                 let current = '';
                 sections.forEach(section => {
                     const sectionTop = section.offsetTop;
-                    if (pageYOffset >= (sectionTop - 150)) {
+                    if (window.scrollY >= (sectionTop - 150)) {
                         current = section.getAttribute('id');
                     }
                 });
@@ -1466,6 +1442,7 @@
                 });
             });
             
+            // Responsive navigation
             function checkScreenSize() {
                 const footer = document.querySelector('.footer');
                 const horizontalNav = document.querySelector('.nav-scroll');
@@ -1482,17 +1459,21 @@
             window.addEventListener('resize', checkScreenSize);
             checkScreenSize();
             
-            const cards = document.querySelectorAll('.stat-card, .match-card, .result-card, .team-card');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    card.style.transform = 'translateY(-5px)';
-                    card.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.12)';
+            // Intersection Observer for subtle fade-in
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
                 });
-                
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'translateY(0)';
-                    card.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
-                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.stats-grid, .match-card, .result-card, .team-card, .points-section, .rules-list').forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(15px)';
+                section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(section);
             });
 
             // Toggle Points Table Guide
