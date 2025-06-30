@@ -58,17 +58,28 @@ return $result;
        
     }
 
-    public function add_match_player($data)
-    {
 
-        $this->db->where($data);
-        $query=$this->db->get('match_player');
-        
-                if($query->num_rows()==0)
-                {
-         $this->db->insert('match_player', $data);
-     }
-    }
+public function add_match_player($data, $match_id)
+{
+    // First delete any existing MOTM for this match
+    $this->db->where('match_id', $match_id);
+    $this->db->delete('match_player');
+    
+    // Insert new MOTM
+    return $this->db->insert('match_player', $data);
+}
+
+public function get_match_player($match_id)
+{
+    $this->db->select('p.*, mp.selected_at');
+    $this->db->from('match_player mp');
+    $this->db->join('players p', 'mp.player_id = p.player_id');
+    $this->db->where('mp.match_id', $match_id);
+    $query = $this->db->get();
+    
+    return $query->row_array();
+}
+    
 
     public function searchTeams($email) {
               $this->db->select('add_team.team_name, add_team.team_id');

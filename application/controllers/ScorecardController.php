@@ -490,6 +490,7 @@ public function edit_score() {
             $player_id = $this->input->post('player_id');
          //   echo $player_id;
             $batting_order = $this->input->post('batting_order');
+          //  var_dump(  $this->input->post('batting_order'));
             $runs = $this->input->post('runs');
             $balls = $this->input->post('balls');
             $fours = $this->input->post('fours');
@@ -514,7 +515,7 @@ public function edit_score() {
             if($batting_order==1)
             {
  $data=$this->Scorecard_model->get_toss(array('user_id'=>$user_id,'match_id'=>$match_id),'toss');
-                var_dump($data, $match_id); 
+               // var_dump($data, $match_id); 
 
                 
                 $team1=$data['team_one_id'];

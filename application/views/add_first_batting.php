@@ -151,56 +151,98 @@
 </head>
 <body>
     <?php 
-    try {
-        foreach($toss_winner as $toss_win) {
-            $wintossname = $toss_win->team_name ?? 'Unknown Team';
-        } 
-        $wintossid = $toss_id['toss_winner'] ?? 0;
-        $batting_first = $toss_id['bat_first'] ?? 0;
-        $bowl_first = $toss_id['bowl_first'] ?? 0;
-        $decision = $toss_id['decision'] ?? 'bat/bowl';
+    // Enable error reporting for debugging
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
-        $totalExtras = "Click on Add extras to add it";
-        if (!empty($get_extra1)) {
-            foreach($get_extra1 as $t_extra) {
-                $totalExtras = ($t_extra->wides ?? 0) + 
-                             ($t_extra->no_balls ?? 0) + 
-                             ($t_extra->byes ?? 0) + 
-                             ($t_extra->leg_byes ?? 0);
+    // Initialize variables with defaults to prevent undefined errors
+    $wintossname = 'Unknown Team';
+    $wintossid = 0;
+    $batting_first = 0;
+    $bowl_first = 0;
+    $decision = 'bat/bowl';
+    $totalExtras = 'Click on Add extras to add it';
+    $total_score = 'Click on Add extras to add it';
+    $wickets = 0;
+    $t_overs = 0;
+    $match_id = isset($match_id) ? $match_id : '';
+    $team_one = isset($team_one) ? $team_one : [];
+    $team_two = isset($team_two) ? $team_two : [];
+    $bat_first = isset($bat_first) ? $bat_first : [];
+    $get_extra1 = isset($get_extra1) ? $get_extra1 : [];
+    $all_score = isset($all_score) ? $all_score : [];
+    $player_info = isset($player_info) ? $player_info : [];
+    $bowler_info = isset($bowler_info) ? $bowler_info : [];
+    $toss_winner = isset($toss_winner) ? $toss_winner : [];
+    $toss_id = isset($toss_id) ? $toss_id : [];
+
+    try {
+        // Process toss winner
+        if (!empty($toss_winner) && is_array($toss_winner)) {
+            foreach ($toss_winner as $toss_win) {
+                $wintossname = isset($toss_win->team_name) ? $toss_win->team_name : 'Unknown Team';
+            }
+        } else {
+            error_log('Toss winner data is empty or not an array');
+        }
+
+        // Process toss details
+        $wintossid = isset($toss_id['toss_winner']) ? $toss_id['toss_winner'] : 0;
+        $batting_first = isset($toss_id['bat_first']) ? $toss_id['bat_first'] : 0;
+        $bowl_first = isset($toss_id['bowl_first']) ? $toss_id['bowl_first'] : 0;
+        $decision = isset($toss_id['decision']) ? $toss_id['decision'] : 'bat/bowl';
+
+        // Calculate total extras
+        if (!empty($get_extra1) && is_array($get_extra1)) {
+            foreach ($get_extra1 as $t_extra) {
+                $totalExtras = (isset($t_extra->wides) ? $t_extra->wides : 0) + 
+                               (isset($t_extra->no_balls) ? $t_extra->no_balls : 0) + 
+                               (isset($t_extra->byes) ? $t_extra->byes : 0) + 
+                               (isset($t_extra->leg_byes) ? $t_extra->leg_byes : 0);
             }
         }
 
-        $total_score = "Click on Add extras to add it";
-        $wickets = 0;
-        $t_overs = 0;
-        if (!empty($all_score)) {
-            foreach($all_score as $total) {
-                $total_score = $total->total_runs ?? 0;
-                $wickets = $total->wickets ?? 0;
-                $t_overs = $total->t_overs ?? 0;
+        // Calculate total score
+        if (!empty($all_score) && is_array($all_score)) {
+            foreach ($all_score as $total) {
+                $total_score = isset($total->total_runs) ? $total->total_runs : 0;
+                $wickets = isset($total->wickets) ? $total->wickets : 0;
+                $t_overs = isset($total->t_overs) ? $total->t_overs : 0;
             }
         }
     } catch (Exception $e) {
         echo "<div class='alert alert-danger'>Error loading scorecard data: " . htmlspecialchars($e->getMessage()) . "</div>";
+        error_log('Scorecard error: ' . $e->getMessage());
     }
     ?>
 
     <div class="container">
         <div class="team-info">
             <div class="d-flex justify-content-center align-items-center">
-                <?php foreach($team_one as $t_one) { ?>
-                    <div class="team-card text-center mx-1">
-                        <img src="<?php echo htmlspecialchars($t_one->image_path ?? ''); ?>" alt="Team 1" class="team-logo">
-                        <div class="team-name mt-1"><?php echo htmlspecialchars($t_one->team_name ?? 'Team 1'); ?></div>
-                    </div>
-                <?php } ?>
+                <?php 
+                if (!empty($team_one) && is_array($team_one)) {
+                    foreach ($team_one as $t_one) { ?>
+                        <div class="team-card text-center mx-1">
+                            <img src="<?php echo htmlspecialchars($t_one->image_path ?? ''); ?>" alt="Team 1" class="team-logo">
+                            <div class="team-name mt-1"><?php echo htmlspecialchars($t_one->team_name ?? 'Team 1'); ?></div>
+                        </div>
+                    <?php }
+                } else {
+                    echo '<div class="team-card text-center mx-1"><div class="team-name mt-1">Team 1 (Not Set)</div></div>';
+                } ?>
                 <div class="vs-badge mx-2"><span>VS</span></div>
-                <?php foreach($team_two as $t_two) { ?>
-                    <div class="team-card text-center mx-1">
-                        <img src="<?php echo htmlspecialchars($t_two->image_path ?? ''); ?>" alt="Team 2" class="team-logo">
-                        <div class="team-name mt-1"><?php echo htmlspecialchars($t_two->team_name ?? 'Team 2'); ?></div>
-                    </div>
-                <?php } ?>
+                <?php 
+                if (!empty($team_two) && is_array($team_two)) {
+                    foreach ($team_two as $t_two) { ?>
+                        <div class="team-card text-center mx-1">
+                            <img src="<?php echo htmlspecialchars($t_two->image_path ?? ''); ?>" alt="Team 2" class="team-logo">
+                            <div class="team-name mt-1"><?php echo htmlspecialchars($t_two->team_name ?? 'Team 2'); ?></div>
+                        </div>
+                    <?php }
+                } else {
+                    echo '<div class="team-card text-center mx-1"><div class="team-name mt-1">Team 2 (Not Set)</div></div>';
+                } ?>
             </div>
             <div class="toss-result text-center mt-3">
                 <div class="toss-badge">
@@ -225,12 +267,12 @@
                 </thead>
                 <tbody>
                     <?php 
-                    if (empty($bat_first)) {
+                    if (empty($bat_first) || !is_array($bat_first)) {
                         echo '<tr><td colspan="7" class="text-center">Add batting record of first innings</td></tr>';
                     } else {
                         try {
-                            foreach($bat_first as $bat) {
-                                $strike_rate = ($bat->balls > 0) ? round(($bat->runs / $bat->balls) * 100, 2) : 0;
+                            foreach ($bat_first as $bat) {
+                                $strike_rate = (isset($bat->balls) && $bat->balls > 0) ? round(($bat->runs / $bat->balls) * 100, 2) : 0;
                                 ?>
                                 <tr>
                                     <td class="text-start">
@@ -238,7 +280,7 @@
                                         <div class="player-dismissal">
                                             <?php 
                                             echo htmlspecialchars($bat->dismissal ?? ''); 
-                                            if ($bat->dismissal && $bat->dismissal !== 'Not Out' && $bat->dismissal !== 'Run Out') {
+                                            if (isset($bat->dismissal) && $bat->dismissal && $bat->dismissal !== 'Not Out' && $bat->dismissal !== 'Run Out') {
                                                 echo ", " . htmlspecialchars($bat->bowler_name ?? 'Unknown Bowler');
                                             }
                                             ?>
@@ -277,23 +319,26 @@
                             <?php }
                         } catch (Exception $e) {
                             echo "<tr><td colspan='7' class='text-danger'>Error: " . htmlspecialchars($e->getMessage()) . "</td></tr>";
+                            error_log('Batting records error: ' . $e->getMessage());
                         }
                     } ?>
                     <tr>
                         <td colspan="2"><strong>Extras</strong></td>
                         <td colspan="4"><strong><?php echo htmlspecialchars($totalExtras); ?></strong></td>
                         <td>
-                            <?php if(!empty($get_extra1)) { foreach($get_extra1 as $t_extra) {?>
-                                <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#editExtrasModal"
-                                    data-match-id="<?php echo htmlspecialchars($match_id ?? ''); ?>"
-                                    data-batting-order="<?php echo htmlspecialchars($t_extra->batting_order ?? ''); ?>"
-                                    data-wides="<?php echo htmlspecialchars($t_extra->wides ?? ''); ?>"
-                                    data-no-balls="<?php echo htmlspecialchars($t_extra->no_balls ?? ''); ?>"
-                                    data-byes="<?php echo htmlspecialchars($t_extra->byes ?? ''); ?>"
-                                    data-leg-byes="<?php echo htmlspecialchars($t_extra->leg_byes ?? ''); ?>">
-                                    Edit Extras
-                                </button>
-                            <?php } } else { ?>
+                            <?php if (!empty($get_extra1) && is_array($get_extra1)) {
+                                foreach ($get_extra1 as $t_extra) { ?>
+                                    <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#editExtrasModal"
+                                        data-match-id="<?php echo htmlspecialchars($match_id ?? ''); ?>"
+                                        data-batting-order="<?php echo htmlspecialchars($t_extra->batting_order ?? ''); ?>"
+                                        data-wides="<?php echo htmlspecialchars($t_extra->wides ?? ''); ?>"
+                                        data-no-balls="<?php echo htmlspecialchars($t_extra->no_balls ?? ''); ?>"
+                                        data-byes="<?php echo htmlspecialchars($t_extra->byes ?? ''); ?>"
+                                        data-leg-byes="<?php echo htmlspecialchars($t_extra->leg_byes ?? ''); ?>">
+                                        Edit Extras
+                                    </button>
+                                <?php }
+                            } else { ?>
                                 <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#extrasModal">Add Extras</button>
                             <?php } ?>
                         </td>
@@ -303,7 +348,7 @@
                         <td colspan="4">
                             <strong>
                                 <?php 
-                                if(empty($all_score)) { 
+                                if (empty($all_score) || !is_array($all_score)) { 
                                     echo "Add total runs and wickets"; 
                                 } else { 
                                     echo htmlspecialchars($total_score) . "/" . htmlspecialchars($wickets) . " in " . htmlspecialchars($t_overs) . " Overs";
@@ -312,16 +357,18 @@
                             </strong>
                         </td>
                         <td>
-                            <?php if(!empty($all_score)) { foreach($all_score as $t_score) { ?>
-                                <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#editTotalScoreModal"
-                                    data-total-runs="<?php echo htmlspecialchars($t_score->total_runs ?? ''); ?>"
-                                    data-wickets="<?php echo htmlspecialchars($t_score->wickets ?? ''); ?>"
-                                    data-match-id="<?php echo htmlspecialchars($t_score->match_id ?? ''); ?>"
-                                    data-t-overs="<?php echo htmlspecialchars($t_score->t_overs ?? ''); ?>"
-                                    data-batting-order="<?php echo htmlspecialchars($t_score->batting_order ?? ''); ?>">
-                                    Edit Total
-                                </button>
-                            <?php } } else { ?>
+                            <?php if (!empty($all_score) && is_array($all_score)) {
+                                foreach ($all_score as $t_score) { ?>
+                                    <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#editTotalScoreModal"
+                                        data-total-runs="<?php echo htmlspecialchars($t_score->total_runs ?? ''); ?>"
+                                        data-wickets="<?php echo htmlspecialchars($t_score->wickets ?? ''); ?>"
+                                        data-match-id="<?php echo htmlspecialchars($t_score->match_id ?? ''); ?>"
+                                        data-t-overs="<?php echo htmlspecialchars($t_score->t_overs ?? ''); ?>"
+                                        data-batting-order="<?php echo htmlspecialchars($t_score->batting_order ?? ''); ?>">
+                                        Edit Total
+                                    </button>
+                                <?php }
+                            } else { ?>
                                 <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#totalRunsModal">Add Total</button>
                             <?php } ?>
                         </td>
@@ -332,7 +379,7 @@
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scorecardModal">
                     <i class="bi bi-plus-circle-fill"></i> Add Player
                 </button>
-                <a href="<?php echo base_url();?>Welcome/scorecard_links/<?php echo htmlspecialchars($bowl_first ?? ''); ?>/<?php echo htmlspecialchars($batting_first ?? ''); ?>/<?php echo htmlspecialchars($match_id ?? ''); ?>">
+                <a href="<?php echo base_url(); ?>Welcome/scorecard_links/<?php echo htmlspecialchars($bowl_first ?? ''); ?>/<?php echo htmlspecialchars($batting_first ?? ''); ?>/<?php echo htmlspecialchars($match_id ?? ''); ?>">
                     <button class="btn btn-success next-btn">
                         <i class="bi bi-arrow-right-circle-fill"></i> Next Inning
                     </button>
@@ -350,7 +397,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo base_url();?>/ScorecardController/insert_extras" method="POST" id="extrasForm">
+                    <form action="<?php echo base_url(); ?>/ScorecardController/insert_extras" method="POST" id="extrasForm">
                         <input type="hidden" value="<?php echo htmlspecialchars($match_id ?? ''); ?>" name="match_id">
                         <input type="hidden" value="<?php echo htmlspecialchars($batting_first ?? ''); ?>" name="batting_team_id">
                         <input type="hidden" value="1" name="batting_order">
@@ -389,7 +436,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo base_url();?>/ScorecardController/insert_total_score" method="POST" id="totalRunsForm">
+                    <form action="<?php echo base_url(); ?>/ScorecardController/insert_total_score" method="POST" id="totalRunsForm">
                         <input type="hidden" value="<?php echo htmlspecialchars($match_id ?? ''); ?>" name="match_id">
                         <input type="hidden" value="<?php echo htmlspecialchars($batting_first ?? ''); ?>" name="batting_team_id">
                         <input type="hidden" value="1" name="batting_order">
@@ -424,7 +471,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo base_url();?>/ScorecardController/insert_batting" method="POST" id="scorecardForm" onsubmit="return validateScorecard()">
+                    <form action="<?php echo base_url(); ?>/ScorecardController/insert_batting" method="POST" id="scorecardForm" onsubmit="return validateScorecard()">
                         <input type="hidden" value="<?php echo htmlspecialchars($match_id ?? ''); ?>" name="match_id">
                         <input type="hidden" value="<?php echo htmlspecialchars($wintossid ?? ''); ?>" name="team_one_id">
                         <input type="hidden" value="<?php echo htmlspecialchars($batting_first ?? ''); ?>" name="batting_team">
@@ -434,11 +481,16 @@
                             <label for="player-name" class="form-label required-field">Player Name</label>
                             <select class="form-select" id="player-name" name="player_id" required>
                                 <option value="" disabled selected>Select Player</option>
-                                <?php foreach($player_info as $player_name) { ?>
-                                    <option value="<?php echo htmlspecialchars($player_name->player_id ?? ''); ?>">
-                                        <?php echo htmlspecialchars($player_name->playerName ?? ''); ?>
-                                    </option>
-                                <?php } ?>
+                                <?php 
+                                if (!empty($player_info) && is_array($player_info)) {
+                                    foreach ($player_info as $player_name) { ?>
+                                        <option value="<?php echo htmlspecialchars($player_name->player_id ?? ''); ?>">
+                                            <?php echo htmlspecialchars($player_name->playerName ?? 'Unknown Player'); ?>
+                                        </option>
+                                    <?php }
+                                } else {
+                                    echo '<option value="" disabled>No players available</option>';
+                                } ?>
                             </select>
                         </div>
                         <div class="row">
@@ -472,17 +524,21 @@
                                 <option value="Stumped">Stumped</option>
                                 <option value="Hit Wicket">Hit Wicket</option>
                             </select>
-                            </select>
                         </div>
                         <div class="mb-3" id="bowler-section">
                             <label for="bowler-name" class="form-label required-field">Bowler Name</label>
                             <select class="form-select" id="bowler-name" name="bowler_id">
                                 <option value="" disabled selected>Select Bowler</option>
-                                <?php foreach($bowler_info as $bowler) { ?>
-                                    <option value="<?php echo htmlspecialchars($bowler->player_id ?? ''); ?>">
-                                        <?php echo htmlspecialchars($bowler->playerName ?? ''); ?>
-                                    </option>
-                                <?php } ?>
+                                <?php 
+                                if (!empty($bowler_info) && is_array($bowler_info)) {
+                                    foreach ($bowler_info as $bowler) { ?>
+                                        <option value="<?php echo htmlspecialchars($bowler->player_id ?? ''); ?>">
+                                            <?php echo htmlspecialchars($bowler->playerName ?? 'Unknown Bowler'); ?>
+                                        </option>
+                                    <?php }
+                                } else {
+                                    echo '<option value="" disabled>No bowlers available</option>';
+                                } ?>
                             </select>
                         </div>
                         <div class="modal-footer">
@@ -504,10 +560,26 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo base_url();?>/ScorecardController/edit_score" method="POST" id="editScorecardForm" onsubmit="return validateEditScorecard()">
+                    <form action="<?php echo base_url(); ?>/ScorecardController/edit_score" method="POST" id="editScorecardForm" onsubmit="return validateEditScorecard()">
                         <input type="hidden" id="edit-match-id" name="match_id" value="">
-                        <input type="hidden" id="edit-player-id" name="player_id">
-                        <input type="hidden" value="1" name="batting_order">
+                         <input type="hidden" value="1" name="batting_order">
+                        <div class="mb-3">
+                            <label for="edit-player-name" class="form-label required-field">Player Name</label>
+                            <select class="form-select" id="edit-player-name" name="player_id" disabled required>
+                                <option value="" disabled>Select Player</option>
+                                <?php 
+                                if (!empty($player_info) && is_array($player_info)) {
+                                    foreach ($player_info as $player_name) { ?>
+                                        <option value="<?php echo htmlspecialchars($player_name->player_id ?? ''); ?>">
+                                            <?php echo htmlspecialchars($player_name->playerName ?? 'Unknown Player'); ?>
+                                        </option>
+                                    <?php }
+                                } else {
+                                    echo '<option value="" disabled>No players available</option>';
+                                } ?>
+                            </select>
+                            <input type="hidden" id="edit-player-id" name="player_id">
+                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="edit-runs" class="form-label required-field">Runs</label>
@@ -544,11 +616,16 @@
                             <label for="edit-bowler-name" class="form-label required-field">Bowler Name</label>
                             <select class="form-select" id="edit-bowler-name" name="bowler_id">
                                 <option value="" disabled>Select Bowler</option>
-                                <?php foreach($bowler_info as $bowler) { ?>
-                                    <option value="<?php echo htmlspecialchars($bowler->player_id ?? ''); ?>">
-                                        <?php echo htmlspecialchars($bowler->playerName ?? ''); ?>
-                                    </option>
-                                <?php } ?>
+                                <?php 
+                                if (!empty($bowler_info) && is_array($bowler_info)) {
+                                    foreach ($bowler_info as $bowler) { ?>
+                                        <option value="<?php echo htmlspecialchars($bowler->player_id ?? ''); ?>">
+                                            <?php echo htmlspecialchars($bowler->playerName ?? 'Unknown Bowler'); ?>
+                                        </option>
+                                    <?php }
+                                } else {
+                                    echo '<option value="" disabled>No bowlers available</option>';
+                                } ?>
                             </select>
                         </div>
                         <div class="modal-footer">
@@ -570,7 +647,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo base_url();?>/ScorecardController/edit_extra" method="POST" id="editExtrasForm">
+                    <form action="<?php echo base_url(); ?>/ScorecardController/edit_extra" method="POST" id="editExtrasForm">
                         <input type="hidden" id="edit-extras-match-id" name="match_id">
                         <input type="hidden" value="1" name="batting_order">
                         <div class="mb-3">
@@ -579,7 +656,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="edit-no-balls" class="form-label">No Balls</label>
-                            <input type="number" class="form-control" id="edit-no-balls" name="no_balls" min="0" required>
+                        <input type="number" class="form-control" id="edit-no-balls" name="no_balls" min="0" required>
                         </div>
                         <div class="mb-3">
                             <label for="edit-byes" class="form-label">Byes</label>
@@ -608,7 +685,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editTotalScoreForm" method="POST" action="<?php echo base_url();?>/ScorecardController/edit_total_score">
+                    <form id="editTotalScoreForm" method="POST" action="<?php echo base_url(); ?>/ScorecardController/edit_total_score">
                         <input type="hidden" id="edit-total-match-id" name="match_id">
                         <input type="hidden" value="1" name="batting_order">
                         <div class="mb-3">
@@ -677,9 +754,16 @@
             const dismissal = document.getElementById('dismissal').value;
             const bowler = document.getElementById('bowler-name');
             const matchId = document.querySelector('#scorecardForm input[name="match_id"]').value;
+            const playerId = document.getElementById('player-name').value;
 
             if (!matchId) {
                 alert('Match ID is missing. Please try again.');
+                console.error('Match ID not found in scorecardForm');
+                return false;
+            }
+            if (!playerId) {
+                alert('Please select a player.');
+                console.error('Player ID not selected in scorecardForm');
                 return false;
             }
             const boundaryRuns = (fours * 4) + (sixes * 6);
@@ -707,10 +791,16 @@
             const dismissal = document.getElementById('edit-dismissal').value;
             const bowler = document.getElementById('edit-bowler-name');
             const matchId = document.getElementById('edit-match-id').value;
+            const playerId = document.getElementById('edit-player-id').value;
 
             if (!matchId) {
                 alert('Match ID is missing. Please try again.');
                 console.error('Match ID not found in editScorecardForm');
+                return false;
+            }
+            if (!playerId) {
+                alert('Player ID is missing. Please try again.');
+                console.error('Player ID not found in editScorecardForm');
                 return false;
             }
             const boundaryRuns = (fours * 4) + (sixes * 6);
@@ -745,14 +835,26 @@
                     'dismissal': 'dismissal',
                     'bowler-id': 'bowler_id'
                 };
+
                 // Explicitly set match_id
                 const matchIdInput = document.getElementById('edit-match-id');
                 matchIdInput.value = matchId;
                 if (!matchId) {
                     console.error('Match ID is missing or empty in editScorecardModal');
                 }
+
+                // Set player_id in both hidden input and select element
+                const playerId = button.getAttribute('data-player-id') || '';
+                document.getElementById('edit-player-id').value = playerId;
+                const playerSelect = document.getElementById('edit-player-name');
+                playerSelect.value = playerId;
+                if (!playerId) {
+                    console.error('Player ID is missing or empty in editScorecardModal');
+                }
+
+                // Set other fields
                 Object.entries(fields).forEach(([id, attr]) => {
-                    if (id !== 'match-id') { // Skip match-id as it's handled separately
+                    if (id !== 'match-id' && id !== 'player-id') {
                         const value = button.getAttribute(`data-${attr}`) || '';
                         const element = document.getElementById(`edit-${id}`);
                         if (element.tagName === 'SELECT') {
@@ -762,6 +864,7 @@
                         }
                     }
                 });
+
                 // Trigger change event to update bowler section visibility
                 const dismissalSelect = document.getElementById('edit-dismissal');
                 dismissalSelect.dispatchEvent(new Event('change'));

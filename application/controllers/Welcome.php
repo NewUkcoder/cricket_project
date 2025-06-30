@@ -140,6 +140,11 @@ class Welcome extends CI_Controller {
             $data['two_team_player'] = $this->Team_model->two_team_player($team1, $team2);
             $data['player_of_match'] = $this->Player_model->player_of_match($match_id);
             $data['match_id'] = $match_id;
+             $data['first_extra']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
+             $data['second_extra']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
+              $data['first_batting']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id));
+             // var_dump( $data['first_batting']); 
+               $data['second_batting']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
 
             $this->load->view('header');
             $this->load->view('scorecard_links', $data);
@@ -175,6 +180,11 @@ class Welcome extends CI_Controller {
                 $data['two_team_player'] = $this->Team_model->two_team_player($team1, $team2);
                 $data['player_of_match'] = $this->Player_model->player_of_match($match_id);
                 $data['match_id'] = $match_id;
+                  $data['first_extra']=$this->Scorecard_model->total_extra(array('batting_order'=>1,'match_id'=>$match_id),'extras');
+             $data['second_extra']=$this->Scorecard_model->total_extra(array('batting_order'=>2,'match_id'=>$match_id),'extras');
+              $data['first_batting']=$this->Scorecard_model->get_total_score(array('batting_order'=>1,'match_id'=>$match_id));
+             // var_dump( $data['first_batting']); 
+               $data['second_batting']=$this->Scorecard_model->get_total_score(array('batting_order'=>2,'match_id'=>$match_id),'batting_first');
 
                 $this->load->view('header');
                 $this->load->view('scorecard_links', $data);

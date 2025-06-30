@@ -52,6 +52,13 @@
             top: 0;
             z-index: 100;
             box-shadow: var(--box-shadow);
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+
+        .league-header::-webkit-scrollbar {
+            display: none;
         }
 
         .back-btn {
@@ -72,12 +79,12 @@
         }
 
         .league-title {
-            font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+            font-size: clamp(1rem, 4vw, 1.2rem);
             font-weight: 700;
-            margin-bottom: 6px;
-            white-space: normal;
-            overflow: visible;
-            text-overflow: clip;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .league-meta {
@@ -86,6 +93,7 @@
             flex-wrap: wrap;
             gap: 6px;
             justify-content: flex-start;
+            margin-top: 8px;
         }
 
         .league-meta span {
@@ -142,7 +150,7 @@
             position: fixed;
             bottom: 0;
             left: 0;
-            width: 100%;
+            widthups: nowrap;
             background: var(--card-bg);
             display: flex;
             justify-content: space-around;
@@ -813,6 +821,19 @@
 
         /* Mobile Optimizations */
         @media (max-width: 767px) {
+            .league-header {
+                padding: 10px;
+            }
+
+            .league-title {
+                font-size: clamp(0.9rem, 3.8vw, 1.1rem);
+                margin-bottom: 10px;
+            }
+
+            .league-meta {
+                margin-top: 10px;
+            }
+
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
@@ -942,11 +963,12 @@
             }
 
             .league-title {
-                font-size: clamp(1.5rem, 3vw, 1.7rem);
+                font-size: clamp(1.2rem, 3vw, 1.4rem);
             }
 
             .league-meta {
                 font-size: clamp(11px, 2.5vw, 12px);
+                margin-top: 10px;
             }
 
             .league-meta span {

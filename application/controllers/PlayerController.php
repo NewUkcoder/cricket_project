@@ -54,23 +54,36 @@ class PlayerController extends CI_Controller {
         }
     
 
-    public function add_match_player()
-    {
-        $player_id= $this->input->post('match_player');
-        $match_id= $this->input->post('match_id');
+public function add_match_player()
+{
+    $player_id = $this->input->post('match_player');
+    $match_id = $this->input->post('match_id');
 
-        $record=array('player_id'=> $player_id,'match_id'=>$match_id);
-         $this->Player_model->add_match_player($record);
-          echo "<script type='text/javascript'>
-            alert('Player of the Match is selected.');
-           
-          </script>";
-          redirect($this->agent->referrer());
-
-
-
-
+    if (empty($player_id)) {
+        $this->session->set_flashdata('error', 'Please select a player');
+        redirect($this->agent->referrer());
     }
+
+    // Check if player exists in either team for this match
+   
+
+    // Prepare data
+    $record = array(
+        'player_id' => $player_id,
+        'match_id' => $match_id
+    );
+
+    // Add or update MOTM
+    $result = $this->Player_model->add_match_player($record, $match_id);
+
+    if ($result) {
+        $this->session->set_flashdata('success', 'Player of the Match updated successfully');
+    } else {
+        $this->session->set_flashdata('error', 'Failed to update Player of the Match');
+    }
+
+    redirect($this->agent->referrer());
+}
 
    public function profile_player()
 {       
@@ -249,115 +262,131 @@ class PlayerController extends CI_Controller {
 
    
  public function update_player_picture($player_id) {
-        // Verify the logged-in user owns the player profile
-        $user_id = $this->session->userdata('user_id');
-        $player = $this->Player_model->get_player(['player_id' => $player_id]);
-        if (!$player || $player['user_id'] != $user_id) {
-            $this->session->set_flashdata('error', 'Unauthorized access.');
-            redirect('Welcome/landing_page');
-        }
-
-        // Configure upload parameters
-        $config['upload_path'] = './Uploads/';
-        $config['allowed_types'] = 'jpg|jpeg|png';
-        $config['max_size'] = 10000; // 
-      
-        $config['file_name'] = 'profile_' . $player_id . '_' . time();
-
-        $this->upload->initialize($config);
-
-        // Check if a file is uploaded
-        if (empty($_FILES['profile_image']['name'])) {
-            $this->session->set_flashdata('error', 'Please select an image to upload.');
-            redirect('Welcome/landing_page');
-        }
-
-        // Attempt to upload the file
-        if (!$this->upload->do_upload('profile_image')) {
-            $this->session->set_flashdata('error', $this->upload->display_errors());
-            redirect('Welcome/landing_page');
-        }
-
-        // Upload successful
-        $upload_data = $this->upload->data();
-        $uploaded_file = $upload_data['full_path'];
-
-        // Load image_lib for resizing
-        $this->load->library('image_lib');
-
-        // Check if GD is available
-        if (!extension_loaded('gd')) {
-            $this->session->set_flashdata('error', 'Image resizing is not supported. Please enable the GD extension in PHP.');
-            unlink($uploaded_file); // Delete uploaded file
-            redirect('Welcome/landing_page');
-        }
-
-        // Resize the image to 300x300 pixels
-        $resize_config = [
-            'image_library' => 'gd2',
-            'source_image' => $uploaded_file,
-            'maintain_ratio' => TRUE,
-            'width' => 300,
-            'height' => 300,
-            'new_image' => $uploaded_file, // Overwrite the original
-            'quality' => '80%', // Compress JPGs to reduce file size
-            'master_dim' => 'auto'
-        ];
-
-        $this->image_lib->initialize($resize_config);
-        if (!$this->image_lib->resize()) {
-            $this->session->set_flashdata('error', 'Failed to resize image: ' . $this->image_lib->display_errors());
-            unlink($uploaded_file); // Delete uploaded file on failure
-            redirect('Welcome/landing_page');
-        }
-        $this->image_lib->clear();
-
-        // Ensure the image is square by cropping if necessary
-        $image_size = getimagesize($uploaded_file);
-        if ($image_size[0] != $image_size[1]) {
-            $crop_size = min($image_size[0], $image_size[1]);
-            $crop_config = [
-                'image_library' => 'gd2',
-                'source_image' => $uploaded_file,
-                'maintain_ratio' => FALSE,
-                'width' => $crop_size,
-                'height' => $crop_size,
-                'x_axis' => ($image_size[0] - $crop_size) / 2,
-                'y_axis' => ($image_size[1] - $crop_size) / 2,
-                'new_image' => $uploaded_file
-            ];
-
-            $this->image_lib->initialize($crop_config);
-            if (!$this->image_lib->crop()) {
-                $this->session->set_flashdata('error', 'Failed to crop image: ' . $this->image_lib->display_errors());
-                unlink($uploaded_file);
-                redirect('Welcome/landing_page');
-            }
-            $this->image_lib->clear();
-        }
-
-        // Store the image path
-        $image_path = base_url('Uploads/' . $upload_data['file_name']);
-
-        // Get old image path to delete it
-        $old_image = $this->Player_model->get_player_image($player_id);
-
-        // Update profile picture in the database
-        if ($this->Player_model->update_profile_picture($player_id, $image_path)) {
-            // Delete old image if it exists
-            if ($old_image && file_exists(FCPATH . 'Uploads/' . basename($old_image))) {
-                unlink(FCPATH . 'Uploads/' . basename($old_image));
-            }
-            $this->session->set_flashdata('success', 'Profile picture updated successfully.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to update profile picture in database.');
-            unlink($uploaded_file); // Delete new image on database failure
-        }
-
-        // Redirect to landing page
+    // Verify the logged-in user owns the player profile
+    $user_id = $this->session->userdata('user_id');
+    $player = $this->Player_model->get_player(['player_id' => $player_id]);
+    if (!$player || $player['user_id'] != $user_id) {
+        $this->session->set_flashdata('error', 'Unauthorized access.');
         redirect('Welcome/landing_page');
     }
 
+    // Check if a file is uploaded
+    if (empty($_FILES['profile_image']['name'])) {
+        $this->session->set_flashdata('error', 'Please select an image to upload.');
+        redirect('Welcome/landing_page');
+    }
+
+    // Configure upload parameters
+    $config = [
+        'upload_path'   => './Uploads/',
+        'allowed_types' => 'jpg|jpeg|png',
+        'max_size'      => 5120, // 5MB in KB
+        'file_name'     => 'profile_' . $player_id . '_' . time(),
+        'overwrite'     => false
+    ];
+
+    $this->upload->initialize($config);
+
+    // Attempt to upload the file
+    if (!$this->upload->do_upload('profile_image')) {
+        $this->session->set_flashdata('error', $this->upload->display_errors());
+        redirect('Welcome/landing_page');
+    }
+
+    // Upload successful - process the image
+    $upload_data = $this->upload->data();
+    $uploaded_file = $upload_data['full_path'];
+
+    try {
+        // Load image library
+        $this->load->library('image_lib');
+        
+        if (!extension_loaded('gd')) {
+            throw new Exception('Image processing is not supported. Please enable the GD extension in PHP.');
+        }
+
+        // Process image for passport size (200x200 pixels)
+        $this->_process_passport_image($uploaded_file);
+
+        // Store the image path (relative path)
+        $image_path = base_url('Uploads/' . $upload_data['file_name']);
+
+        // Update database and handle old image
+        $this->_update_player_image($player_id, $image_path);
+        
+        $this->session->set_flashdata('success', 'Profile picture updated successfully.');
+    } catch (Exception $e) {
+        // Clean up on error
+        if (file_exists($uploaded_file)) {
+            unlink($uploaded_file);
+        }
+        $this->session->set_flashdata('error', $e->getMessage());
+    }
+
+    redirect('Welcome/landing_page');
+}
+
+/**
+ * Process image for passport size (200x200 pixels)
+ */
+private function _process_passport_image($file_path) {
+    // First resize maintaining aspect ratio to fit within 200x200
+    $resize_config = [
+        'image_library'  => 'gd2',
+        'source_image'   => $file_path,
+        'maintain_ratio' => true,
+        'width'         => 200,
+        'height'        => 200,
+        'quality'       => '90%',  // Higher quality for small images
+        'new_image'     => $file_path
+    ];
+
+    $this->image_lib->initialize($resize_config);
+    if (!$this->image_lib->resize()) {
+        throw new Exception('Failed to resize image: ' . $this->image_lib->display_errors());
+    }
+    $this->image_lib->clear();
+
+    // Then crop to exact 200x200 square (passport size)
+    $image_info = getimagesize($file_path);
+    $crop_config = [
+        'image_library'  => 'gd2',
+        'source_image'   => $file_path,
+        'maintain_ratio' => false,
+        'width'          => 200,
+        'height'         => 200,
+        'x_axis'         => max(0, ($image_info[0] - 200) / 2),
+        'y_axis'         => max(0, ($image_info[1] - 200) / 2),
+        'new_image'      => $file_path
+    ];
+
+    $this->image_lib->initialize($crop_config);
+    if (!$this->image_lib->crop()) {
+        throw new Exception('Failed to crop image: ' . $this->image_lib->display_errors());
+    }
+    $this->image_lib->clear();
+}
+
+/**
+ * Update player image in database and handle old image
+ */
+private function _update_player_image($player_id, $new_image_path) {
+    // Get old image path
+    $old_image = $this->Player_model->get_player_image($player_id);
+    
+    // Update database
+    if (!$this->Player_model->update_profile_picture($player_id, $new_image_path)) {
+        throw new Exception('Failed to update profile picture in database.');
+    }
+    
+    // Delete old image if update was successful
+    if ($old_image) {
+        $old_image_path = FCPATH . $old_image;
+        if (file_exists($old_image_path)) {
+            unlink($old_image_path);
+        }
+    }
+}
     public function update_field($player_id, $field_name) {
         // Get the new value from the POST request
         $new_value = $this->input->post($field_name);
@@ -375,7 +404,6 @@ class PlayerController extends CI_Controller {
         // Redirect to the player profile edit page
         redirect('PlayerController/update_player/' . $player_id);
     }
-
 
    }
 
