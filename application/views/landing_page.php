@@ -732,9 +732,6 @@
           <button class="btn btn-primary btn-create-team" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">
             <i class="fas fa-plus mr-2"></i> New Team
           </button>
-           <button class="btn btn-primary" onclick="location.href='<?php echo base_url(); ?>Welcome/add_tournament'">
-              <i class="fas fa-plus mr-2"></i> Create Tournament
-            </button>
         </div>
       </div>
       <div class="content-tabs">
@@ -744,7 +741,12 @@
         <button class="tab-btn" data-section="tournaments">
           <i class="fas fa-trophy mr-2"></i> Tournaments
         </button>
-      
+        <button class="tab-btn" data-section="matches">
+          <i class="fas fa-calendar-alt mr-2"></i> Upcoming Matches
+        </button>
+        <button class="tab-btn" data-section="messages">
+          <i class="fas fa-envelope mr-2"></i> Messages
+        </button>
       </div>
       <!-- Teams Section -->
       <div id="teams-section" class="section active">
@@ -756,7 +758,6 @@
             <button class="btn btn-primary btn-create-team" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">
               <i class="fas fa-plus mr-2"></i> Create Team
             </button>
-
           </div>
         <?php else: ?>
           <div class="cards-grid">
@@ -894,7 +895,6 @@
     function previewImage(event) {
       const file = event.target.files[0];
       if (file) {
-        
         const reader = new FileReader();
         reader.onload = function(e) {
           const preview = document.getElementById('imagePreview');
