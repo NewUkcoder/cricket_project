@@ -187,13 +187,13 @@
       background: var(--primary-color);
       color: white;
       border: none;
-      display: inline-block;
+      display: inline-block; /* Ensure visibility */
     }
 
     .btn-primary:hover {
       background: var(--primary-hover);
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(67, 97, 248, 0.2);
+      box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
     }
 
     .btn-outline {
@@ -474,14 +474,12 @@
     .profile-image-upload label {
       cursor: pointer;
       padding: var(--spacing-xs) var(--spacing-sm);
-      font-size: var(--font-sm);
-      font-weight: 500;
+      font-size: var(--font-xs);
       border-radius: var(--border-radius);
       background: var(--primary-color);
       color: white;
       border: none;
       transition: var(--transition);
-      line-height: 1.2;
     }
 
     .profile-image-upload label:hover {
@@ -491,10 +489,8 @@
     .profile-image-upload button {
       cursor: pointer;
       padding: var(--spacing-xs) var(--spacing-sm);
-      font-size: var(--font-sm);
-      font-weight: 500;
+      font-size: var(--font-xs);
       border-radius: var(--border-radius);
-      line-height: 1.2;
     }
 
     /* Section Display */
@@ -583,6 +579,7 @@
 
       .profile-header {
         flex-direction: row;
+        align-items: center;
         gap: var(--spacing-sm);
       }
 
@@ -622,8 +619,8 @@
       }
 
       .profile-image-upload {
-        width: auto;
-        height: auto;
+        width: 28px;
+        height: 28px;
       }
 
       .profile-image-upload i {
@@ -644,11 +641,8 @@
 
       .profile-image-upload label,
       .profile-image-upload button {
-        padding: 6px 12px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        min-width: 60px;
-        text-align: center;
+        padding: 4px 8px;
+        font-size: 0.7rem;
       }
     }
   </style>
@@ -762,6 +756,7 @@
             <button class="btn btn-primary btn-create-team" onclick="location.href='<?php echo base_url(); ?>Welcome/enter_team'">
               <i class="fas fa-plus mr-2"></i> Create Team
             </button>
+
           </div>
         <?php else: ?>
           <div class="cards-grid">
@@ -819,9 +814,7 @@
                     </div>
                     <div>
                       <h4 class="card-title"><?php echo htmlspecialchars($league->league_name); ?></h4>
-                      <p class="card-subtitle"><?php echo $
-
-this->session->userdata('user_id') == $league->user_id ? 'Organizer' : 'Participant'; ?></p>
+                      <p class="card-subtitle"><?php echo $this->session->userdata('user_id') == $league->user_id ? 'Organizer' : 'Participant'; ?></p>
                     </div>
                   </div>
                 </div>
@@ -840,10 +833,11 @@ this->session->userdata('user_id') == $league->user_id ? 'Organizer' : 'Particip
           </div>
         <?php endif; ?>
       </div>
+      <!-- Matches Section -->
+    
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Tab navigation functionality
     document.addEventListener('DOMContentLoaded', function() {
@@ -909,11 +903,11 @@ this->session->userdata('user_id') == $league->user_id ? 'Organizer' : 'Particip
             document.getElementById('uploadButton').style.display = 'inline-block';
           }
         };
-        reader.readAsDataURL
-
-(file);
+        reader.readAsDataURL(file);
       }
     }
   </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
